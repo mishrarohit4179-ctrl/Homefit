@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeFit – Distance 30-Day Challenge</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--teal:#14b8a6;--dark:#111;--light:#f2f2f2;--muted:#777;--green:#22c55e;}
+body{font-family:'Nunito',sans-serif;background:var(--light);color:var(--dark);min-height:100vh;}
+
+.topbar{background:#042f2e;color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.5);}
+.back-btn{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0;}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:1px;}
+.topbar-day{margin-left:auto;font-size:.75rem;font-weight:800;color:#5eead4;}
+
+.hero{background:linear-gradient(135deg,#042f2e,#0d4a47);padding:28px 20px 32px;text-align:center;color:#fff;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:var(--teal);opacity:.15;filter:blur(50px);}
+.hero-badge{font-size:.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:var(--teal);color:#fff;display:inline-block;padding:4px 14px;border-radius:20px;margin-bottom:10px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,8vw,4rem);line-height:.95;letter-spacing:2px;margin-bottom:6px;}
+.hero-title span{color:#5eead4;}
+.hero-desc{font-size:.84rem;font-weight:600;color:rgba(255,255,255,.55);max-width:320px;margin:0 auto 16px;line-height:1.55;}
+.hero-stats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.h-stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.75);font-size:.7rem;font-weight:800;padding:5px 13px;border-radius:20px;}
+
+.page{padding:18px 14px 80px;max-width:680px;margin:0 auto;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.5px;margin-bottom:12px;}
+
+.prog-card{background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;align-items:center;gap:14px;}
+.prog-ring{width:56px;height:56px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.prog-ring-inner{width:42px;height:42px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:.9rem;}
+.prog-text{flex:1;} .prog-text h3{font-size:1rem;font-weight:900;margin-bottom:2px;} .prog-text p{font-size:.76rem;color:var(--muted);}
+.prog-right{text-align:right;} .prog-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--teal);line-height:1;} .prog-lbl{font-size:.6rem;font-weight:800;color:var(--muted);text-transform:uppercase;}
+
+.today-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1);margin-bottom:18px;}
+.today-header{background:linear-gradient(135deg,#042f2e,#0d4a47);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;}
+.today-label{font-size:.7rem;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;}
+.today-day{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#fff;letter-spacing:1px;}
+.today-count{background:var(--teal);color:#fff;font-size:.72rem;font-weight:800;padding:4px 12px;border-radius:20px;}
+
+.playlist{padding:16px 18px 20px;}
+.playlist-title{font-size:.75rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.pl-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);}
+
+.pl-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;margin-bottom:8px;transition:all .25s;position:relative;}
+.pl-item.locked{background:#f5f5f5;border:1.5px solid #ebebeb;opacity:.5;pointer-events:none;}
+.pl-item.active{background:linear-gradient(135deg,rgba(20,184,166,.08),rgba(13,148,136,.04));border:2px solid var(--teal);box-shadow:0 4px 16px rgba(20,184,166,.15);}
+.pl-item.done{background:rgba(34,197,94,.06);border:2px solid rgba(34,197,94,.3);}
+
+.pl-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;flex-shrink:0;}
+.pl-item.locked .pl-num{background:#e8e8e8;color:#bbb;}
+.pl-item.active .pl-num{background:var(--teal);color:#fff;box-shadow:0 3px 10px rgba(20,184,166,.4);}
+.pl-item.done .pl-num{background:var(--green);color:#fff;}
+
+.pl-info{flex:1;min-width:0;}
+.pl-name{font-size:.9rem;font-weight:800;color:var(--dark);margin-bottom:2px;}
+.pl-item.locked .pl-name{color:#bbb;}
+.pl-detail{font-size:.72rem;font-weight:700;color:var(--muted);}
+.pl-item.active .pl-detail{color:var(--teal);}
+.pl-item.done .pl-detail{color:var(--green);}
+.pl-status{flex-shrink:0;font-size:1rem;}
+
+.active-action{background:var(--teal);color:#fff;padding:14px 20px;border-radius:14px;margin-top:4px;display:none;}
+.active-action.show{display:block;}
+.ex-details{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.ex-chip{font-size:.68rem;font-weight:800;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,.2);color:#fff;}
+.ex-tip{font-size:.72rem;color:rgba(255,255,255,.75);margin-bottom:12px;line-height:1.4;background:rgba(0,0,0,.15);border-radius:8px;padding:8px 10px;}
+
+.mini-timer{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.2);border-radius:12px;padding:10px 14px;margin-bottom:12px;}
+.mini-timer-display{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;color:#fff;line-height:1;}
+.mini-timer-label{font-size:.65rem;font-weight:800;color:rgba(255,255,255,.6);text-transform:uppercase;}
+.mini-timer-btns{margin-left:auto;display:flex;gap:6px;}
+.mt-btn{padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:800;font-size:.72rem;text-transform:uppercase;}
+.mt-btn.play{background:rgba(255,255,255,.25);color:#fff;}
+.mt-btn.rst{background:rgba(0,0,0,.2);color:rgba(255,255,255,.6);}
+
+.confirm-btn{width:100%;padding:13px;border-radius:12px;border:none;cursor:pointer;background:#fff;color:var(--teal);font-weight:900;font-size:.9rem;letter-spacing:.8px;text-transform:uppercase;box-shadow:0 4px 14px rgba(0,0,0,.2);transition:all .2s;}
+.confirm-btn:hover{transform:translateY(-1px);}
+
+.all-done-banner{display:none;background:linear-gradient(135deg,#22c55e,#16a34a);border-radius:16px;padding:20px;text-align:center;color:#fff;margin-top:8px;margin-bottom:8px;}
+.all-done-banner.show{display:block;}
+.adb-icon{font-size:2.5rem;margin-bottom:8px;}
+.all-done-banner h3{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:4px;}
+.all-done-banner p{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.8);}
+
+.mark-day-btn{width:100%;padding:14px;border-radius:13px;border:none;cursor:pointer;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-weight:900;font-size:.9rem;letter-spacing:1px;text-transform:uppercase;box-shadow:0 6px 20px rgba(34,197,94,.3);margin-top:8px;transition:all .2s;display:none;}
+.mark-day-btn.show{display:block;}
+.mark-day-btn:hover{transform:translateY(-2px);}
+.mark-day-btn.already{background:#6b7280;box-shadow:none;cursor:default;}
+.mark-day-btn.already:hover{transform:none;}
+
+.day-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:20px;}
+.day-box{background:#fff;border-radius:10px;border:2px solid #e8e8e8;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:relative;}
+.day-box:hover{border-color:var(--teal);transform:translateY(-1px);}
+.day-box.active-day{border-color:var(--teal);background:rgba(20,184,166,.05);}
+.day-box.done-day{border-color:var(--green);background:rgba(34,197,94,.06);}
+.day-box.future{opacity:.4;cursor:default;}
+.day-box .dn{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;line-height:1;color:var(--dark);}
+.day-box.active-day .dn{color:var(--teal);}
+.day-box.done-day .dn{color:var(--green);}
+.day-box .dex{font-size:.45rem;font-weight:800;color:var(--muted);text-transform:uppercase;margin-top:2px;}
+.day-box .dtick{position:absolute;top:3px;right:4px;font-size:.55rem;color:var(--green);font-weight:900;}
+.day-box .dicon{position:absolute;top:2px;right:3px;font-size:.6rem;}
+
+.view-switcher{display:flex;gap:8px;margin-bottom:16px;}
+.vs-btn{flex:1;padding:10px;border-radius:12px;border:2px solid #e8e8e8;background:#fff;font-weight:800;font-size:.8rem;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:all .2s;color:#666;}
+.vs-btn.active{background:var(--dark);border-color:var(--dark);color:#fff;}
+.view{display:none;} .view.show{display:block;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="index.html">&#8592;</a>
+  <div class="topbar-title">🏃 Distance 30-Day Challenge</div>
+  <div class="topbar-day" id="topInfo">Day 1</div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">🏃 Cardio · Endurance · 30 Days</div>
+  <div class="hero-title">RUN<br><span>FURTHER</span></div>
+  <div class="hero-desc">Every day more exercises unlock — build stamina, endurance and running strength step by step.</div>
+  <div class="hero-stats">
+    <span class="h-stat">🏃 Cardio Based</span>
+    <span class="h-stat">📈 Increases Daily</span>
+    <span class="h-stat">🎵 Playlist Style</span>
+    <span class="h-stat">📅 30 Days</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="prog-card">
+    <div class="prog-ring" id="progRing"><div class="prog-ring-inner" id="progPct">0%</div></div>
+    <div class="prog-text"><h3>Your Progress</h3><p id="progMsg">Start your first workout today!</p></div>
+    <div class="prog-right"><div class="prog-num" id="progNum">0</div><div class="prog-lbl">of 30 days</div></div>
+  </div>
+
+  <div class="view-switcher">
+    <button class="vs-btn active" id="btnToday" onclick="switchView('today')">🏃 Today's Workout</button>
+    <button class="vs-btn" id="btnCalendar" onclick="switchView('calendar')">📅 30-Day Calendar</button>
+  </div>
+
+  <div class="view show" id="viewToday">
+    <div class="today-card">
+      <div class="today-header">
+        <div>
+          <div class="today-label">Day <span id="todayDayNum">1</span> of 30</div>
+          <div class="today-day" id="todayTitle">Today's Workout</div>
+        </div>
+        <div class="today-count" id="todayExCount">1 exercise</div>
+      </div>
+      <div class="playlist">
+        <div class="playlist-title"><div class="pl-dot"></div>Exercise Playlist</div>
+        <div id="playlistItems"></div>
+        <div class="all-done-banner" id="allDoneBanner">
+          <div class="adb-icon">🏅</div>
+          <h3>Distance Crushed!</h3>
+          <p>Day <span id="allDoneDay">1</span> complete! Your stamina is growing. Mark it done!</p>
+        </div>
+        <button class="mark-day-btn" id="markDayBtn" onclick="markDayDone()">✓ Mark Day as Done</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="viewCalendar">
+    <div class="sec-title">30-Day Progress</div>
+    <div class="day-grid" id="dayGrid"></div>
+  </div>
+
+</div>
+
+<script>
+// 30 UNIQUE DISTANCE / ENDURANCE EXERCISES
+const exercisePool = [
+  // Day 1-10: Base Building
+  { name:'Brisk Walk',            sets:'1 set',  reps:'5 min',    rest:'0s',  timer:300, icon:'🚶', desc:'Start easy — 5 min brisk walk to activate legs.' },
+  { name:'High Knees',            sets:'3 sets', reps:'30 reps',  rest:'20s', timer:30,  icon:'🦵', desc:'Running motion drill — lift knees high.' },
+  { name:'Butt Kicks',            sets:'3 sets', reps:'30 reps',  rest:'20s', timer:25,  icon:'🦶', desc:'Hamstring activation for running form.' },
+  { name:'Jog in Place',          sets:'3 sets', reps:'1 min',    rest:'30s', timer:60,  icon:'🏃', desc:'Easy jog — build base aerobic capacity.' },
+  { name:'Walking Lunges',        sets:'3 sets', reps:'10 each',  rest:'25s', timer:35,  icon:'🚶', desc:'Leg strength for longer distances.' },
+  { name:'Calf Raises',           sets:'4 sets', reps:'25 reps',  rest:'20s', timer:30,  icon:'🦵', desc:'Calf strength prevents shin splints.' },
+  { name:'Ankle Circles',         sets:'2 sets', reps:'15 each',  rest:'10s', timer:20,  icon:'🔄', desc:'Ankle mobility for injury prevention.' },
+  { name:'Standing Hip Circles',  sets:'2 sets', reps:'10 each',  rest:'15s', timer:20,  icon:'🌀', desc:'Hip mobility for running stride.' },
+  { name:'Glute Bridges',         sets:'3 sets', reps:'15 reps',  rest:'25s', timer:30,  icon:'🍑', desc:'Glute power for uphill running.' },
+  { name:'Box Step-Ups',          sets:'3 sets', reps:'12 each',  rest:'25s', timer:35,  icon:'📦', desc:'Leg strength for stair and hill running.' },
+  // Day 11-20: Endurance Building
+  { name:'Interval Sprints',      sets:'5 sets', reps:'20s sprint',rest:'40s',timer:20,  icon:'⚡', desc:'20s sprint + 40s walk — build VO2 max.' },
+  { name:'Jump Rope (Imaginary)', sets:'3 sets', reps:'1 min',    rest:'30s', timer:60,  icon:'🪢', desc:'Jump rope motion — cardio and coordination.' },
+  { name:'Lateral Shuffles',      sets:'4 sets', reps:'20s',      rest:'20s', timer:20,  icon:'↔️', desc:'Lateral agility for multi-direction running.' },
+  { name:'Hip Flexor Stretch',    sets:'2 sets', reps:'40s each', rest:'15s', timer:40,  icon:'🧘', desc:'Essential stretch for distance runners.' },
+  { name:'Hamstring Stretch',     sets:'2 sets', reps:'40s each', rest:'15s', timer:40,  icon:'🦵', desc:'Prevent hamstring tightness after runs.' },
+  { name:'Single-Leg Calf Raise', sets:'3 sets', reps:'15 each',  rest:'20s', timer:30,  icon:'🦶', desc:'Unilateral calf strength for stability.' },
+  { name:'Plank Hold',            sets:'3 sets', reps:'40s',      rest:'25s', timer:40,  icon:'🧱', desc:'Core stability reduces running fatigue.' },
+  { name:'Superman Hold',         sets:'3 sets', reps:'12 reps',  rest:'25s', timer:30,  icon:'🦸', desc:'Lower back strength for long distance.' },
+  { name:'Reverse Lunges',        sets:'3 sets', reps:'12 each',  rest:'30s', timer:35,  icon:'🔄', desc:'Knee-safe leg strength builder.' },
+  { name:'Bear Crawl',            sets:'3 sets', reps:'10 steps', rest:'30s', timer:30,  icon:'🐻', desc:'Full body endurance and coordination.' },
+  // Day 21-30: Advanced Distance Prep
+  { name:'Long Jog',              sets:'1 set',  reps:'3 min',    rest:'0s',  timer:180, icon:'🏃', desc:'Sustained 3-minute jog — build base fitness.' },
+  { name:'Speed Skaters',         sets:'4 sets', reps:'16 reps',  rest:'20s', timer:25,  icon:'⛸️', desc:'Lateral power for varied terrain running.' },
+  { name:'Stair Steps (Fast)',    sets:'3 sets', reps:'1 min',    rest:'30s', timer:60,  icon:'🪜', desc:'Fast step-ups simulate hill running.' },
+  { name:'Quad Stretch Hold',     sets:'2 sets', reps:'40s each', rest:'15s', timer:40,  icon:'🧘', desc:'Quad flexibility for downhill running.' },
+  { name:'IT Band Stretch',       sets:'2 sets', reps:'40s each', rest:'15s', timer:40,  icon:'🦵', desc:'Prevent IT band syndrome in runners.' },
+  { name:'Explosive Step-Ups',    sets:'3 sets', reps:'10 each',  rest:'35s', timer:35,  icon:'⬆️', desc:'Explosive leg power for running speed.' },
+  { name:'Tuck Jumps',            sets:'3 sets', reps:'8 reps',   rest:'40s', timer:35,  icon:'🦘', desc:'Maximum leg power and cardio blast.' },
+  { name:'Inchworm Walk',         sets:'3 sets', reps:'8 reps',   rest:'25s', timer:35,  icon:'🐛', desc:'Full body mobility before long runs.' },
+  { name:'Cool-Down Walk',        sets:'1 set',  reps:'3 min',    rest:'0s',  timer:180, icon:'🚶', desc:'Gradual heart rate reduction and recovery.' },
+  { name:'Distance Challenge Run',sets:'1 set',  reps:'10 min',   rest:'0s',  timer:600, icon:'🏅', desc:'Day 30 — 10 minute continuous run. Go the distance. You are a runner now!' },
+];
+
+function getDayExercises(d){ return exercisePool.slice(0, Math.min(d, 30)); }
+
+const STORE = 'hf_distance30';
+let savedData={};
+try{ savedData=JSON.parse(localStorage.getItem(STORE)||'{}'); }catch(e){}
+const todayNum=new Date().getDate(), activeDay=Math.min(todayNum,30);
+let currentDay=activeDay, timerInterval=null, timerRunning=false, timerSecs=60, timerTotal=60, activeTimerIdx=-1;
+
+function getDayState(day){ const d=savedData[day]||{}; return{completed:new Set(d.completed||[]),dayDone:d.dayDone||false}; }
+function saveDayState(day,completed,dayDone){ savedData[day]={completed:[...completed],dayDone}; try{localStorage.setItem(STORE,JSON.stringify(savedData));}catch(e){} }
+
+function init(){ renderProgress(); renderCalendar(); renderPlaylist(activeDay); }
+
+function renderProgress(){
+  let done=0; for(let d=1;d<=30;d++) if((savedData[d]||{}).dayDone) done++;
+  const pct=Math.round(done/30*100);
+  document.getElementById('progNum').textContent=done;
+  document.getElementById('progPct').textContent=pct+'%';
+  document.getElementById('topInfo').textContent=`Day ${activeDay} of 30`;
+  document.getElementById('progRing').style.background=`conic-gradient(var(--teal) ${pct}%,#e8e8e8 ${pct}%)`;
+  document.getElementById('progMsg').textContent=done===0?'Start your first workout today!':`${done} days done — stamina growing!`;
+}
+
+function renderCalendar(){
+  let html='';
+  for(let d=1;d<=30;d++){
+    const s=getDayState(d), isToday=d===activeDay, isFuture=d>activeDay;
+    let cls='day-box'+(s.dayDone?' done-day':isToday?' active-day':isFuture?' future':'');
+    html+=`<div class="${cls}" onclick="${isFuture?'':` openDayFromCal(${d})`}">
+      ${s.dayDone?'<div class="dtick">✓</div>':isToday?'<div class="dicon">🏃</div>':''}
+      <div class="dn">${d}</div><div class="dex">${Math.min(d,30)} ex</div>
+    </div>`;
+  }
+  document.getElementById('dayGrid').innerHTML=html;
+}
+
+function openDayFromCal(day){ currentDay=day; switchView('today'); renderPlaylist(day); }
+
+function renderPlaylist(day){
+  const exList=getDayExercises(day), state=getDayState(day), completed=state.completed, dayDone=state.dayDone;
+  document.getElementById('todayDayNum').textContent=day;
+  document.getElementById('todayTitle').textContent=`Day ${day} — Endurance`;
+  document.getElementById('todayExCount').textContent=`${exList.length} exercise${exList.length>1?'s':''}`;
+  document.getElementById('allDoneDay').textContent=day;
+
+  let firstUncompleted=-1;
+  for(let i=0;i<exList.length;i++) if(!completed.has(i)){firstUncompleted=i;break;}
+  const allDone=firstUncompleted===-1;
+
+  let html='';
+  exList.forEach((ex,i)=>{
+    const isDone=completed.has(i), isActive=!dayDone&&!isDone&&i===firstUncompleted, isLocked=!dayDone&&!isDone&&i!==firstUncompleted;
+    let cls='pl-item'+(isDone?' done':isActive?' active':isLocked?' locked':'');
+    html+=`<div class="${cls}" id="pl-item-${i}">
+      <div class="pl-num">${i+1}</div>
+      <div class="pl-info">
+        <div class="pl-name">${ex.icon} ${ex.name}</div>
+        <div class="pl-detail">${isDone?'✓ Completed':isActive?`${ex.sets} · ${ex.reps} · Rest ${ex.rest}`:`${ex.sets} · ${ex.reps}`}</div>
+      </div>
+      <div class="pl-status">${isLocked?'<span style="color:#ccc;font-size:.9rem;">🔒</span>':isDone?'✅':isActive?'▶':''}</div>
+    </div>
+    ${isActive?`<div class="active-action show">
+      <div class="ex-details">
+        <span class="ex-chip">${ex.sets}</span>
+        <span class="ex-chip">${ex.reps}</span>
+        <span class="ex-chip">Rest ${ex.rest}</span>
+      </div>
+      <div class="ex-tip">💡 ${ex.desc}</div>
+      <div class="mini-timer">
+        <div>
+          <div class="mini-timer-display" id="timerDisp-${i}">${String(Math.floor(ex.timer/60)).padStart(2,'0')}:${String(ex.timer%60).padStart(2,'0')}</div>
+          <div class="mini-timer-label">${ex.name}</div>
+        </div>
+        <div class="mini-timer-btns">
+          <button class="mt-btn play" id="timerBtn-${i}" onclick="toggleTimer(${i},${ex.timer})">▶ Start</button>
+          <button class="mt-btn rst" onclick="resetTimer(${i},${ex.timer})">↺</button>
+        </div>
+      </div>
+      <button class="confirm-btn" onclick="confirmEx(${i})">✓ Done! Next Exercise →</button>
+    </div>`:''}`;
+  });
+
+  document.getElementById('playlistItems').innerHTML=html;
+  const banner=document.getElementById('allDoneBanner'), markBtn=document.getElementById('markDayBtn');
+  if(allDone||dayDone){
+    banner.classList.add('show'); markBtn.classList.add('show');
+    markBtn.textContent=dayDone?'✅ Day Already Marked Done!':'✓ Mark Day as Done';
+    markBtn.className='mark-day-btn show'+(dayDone?' already':'');
+  } else { banner.classList.remove('show'); markBtn.classList.remove('show'); }
+}
+
+function confirmEx(idx){
+  const state=getDayState(currentDay); state.completed.add(idx);
+  saveDayState(currentDay,state.completed,state.dayDone);
+  clearInterval(timerInterval); timerRunning=false; activeTimerIdx=-1;
+  const item=document.getElementById(`pl-item-${idx}`);
+  if(item){item.style.background='rgba(34,197,94,.15)';item.style.borderColor='var(--green)';}
+  setTimeout(()=>{renderPlaylist(currentDay);renderProgress();renderCalendar();
+    setTimeout(()=>{const n=document.querySelector('.pl-item.active');if(n)n.scrollIntoView({behavior:'smooth',block:'center'});},100);},300);
+}
+
+function markDayDone(){
+  const state=getDayState(currentDay); if(state.dayDone)return;
+  saveDayState(currentDay,state.completed,true);
+  renderPlaylist(currentDay); renderProgress(); renderCalendar();
+}
+
+function toggleTimer(idx,total){
+  if(activeTimerIdx!==idx){clearInterval(timerInterval);timerRunning=false;timerSecs=total;timerTotal=total;activeTimerIdx=idx;updateTimerDisp(idx);}
+  if(timerRunning){clearInterval(timerInterval);timerRunning=false;document.getElementById(`timerBtn-${idx}`).textContent='▶ Resume';}
+  else{
+    if(timerSecs<=0){resetTimer(idx,total);return;}
+    timerRunning=true; document.getElementById(`timerBtn-${idx}`).textContent='⏸ Pause';
+    timerInterval=setInterval(()=>{timerSecs--;updateTimerDisp(idx);
+      if(timerSecs<=0){clearInterval(timerInterval);timerRunning=false;const b=document.getElementById(`timerBtn-${idx}`);if(b)b.textContent='✅ Done!';}},1000);
+  }
+}
+function resetTimer(idx,total){clearInterval(timerInterval);timerRunning=false;timerSecs=total;timerTotal=total;activeTimerIdx=-1;const b=document.getElementById(`timerBtn-${idx}`);if(b)b.textContent='▶ Start';updateTimerDisp(idx);}
+function updateTimerDisp(idx){const el=document.getElementById(`timerDisp-${idx}`);if(el)el.textContent=String(Math.floor(timerSecs/60)).padStart(2,'0')+':'+String(timerSecs%60).padStart(2,'0');}
+
+function switchView(v){
+  document.getElementById('viewToday').className='view'+(v==='today'?' show':'');
+  document.getElementById('viewCalendar').className='view'+(v==='calendar'?' show':'');
+  document.getElementById('btnToday').className='vs-btn'+(v==='today'?' active':'');
+  document.getElementById('btnCalendar').className='vs-btn'+(v==='calendar'?' active':'');
+}
+
+init();
+</script>
+</body>
+</html>

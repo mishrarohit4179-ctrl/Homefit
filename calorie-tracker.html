@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeFit – Calorie Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--col:#f59e0b;--colb:#d97706;--dark:#111;--muted:#777;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;}
+body{font-family:'Nunito',sans-serif;background:#0d0a00;color:#fff;min-height:100vh;}
+.topbar{background:#1a1000;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.6);border-bottom:1px solid rgba(245,158,11,.2);}
+.back-btn{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0;}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:1px;}
+.topbar-sub{margin-left:auto;font-size:.72rem;font-weight:800;color:#fcd34d;}
+
+.hero{background:linear-gradient(135deg,#1a1000,#2d1a00);padding:28px 20px 32px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.3),transparent 70%);pointer-events:none;}
+.hero::after{content:'';position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(239,68,68,.15),transparent 70%);pointer-events:none;}
+.hero-badge{font-size:.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:var(--col);color:#1a1000;display:inline-block;padding:4px 14px;border-radius:20px;margin-bottom:10px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,8vw,4rem);line-height:.95;letter-spacing:2px;margin-bottom:6px;}
+.hero-title span{color:#fcd34d;}
+.hero-desc{font-size:.84rem;font-weight:600;color:rgba(255,255,255,.4);max-width:320px;margin:0 auto 16px;line-height:1.6;}
+.hero-facts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.hero-fact{font-size:.68rem;font-weight:800;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);padding:5px 13px;border-radius:20px;}
+
+.page{padding:18px 16px 80px;max-width:600px;margin:0 auto;}
+
+.info-card{background:#1a1200;border:1px solid rgba(245,158,11,.15);border-radius:20px;padding:20px;margin-bottom:16px;}
+.info-card h3{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.8px;margin-bottom:10px;color:#fcd34d;}
+.info-card p{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.4);line-height:1.7;margin-bottom:8px;}
+.info-card p:last-child{margin-bottom:0;}
+
+.input-card{background:#1a1200;border:1px solid rgba(245,158,11,.15);border-radius:22px;overflow:hidden;margin-bottom:16px;}
+.input-card-header{background:linear-gradient(135deg,#1a1000,#2d1a00);padding:16px 20px;}
+.input-card-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px;color:#fff;}
+.input-card-sub{font-size:.7rem;font-weight:600;color:rgba(255,255,255,.35);margin-top:2px;}
+.input-body{padding:18px 20px;}
+
+.field-label{font-size:.72rem;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.field-group{margin-bottom:16px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.inp-wrap{position:relative;display:flex;align-items:center;}
+.inp-wrap .inp{padding-right:44px;}
+.inp-wrap .unit{position:absolute;right:14px;font-size:.72rem;font-weight:800;color:rgba(255,255,255,.3);pointer-events:none;}
+.inp{width:100%;padding:13px 16px;border-radius:13px;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;color:#fff;transition:border-color .2s;-webkit-appearance:none;}
+.inp:focus{outline:none;border-color:var(--col);}
+.inp::placeholder{color:rgba(255,255,255,.2);font-weight:600;}
+select.inp{cursor:pointer;}
+select.inp option{background:#1a1200;color:#fff;}
+
+.gender-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.gender-btn{padding:13px;border-radius:13px;border:2px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:rgba(255,255,255,.45);font-weight:800;font-size:.85rem;cursor:pointer;transition:all .2s;text-align:center;}
+.gender-btn.active{border-color:var(--col);background:rgba(245,158,11,.1);color:#fff;}
+.gender-btn span{display:block;font-size:1.5rem;margin-bottom:3px;}
+
+.age-display{text-align:center;font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--col);line-height:1;margin-bottom:6px;}
+.age-display span{font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:800;color:rgba(255,255,255,.3);margin-left:4px;}
+.age-slider{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:rgba(255,255,255,.1);outline:none;cursor:pointer;}
+.age-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--col),var(--colb));cursor:pointer;box-shadow:0 4px 12px rgba(245,158,11,.5);}
+
+.calc-btn{width:100%;padding:16px;border-radius:14px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--col),var(--colb));color:#1a1000;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1.5px;font-weight:900;box-shadow:0 8px 28px rgba(245,158,11,.4);transition:all .25s;margin-top:4px;}
+.calc-btn:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(245,158,11,.5);}
+
+/* RESULT */
+.result-card{background:#1a1200;border:1px solid rgba(245,158,11,.15);border-radius:22px;overflow:hidden;margin-bottom:16px;display:none;}
+.result-card.show{display:block;animation:fadeUp .4s ease;}
+
+.calorie-hero{background:linear-gradient(135deg,#1a1000,#2d1a00);padding:26px 20px;text-align:center;position:relative;overflow:hidden;}
+.calorie-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.2),transparent 70%);}
+.cal-main-lbl{font-size:.68rem;font-weight:800;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;}
+.cal-main-num{font-family:'Bebas Neue',sans-serif;font-size:5rem;line-height:.9;color:var(--col);letter-spacing:2px;}
+.cal-main-unit{font-size:.82rem;font-weight:800;color:rgba(255,255,255,.4);margin-bottom:14px;}
+.cal-goal-badge{display:inline-block;font-size:.75rem;font-weight:800;padding:6px 18px;border-radius:20px;background:rgba(245,158,11,.15);color:var(--col);border:1px solid rgba(245,158,11,.3);}
+
+/* MACRO RING */
+.macro-section{padding:20px;border-bottom:1px solid rgba(255,255,255,.05);}
+.macro-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.8px;color:rgba(255,255,255,.5);margin-bottom:14px;}
+.macro-ring-row{display:flex;align-items:center;gap:20px;}
+.macro-ring{flex-shrink:0;position:relative;}
+.macro-ring svg{transform:rotate(-90deg);}
+.macro-ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.macro-ring-num{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;line-height:1;color:var(--col);}
+.macro-ring-lbl{font-size:.5rem;font-weight:800;color:rgba(255,255,255,.3);text-transform:uppercase;}
+.macro-bars{flex:1;display:flex;flex-direction:column;gap:10px;}
+.macro-bar-item{display:flex;flex-direction:column;gap:4px;}
+.macro-bar-top{display:flex;justify-content:space-between;align-items:center;}
+.macro-bar-name{font-size:.68rem;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;}
+.macro-bar-val{font-size:.75rem;font-weight:900;color:#fff;}
+.macro-bar-track{height:6px;border-radius:6px;background:rgba(255,255,255,.07);}
+.macro-bar-fill{height:100%;border-radius:6px;transition:width .8s cubic-bezier(.34,1.56,.64,1);}
+
+/* CALORIE TABLE */
+.cal-table-section{padding:18px 20px;border-bottom:1px solid rgba(255,255,255,.05);}
+.cal-table-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.8px;color:rgba(255,255,255,.5);margin-bottom:12px;}
+.goal-row{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:13px;margin-bottom:7px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03);}
+.goal-row.active-goal{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.3);}
+.goal-row-left{display:flex;align-items:center;gap:10px;}
+.goal-row-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.9rem;}
+.goal-row-name{font-size:.8rem;font-weight:900;color:#fff;}
+.goal-row-sub{font-size:.62rem;font-weight:700;color:rgba(255,255,255,.3);}
+.goal-row-cal{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;}
+
+/* TIPS */
+.tips-section{padding:18px 20px;}
+.tips-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.8px;color:rgba(255,255,255,.5);margin-bottom:12px;}
+.tip-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;margin-bottom:8px;}
+.tip-item:last-child{margin-bottom:0;}
+.tip-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.tip-text h4{font-size:.82rem;font-weight:900;color:#fff;margin-bottom:3px;}
+.tip-text p{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.35);line-height:1.5;}
+
+/* BMR EXPLAIN */
+.bmr-card{background:#1a1200;border:1px solid rgba(245,158,11,.12);border-radius:20px;padding:20px;margin-bottom:16px;}
+.bmr-card h3{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.8px;margin-bottom:10px;color:#fcd34d;}
+.bmr-card p{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.4);line-height:1.7;margin-bottom:8px;}
+.bmr-card p:last-child{margin-bottom:0;}
+.formula-box{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);border-radius:12px;padding:12px 14px;margin-top:10px;}
+.formula-box code{font-size:.72rem;font-weight:700;color:#fcd34d;line-height:1.8;display:block;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.err-toast{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#ef4444;color:#fff;padding:12px 24px;border-radius:30px;font-weight:800;font-size:.82rem;z-index:999;box-shadow:0 8px 30px rgba(0,0,0,.4);white-space:nowrap;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="index.html">&#8592;</a>
+  <div class="topbar-title">🔥 Calorie Tracker</div>
+  <div class="topbar-sub" id="topSub">Enter details</div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">🔥 Daily Calorie Calculator</div>
+  <div class="hero-title">FUEL YOUR<br><span>BODY</span></div>
+  <div class="hero-desc">Apna TDEE jaano — roz kitni calories chahiye goal ke hisaab se, macros ke saath.</div>
+  <div class="hero-facts">
+    <span class="hero-fact">📊 Mifflin-St Jeor Formula</span>
+    <span class="hero-fact">🎯 Goal Based</span>
+    <span class="hero-fact">🥩 Macro Breakdown</span>
+    <span class="hero-fact">⚡ Instant Result</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- WHAT IS TDEE -->
+  <div class="info-card">
+    <h3>🤔 Calories Count Kyun Karein?</h3>
+    <p>Weight loss, gain ya maintain — sab mein calorie balance sabse important factor hai. Jab tak tum apni daily calorie need nahi jaante, diet plan karna mushkil hota hai.</p>
+    <p>Yeh calculator tumhara TDEE (Total Daily Energy Expenditure) nikalta hai — matlab ek din mein tumhare body ko kitni calories chahiye apni activity ke hisaab se. Phir goal ke hisaab se adjust karta hai.</p>
+  </div>
+
+  <!-- INPUT -->
+  <div class="input-card">
+    <div class="input-card-header">
+      <div class="input-card-title">📝 Your Details</div>
+      <div class="input-card-sub">Sab sahi bharo — accurate result ke liye</div>
+    </div>
+    <div class="input-body">
+
+      <div class="field-label">👤 Gender</div>
+      <div class="gender-row">
+        <button class="gender-btn active" id="gMale" onclick="setG('male')"><span>♂️</span>Male</button>
+        <button class="gender-btn" id="gFemale" onclick="setG('female')"><span>♀️</span>Female</button>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">🎂 Age</div>
+        <div class="age-display" id="ageDisp">25 <span>years</span></div>
+        <input type="range" class="age-slider" id="ageSlider" min="10" max="80" value="25" oninput="document.getElementById('ageDisp').innerHTML=this.value+' <span>years</span>'">
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">📐 Height</div>
+        <div class="age-display" id="heightDisp">170 <span>cm</span></div>
+        <input type="range" class="age-slider" id="heightSlider" min="140" max="220" value="170" oninput="document.getElementById('heightDisp').innerHTML=this.value+' <span>cm</span>'">
+        <div style="display:flex;justify-content:space-between;margin-top:4px;">
+          <span style="font-size:.55rem;font-weight:800;color:rgba(255,255,255,.2);">140 cm</span>
+          <span style="font-size:.55rem;font-weight:800;color:rgba(255,255,255,.2);">220 cm</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">⚖️ Weight</div>
+        <div class="inp-wrap">
+          <input class="inp" id="weightKg" type="number" min="30" max="300" step="0.1" placeholder="e.g. 70">
+          <span class="unit">kg</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">🏃 Activity Level</div>
+        <select class="inp" id="actLevel">
+          <option value="1.2">😴 Sedentary — Office job, little/no exercise</option>
+          <option value="1.375">🚶 Lightly Active — Light exercise 1-3 days/week</option>
+          <option value="1.55" selected>🏃 Moderately Active — Exercise 3-5 days/week</option>
+          <option value="1.725">💪 Very Active — Hard exercise 6-7 days/week</option>
+          <option value="1.9">🔥 Extra Active — Athlete, physical job + training</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">🎯 Your Goal</div>
+        <select class="inp" id="goalSel">
+          <option value="loss2">⬇️ Fast Weight Loss (−500 cal/day)</option>
+          <option value="loss1">⬇️ Slow Weight Loss (−250 cal/day)</option>
+          <option value="maintain" selected>⚖️ Maintain Current Weight</option>
+          <option value="gain1">⬆️ Lean Bulk (Muscle Gain +250 cal/day)</option>
+          <option value="gain2">⬆️ Aggressive Bulk (+500 cal/day)</option>
+        </select>
+      </div>
+
+      <button class="calc-btn" onclick="calculate()">🔥 Calculate Calories</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-card" id="resultCard">
+    <div class="calorie-hero">
+      <div class="cal-main-lbl">Daily Calories (Goal)</div>
+      <div class="cal-main-num" id="calMainNum">--</div>
+      <div class="cal-main-unit">kcal / day</div>
+      <div class="cal-goal-badge" id="calGoalBadge">Maintenance</div>
+    </div>
+
+    <div class="macro-section">
+      <div class="macro-title">🥩 MACROS BREAKDOWN</div>
+      <div class="macro-ring-row">
+        <div class="macro-ring">
+          <svg width="90" height="90" viewBox="0 0 90 90">
+            <circle cx="45" cy="45" r="36" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="8"/>
+            <circle cx="45" cy="45" r="36" fill="none" stroke="#f59e0b" stroke-width="8" stroke-dasharray="226.2" id="carbArc" stroke-dashoffset="226.2" stroke-linecap="round"/>
+          </svg>
+          <div class="macro-ring-center">
+            <div class="macro-ring-num" id="ringNum">--</div>
+            <div class="macro-ring-lbl">kcal</div>
+          </div>
+        </div>
+        <div class="macro-bars">
+          <div class="macro-bar-item">
+            <div class="macro-bar-top"><span class="macro-bar-name">🌾 Carbs</span><span class="macro-bar-val" id="carbVal">--g</span></div>
+            <div class="macro-bar-track"><div class="macro-bar-fill" id="carbBar" style="background:linear-gradient(90deg,#f59e0b,#fbbf24);width:0%"></div></div>
+          </div>
+          <div class="macro-bar-item">
+            <div class="macro-bar-top"><span class="macro-bar-name">🥩 Protein</span><span class="macro-bar-val" id="protVal">--g</span></div>
+            <div class="macro-bar-track"><div class="macro-bar-fill" id="protBar" style="background:linear-gradient(90deg,#3b82f6,#60a5fa);width:0%"></div></div>
+          </div>
+          <div class="macro-bar-item">
+            <div class="macro-bar-top"><span class="macro-bar-name">🥑 Fat</span><span class="macro-bar-val" id="fatVal">--g</span></div>
+            <div class="macro-bar-track"><div class="macro-bar-fill" id="fatBar" style="background:linear-gradient(90deg,#ef4444,#f87171);width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cal-table-section">
+      <div class="cal-table-title">📊 ALL GOALS COMPARISON</div>
+      <div id="goalsTable"></div>
+    </div>
+
+    <div class="tips-section">
+      <div class="tips-title">💡 NUTRITION TIPS</div>
+      <div id="nutritionTips"></div>
+    </div>
+  </div>
+
+  <!-- BMR EXPLAIN -->
+  <div class="bmr-card">
+    <h3>📚 Formula Kya Use Hoti Hai?</h3>
+    <p>Yeh calculator Mifflin-St Jeor equation use karta hai — yeh sabse accurate BMR formula mana jaata hai modern nutrition science mein.</p>
+    <p>Pehle BMR (Basal Metabolic Rate) nikala jaata hai — matlab aaram karte waqt body ko kitni calories chahiye. Phir usse activity multiplier se multiply karke TDEE nikala jaata hai.</p>
+    <div class="formula-box">
+      <code>Men: BMR = (10 × weight kg) + (6.25 × height cm) − (5 × age) + 5</code>
+      <code>Women: BMR = (10 × weight kg) + (6.25 × height cm) − (5 × age) − 161</code>
+      <code>TDEE = BMR × Activity Multiplier</code>
+    </div>
+  </div>
+
+</div>
+
+<div class="err-toast" id="errToast"></div>
+
+<script>
+let gender = 'male';
+function setG(g) {
+  gender = g;
+  document.getElementById('gMale').className = 'gender-btn'+(g==='male'?' active':'');
+  document.getElementById('gFemale').className = 'gender-btn'+(g==='female'?' active':'');
+}
+
+function showError(msg) {
+  const t = document.getElementById('errToast');
+  t.textContent = msg; t.style.display = 'block';
+  setTimeout(()=>t.style.display='none', 3000);
+}
+
+function calculate() {
+  const age = parseInt(document.getElementById('ageSlider').value);
+  const height = parseInt(document.getElementById('heightSlider').value);
+  const weight = parseFloat(document.getElementById('weightKg').value);
+  const act = parseFloat(document.getElementById('actLevel').value);
+  const goal = document.getElementById('goalSel').value;
+
+  if (!weight || weight < 30) { showError('⚠️ Weight sahi enter karo!'); return; }
+
+  // Mifflin-St Jeor BMR
+  const bmr = gender === 'male'
+    ? (10 * weight) + (6.25 * height) - (5 * age) + 5
+    : (10 * weight) + (6.25 * height) - (5 * age) - 161;
+
+  const tdee = Math.round(bmr * act);
+
+  const goalMap = {
+    loss2: { adj: -500, label: '⬇️ Fast Weight Loss', color: '#ef4444' },
+    loss1: { adj: -250, label: '⬇️ Slow Weight Loss', color: '#f97316' },
+    maintain: { adj: 0, label: '⚖️ Maintenance', color: '#f59e0b' },
+    gain1: { adj: 250, label: '⬆️ Lean Bulk', color: '#22c55e' },
+    gain2: { adj: 500, label: '⬆️ Aggressive Bulk', color: '#3b82f6' },
+  };
+  const g = goalMap[goal];
+  const goalCal = Math.max(1200, tdee + g.adj);
+
+  // Macros
+  const prot = Math.round(weight * (goal.includes('gain') ? 2.2 : 2.0));
+  const fat = Math.round(goalCal * 0.25 / 9);
+  const carb = Math.round((goalCal - (prot * 4) - (fat * 9)) / 4);
+
+  // Update UI
+  document.getElementById('calMainNum').textContent = goalCal;
+  document.getElementById('calMainNum').style.color = g.color;
+  document.getElementById('calGoalBadge').textContent = g.label;
+  document.getElementById('calGoalBadge').style.color = g.color;
+  document.getElementById('topSub').textContent = goalCal + ' kcal/day';
+  document.getElementById('ringNum').textContent = goalCal;
+
+  // Macro bars
+  const maxMacro = Math.max(carb, prot*2);
+  setTimeout(()=>{
+    document.getElementById('carbVal').textContent = carb + 'g';
+    document.getElementById('protVal').textContent = prot + 'g';
+    document.getElementById('fatVal').textContent = fat + 'g';
+    document.getElementById('carbBar').style.width = Math.min(100, carb/maxMacro*100) + '%';
+    document.getElementById('protBar').style.width = Math.min(100, prot*2/maxMacro*100) + '%';
+    document.getElementById('fatBar').style.width = Math.min(100, fat*3/maxMacro*100) + '%';
+
+    // Arc animation
+    const arc = 226.2;
+    const carbPct = (carb*4) / goalCal;
+    document.getElementById('carbArc').style.strokeDashoffset = arc - (arc * carbPct * 0.85);
+  }, 100);
+
+  // Goals table
+  const allGoals = [
+    { key:'loss2', name:'Fast Loss', sub:'−0.5 kg/week', icon:'🔥', cal: Math.max(1200, tdee-500), color:'#ef4444' },
+    { key:'loss1', name:'Slow Loss', sub:'−0.25 kg/week', icon:'📉', cal: Math.max(1200, tdee-250), color:'#f97316' },
+    { key:'maintain', name:'Maintain', sub:'Weight stable', icon:'⚖️', cal: tdee, color:'#f59e0b' },
+    { key:'gain1', name:'Lean Bulk', sub:'+0.25 kg/week', icon:'💪', cal: tdee+250, color:'#22c55e' },
+    { key:'gain2', name:'Bulk', sub:'+0.5 kg/week', icon:'🏋️', cal: tdee+500, color:'#3b82f6' },
+  ];
+  document.getElementById('goalsTable').innerHTML = allGoals.map(row => `
+    <div class="goal-row${row.key===goal?' active-goal':''}">
+      <div class="goal-row-left">
+        <div class="goal-row-icon" style="background:${row.color}22;border:1px solid ${row.color}44;">${row.icon}</div>
+        <div><div class="goal-row-name">${row.name}</div><div class="goal-row-sub">${row.sub}</div></div>
+      </div>
+      <div class="goal-row-cal" style="color:${row.color}">${row.cal}</div>
+    </div>`).join('');
+
+  // Tips based on goal
+  const tipSets = {
+    loss: [
+      {icon:'🥗',bg:'rgba(239,68,68,.15)',h:'Protein Priority',p:'Har meal mein protein include karo — eggs, chicken, dal, paneer. Satiety badti hai aur muscle preserve rehti hai.'},
+      {icon:'💧',bg:'rgba(239,68,68,.15)',h:'Paani Piyate Raho',p:'Khane se pehle 1-2 glass paani piyo — hunger kam hota hai aur overall intake reduce hoti hai.'},
+      {icon:'🚫',bg:'rgba(239,68,68,.15)',h:'Liquid Calories Avoid',p:'Juice, cold drinks, chai mein sugar — yeh sab silently calories add karte hain. Inhe cut karo pehle.'},
+    ],
+    maintain: [
+      {icon:'⚖️',bg:'rgba(245,158,11,.15)',h:'Balance Maintain Karo',p:'Ek din zyada khao toh dusre din thoda kam — weekly average same rakho. Daily strict hona zaruri nahi.'},
+      {icon:'🏃',bg:'rgba(245,158,11,.15)',h:'Activity Consistent Rakho',p:'Agar exercise band ho toh calorie intake bhi thoda kam karo warna gradual weight gain hoga.'},
+      {icon:'📅',bg:'rgba(245,158,11,.15)',h:'Weekly Check-In',p:'Har hafte weight check karo same time pe — morning, khali pet. 1-2 kg fluctuation normal hai.'},
+    ],
+    gain: [
+      {icon:'🍚',bg:'rgba(34,197,94,.15)',h:'Complex Carbs Khao',p:'Brown rice, oats, sweet potato — slow digesting carbs energy dete hain aur muscle glycogen fill karte hain.'},
+      {icon:'🥤',bg:'rgba(34,197,94,.15)',h:'Post Workout Nutrition',p:'Exercise ke baad 30-60 min mein protein + carbs lo — yeh muscle recovery window hai.'},
+      {icon:'😴',bg:'rgba(34,197,94,.15)',h:'Sleep Mein Muscle Banta Hai',p:'7-9 ghante ki neend mein growth hormone release hota hai — yahi actual muscle building time hai.'},
+    ],
+  };
+  const tipKey = goal.includes('loss') ? 'loss' : goal.includes('gain') ? 'gain' : 'maintain';
+  document.getElementById('nutritionTips').innerHTML = tipSets[tipKey].map(t => `
+    <div class="tip-item">
+      <div class="tip-icon" style="background:${t.bg}">${t.icon}</div>
+      <div class="tip-text"><h4>${t.h}</h4><p>${t.p}</p></div>
+    </div>`).join('');
+
+  document.getElementById('resultCard').classList.add('show');
+  setTimeout(()=>document.getElementById('resultCard').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+</script>
+</body>
+</html>

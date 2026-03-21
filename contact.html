@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeFit – Contact Us</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--red:#e53e2f;--orange:#ff6b35;--dark:#111;--muted:#777;--green:#22c55e;}
+body{font-family:'Nunito',sans-serif;background:#0d0d0d;color:#fff;min-height:100vh;}
+
+.topbar{background:#111;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.6);border-bottom:1px solid rgba(255,255,255,.07);}
+.back-btn{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0;}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:1px;}
+
+.hero{background:linear-gradient(135deg,#1a0500,#2d0a00);padding:36px 20px 40px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(229,62,47,.25),transparent 70%);pointer-events:none;}
+.hero::after{content:'';position:absolute;bottom:-50px;left:-50px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,53,.12),transparent 70%);pointer-events:none;}
+.hero-badge{font-size:.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:rgba(229,62,47,.15);color:#ff6b35;border:1px solid rgba(229,62,47,.3);display:inline-block;padding:4px 14px;border-radius:20px;margin-bottom:12px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,8vw,4rem);line-height:.95;letter-spacing:2px;margin-bottom:8px;}
+.hero-title span{color:#ff6b35;}
+.hero-desc{font-size:.85rem;font-weight:600;color:rgba(255,255,255,.4);max-width:300px;margin:0 auto;line-height:1.65;}
+
+.page{padding:22px 16px 80px;max-width:600px;margin:0 auto;}
+
+/* QUICK CONTACT CARDS */
+.quick-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.quick-card{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px 16px;text-align:center;text-decoration:none;transition:all .25s;display:block;}
+.quick-card:hover{transform:translateY(-4px);border-color:rgba(255,107,53,.3);background:rgba(255,107,53,.05);}
+.qc-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto 10px;}
+.qc-title{font-weight:900;font-size:.88rem;color:#fff;margin-bottom:3px;}
+.qc-sub{font-size:.68rem;font-weight:700;color:rgba(255,255,255,.3);line-height:1.4;}
+.qc-link{font-size:.7rem;font-weight:800;color:#ff6b35;margin-top:6px;display:block;word-break:break-all;}
+
+/* FORM CARD */
+.form-card{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:22px;overflow:hidden;margin-bottom:20px;}
+.form-header{background:linear-gradient(135deg,#1a0500,#2d0a00);padding:16px 20px;}
+.form-header-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px;color:#fff;}
+.form-header-sub{font-size:.7rem;font-weight:600;color:rgba(255,255,255,.4);margin-top:2px;}
+.form-body{padding:20px;}
+
+.field-group{margin-bottom:14px;}
+.field-label{font-size:.72rem;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px;display:block;}
+.inp{width:100%;padding:13px 16px;border-radius:13px;border:2px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;color:#fff;transition:border-color .2s;-webkit-appearance:none;}
+.inp:focus{outline:none;border-color:var(--orange);}
+.inp::placeholder{color:rgba(255,255,255,.2);font-weight:600;}
+textarea.inp{resize:vertical;min-height:110px;line-height:1.6;}
+
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.topic-btn{padding:10px 12px;border-radius:12px;border:2px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:rgba(255,255,255,.4);font-weight:800;font-size:.75rem;cursor:pointer;transition:all .2s;text-align:center;}
+.topic-btn.active{border-color:var(--orange);background:rgba(255,107,53,.1);color:#fff;}
+.topic-btn:hover{border-color:rgba(255,107,53,.3);}
+
+.send-btn{width:100%;padding:15px;border-radius:14px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--red),var(--orange));color:#fff;font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:1.5px;box-shadow:0 8px 28px rgba(229,62,47,.4);transition:all .25s;margin-top:4px;}
+.send-btn:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(229,62,47,.5);}
+
+/* SUCCESS STATE */
+.success-banner{display:none;background:linear-gradient(135deg,#16a34a,#15803d);border-radius:18px;padding:24px;text-align:center;margin-bottom:20px;}
+.success-banner.show{display:block;animation:fadeUp .4s ease;}
+.success-icon{font-size:3rem;margin-bottom:8px;}
+.success-banner h3{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:1px;margin-bottom:6px;}
+.success-banner p{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.75);line-height:1.6;}
+
+/* FAQ */
+.faq-card{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:20px;overflow:hidden;margin-bottom:20px;}
+.faq-header-main{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.07);}
+.faq-header-main-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.8px;color:rgba(255,255,255,.7);}
+.faq-item{border-bottom:1px solid rgba(255,255,255,.05);}
+.faq-item:last-child{border-bottom:none;}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;cursor:pointer;transition:background .2s;}
+.faq-q:hover{background:rgba(255,255,255,.03);}
+.faq-q-text{font-size:.82rem;font-weight:800;color:rgba(255,255,255,.7);flex:1;padding-right:12px;}
+.faq-arrow{color:#ff6b35;font-size:.9rem;transition:transform .3s;flex-shrink:0;}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .3s;}
+.faq-item.open .faq-a{max-height:200px;padding:0 20px 14px;}
+.faq-a p{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.4);line-height:1.7;}
+
+/* INFO ROW */
+.info-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;}
+.info-box{background:#161616;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:14px 12px;text-align:center;}
+.info-box-icon{font-size:1.4rem;margin-bottom:6px;}
+.info-box-title{font-size:.72rem;font-weight:900;color:#fff;margin-bottom:3px;}
+.info-box-sub{font-size:.62rem;font-weight:700;color:rgba(255,255,255,.3);line-height:1.4;}
+
+footer{text-align:center;padding:24px;font-size:.72rem;color:rgba(255,255,255,.2);border-top:1px solid rgba(255,255,255,.06);}
+footer a{color:rgba(255,255,255,.35);text-decoration:none;margin:0 8px;}
+footer a:hover{color:#ff6b35;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="index.html">&#8592;</a>
+  <div class="topbar-title">📬 Contact Us</div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">📬 Get In Touch</div>
+  <div class="hero-title">CONTACT<br><span>US</span></div>
+  <div class="hero-desc">Koi sawaal, feedback ya suggestion hai? Hum sunne ke liye hamesha available hain.</div>
+</div>
+
+<div class="page">
+
+  <!-- QUICK CONTACT -->
+  <div class="quick-cards">
+    <a class="quick-card" href="mailto:mishrarohit4179@gmail.com">
+      <div class="qc-icon" style="background:rgba(229,62,47,.15);border:1px solid rgba(229,62,47,.2);">📧</div>
+      <div class="qc-title">Email Karen</div>
+      <div class="qc-sub">Direct email bhejo — 24-48 hours mein reply</div>
+      <span class="qc-link">mishrarohit4179@gmail.com</span>
+    </a>
+    <a class="quick-card" href="https://instagram.com" target="_blank">
+      <div class="qc-icon" style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.2);">📸</div>
+      <div class="qc-title">Instagram</div>
+      <div class="qc-sub">DM karo ya story mein tag karo</div>
+      <span class="qc-link">@homefit</span>
+    </a>
+  </div>
+
+  <!-- INFO ROW -->
+  <div class="info-row">
+    <div class="info-box">
+      <div class="info-box-icon">⏱️</div>
+      <div class="info-box-title">Response Time</div>
+      <div class="info-box-sub">24-48 ghante mein reply</div>
+    </div>
+    <div class="info-box">
+      <div class="info-box-icon">🌍</div>
+      <div class="info-box-title">Language</div>
+      <div class="info-box-sub">Hindi ya English — dono chalega</div>
+    </div>
+    <div class="info-box">
+      <div class="info-box-icon">💬</div>
+      <div class="info-box-title">Har Topic</div>
+      <div class="info-box-sub">Workout, bugs, feedback sab</div>
+    </div>
+  </div>
+
+  <!-- SUCCESS BANNER -->
+  <div class="success-banner" id="successBanner">
+    <div class="success-icon">✅</div>
+    <h3>Message Bhej Diya!</h3>
+    <p>Shukriya! Tumhara message hum tak pahunch gaya.<br>Hum jald hi <strong>mishrarohit4179@gmail.com</strong> par reply karenge.</p>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-card" id="formCard">
+    <div class="form-header">
+      <div class="form-header-title">✍️ Message Bhejo</div>
+      <div class="form-header-sub">Form bharo — hum seedha email se respond karenge</div>
+    </div>
+    <div class="form-body">
+
+      <div class="field-group">
+        <label class="field-label">👤 Tumhara Naam</label>
+        <input class="inp" id="inpName" type="text" placeholder="e.g. Rohit Mishra">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">📧 Email Address</label>
+        <input class="inp" id="inpEmail" type="email" placeholder="e.g. rohit@gmail.com">
+      </div>
+
+      <label class="field-label" style="margin-bottom:8px;display:block;">🏷️ Topic Select Karo</label>
+      <div class="topic-grid" id="topicGrid">
+        <button class="topic-btn active" onclick="setTopic(this)">💪 Workout Help</button>
+        <button class="topic-btn" onclick="setTopic(this)">🐛 Bug Report</button>
+        <button class="topic-btn" onclick="setTopic(this)">💡 Suggestion</button>
+        <button class="topic-btn" onclick="setTopic(this)">❓ General Query</button>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">💬 Tumhara Message</label>
+        <textarea class="inp" id="inpMsg" placeholder="Apna sawaal ya feedback yahan likho — jitna detail mein likho utna better..."></textarea>
+      </div>
+
+      <button class="send-btn" onclick="sendMessage()">📬 Send Message</button>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-card">
+    <div class="faq-header-main">
+      <div class="faq-header-main-title">🙋 Frequently Asked Questions</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Mera challenge progress delete ho gaya — kya recover ho sakta hai?</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a"><p>Unfortunately nahi. Progress browser localStorage mein save hoti hai. Agar browser data clear hua ya incognito mode use kiya toh data permanently delete ho jaata hai. Hum recommend karte hain regular screenshots lo apna progress ka.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">BMI Calculator ka result doctor ke result se alag kyun hai?</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a"><p>BMI ek general estimate hai — doctors additional factors consider karte hain jaise body fat percentage, muscle mass, bone density. Calculator ek guide hai, medical advice nahi. Koi bhi health concern ke liye doctor se zaroor milein.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Kya HomeFit free hai? Koi hidden charges hain?</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a"><p>Bilkul free hai! Saare challenges, calculators, timers — sab kuch completely free hain. Koi registration, subscription ya hidden charges nahi hain. Hum ads bhi nahi dikhate.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Naya challenge ya feature request kaise karein?</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a"><p>Upar diye gaye form mein "Suggestion" topic select karo aur apna idea detail mein likho. Hum saari suggestions seriously lete hain aur popular requests future updates mein add karte hain.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Kya beginners ke liye yeh workouts safe hain?</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a"><p>Hamare challenges beginner-friendly hain aur Day 1 se gradually build hote hain. Lekin agar koi injury, chronic condition ya health issue hai toh pehle doctor se consult karein. Apna pace khud set karo — rest lena bhi progress hai.</p></div>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  © 2026 HomeFit · All rights reserved
+  <br style="margin-bottom:8px;">
+  <a href="index.html">Home</a>
+  <a href="privacy-policy.html">Privacy Policy</a>
+  <a href="terms-and-conditions.html">Terms & Conditions</a>
+  <a href="contact.html">Contact</a>
+</footer>
+
+<script>
+let selectedTopic = 'Workout Help';
+
+function setTopic(btn) {
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedTopic = btn.textContent.trim();
+}
+
+function sendMessage() {
+  const name = document.getElementById('inpName').value.trim();
+  const email = document.getElementById('inpEmail').value.trim();
+  const msg = document.getElementById('inpMsg').value.trim();
+
+  if (!name) { showErr('⚠️ Naam likho!'); return; }
+  if (!email || !email.includes('@')) { showErr('⚠️ Valid email likho!'); return; }
+  if (!msg || msg.length < 10) { showErr('⚠️ Thoda zyada detail mein likho!'); return; }
+
+  // Build mailto link
+  const subject = encodeURIComponent(`HomeFit Contact: ${selectedTopic} — ${name}`);
+  const body = encodeURIComponent(
+    `Naam: ${name}\nEmail: ${email}\nTopic: ${selectedTopic}\n\nMessage:\n${msg}\n\n---\nSent from HomeFit Contact Page`
+  );
+  const mailtoLink = `mailto:mishrarohit4179@gmail.com?subject=${subject}&body=${body}`;
+
+  window.location.href = mailtoLink;
+
+  // Show success
+  document.getElementById('formCard').style.display = 'none';
+  document.getElementById('successBanner').classList.add('show');
+  document.getElementById('successBanner').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function showErr(msg) {
+  let t = document.getElementById('errToast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'errToast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#ef4444;color:#fff;padding:12px 24px;border-radius:30px;font-weight:800;font-size:.82rem;z-index:999;box-shadow:0 8px 30px rgba(0,0,0,.4);white-space:nowrap;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 3000);
+}
+
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>

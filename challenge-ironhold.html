@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeFit – Iron Hold Challenge</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--color:#ff6b35;--dark:#1a1a1a;--light:#f0f0f0;--muted:#777;--green:#22c55e;}
+body{font-family:'Nunito',sans-serif;background:var(--light);color:var(--dark);}
+.topbar{background:#111;color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.4);}
+.back-btn{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:background .2s;flex-shrink:0;}
+.back-btn:hover{background:rgba(255,255,255,.2);}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:1px;}
+.topbar-done{margin-left:auto;font-size:.75rem;font-weight:800;color:var(--color);}
+.hero{background:#111;padding:26px 20px 30px;text-align:center;color:#fff;}
+.hero-tag{font-size:.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:var(--color);display:inline-block;padding:4px 14px;border-radius:20px;margin-bottom:10px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,8vw,4rem);line-height:.95;letter-spacing:2px;margin-bottom:8px;}
+.hero-desc{font-size:.86rem;font-weight:600;color:rgba(255,255,255,.55);max-width:340px;margin:0 auto;line-height:1.5;}
+.page{padding:18px 14px 60px;max-width:700px;margin:0 auto;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.5px;margin-bottom:12px;}
+
+/* PROGRESS */
+.prog-card{background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;align-items:center;gap:14px;}
+.prog-circle{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.prog-inner{width:42px;height:42px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;}
+.prog-info{flex:1;}
+.prog-info h3{font-size:1rem;font-weight:900;margin-bottom:2px;}
+.prog-info p{font-size:.78rem;color:var(--muted);}
+.prog-count{text-align:right;}
+.prog-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--color);line-height:1;}
+.prog-lbl{font-size:.62rem;font-weight:800;color:var(--muted);text-transform:uppercase;}
+
+/* DAY GRID */
+.day-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:18px;}
+.day-cell{background:#fff;border-radius:12px;border:2px solid #e8e8e8;padding:7px 3px 9px;text-align:center;cursor:pointer;min-height:74px;display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;transition:all .2s;}
+.day-cell:hover{border-color:var(--color);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.1);}
+.day-cell.done{border-color:var(--green);background:rgba(34,197,94,.05);}
+.day-cell.today{border-color:var(--color);background:rgba(255,107,53,.04);}
+.day-cell.rest{background:#fafafa;cursor:pointer;}
+.day-num{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;line-height:1;}
+.day-label{font-size:.52rem;font-weight:800;text-transform:uppercase;line-height:1.2;padding:0 2px;}
+.day-time{font-size:.5rem;font-weight:700;color:var(--muted);}
+.day-check{position:absolute;top:3px;right:5px;font-size:.58rem;color:var(--green);font-weight:900;}
+
+/* TRACKER BOXES */
+.tracker-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:20px;}
+.tracker-box{background:#fff;border-radius:8px;border:2px solid #e0e0e0;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#999;cursor:pointer;transition:all .2s;}
+.tracker-box:hover{border-color:var(--color);color:var(--color);}
+.tracker-box.done{background:var(--color);border-color:var(--color);color:#fff;}
+.tracker-box.today{border-color:var(--dark);color:var(--dark);}
+
+/* TIMER */
+.timer-card{background:#111;border-radius:20px;padding:24px 20px;margin-bottom:16px;text-align:center;color:#fff;}
+.timer-title{font-size:.72rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:16px;}
+.timer-ring-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;}
+.timer-svg{transform:rotate(-90deg);}
+.timer-center{position:absolute;display:flex;flex-direction:column;align-items:center;}
+.timer-big{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;letter-spacing:3px;line-height:1;color:#fff;}
+.timer-sub{font-size:.65rem;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.timer-btns{display:flex;gap:12px;justify-content:center;}
+.tbtn{padding:12px 28px;border-radius:12px;border:none;cursor:pointer;font-weight:800;font-size:.88rem;text-transform:uppercase;transition:all .2s;}
+.tbtn.start{background:var(--color);color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.3);}
+.tbtn.start:hover{transform:translateY(-2px);}
+.tbtn.reset{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.15);}
+
+/* DAY MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(5px);z-index:2000;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.modal-bg.open{opacity:1;pointer-events:all;}
+.modal{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:520px;transform:translateY(100%);transition:transform .38s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+.modal-bg.open .modal{transform:translateY(0);}
+.modal-handle{width:40px;height:4px;background:#ddd;border-radius:2px;margin:12px auto 0;}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 12px;border-bottom:1px solid #f0f0f0;}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:1px;}
+.modal-close{width:32px;height:32px;border-radius:8px;background:#f2f2f2;border:none;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.modal-body{padding:18px 20px;}
+.modal-ex-box{background:#f8f8f8;border-radius:14px;padding:20px;text-align:center;margin-bottom:14px;border:2px solid #ebebeb;}
+.modal-icon{font-size:3rem;margin-bottom:8px;}
+.modal-ex-name{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:1px;margin-bottom:4px;}
+.modal-ex-time{font-family:'Bebas Neue',sans-serif;font-size:3rem;line-height:1;margin-bottom:4px;color:var(--color);}
+.modal-ex-lbl{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.tips-title{font-size:.78rem;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+.tip{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;font-size:.8rem;color:#444;line-height:1.4;}
+.tip-dot{width:6px;height:6px;border-radius:50%;background:var(--color);flex-shrink:0;margin-top:5px;}
+.done-btn{width:100%;padding:15px;border-radius:13px;border:none;cursor:pointer;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-weight:800;font-size:.9rem;letter-spacing:1px;text-transform:uppercase;box-shadow:0 6px 20px rgba(34,197,94,.3);transition:all .2s;margin-top:14px;}
+.done-btn:hover{transform:translateY(-2px);}
+.done-btn.already{background:#6b7280;box-shadow:none;cursor:default;}
+.done-btn.already:hover{transform:none;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="challenges.html">&#8592;</a>
+  <div class="topbar-title">🔥 Iron Hold Challenge</div>
+  <div class="topbar-done" id="topDone">0 / 30 Done</div>
+</div>
+
+<div class="hero">
+  <div class="hero-tag">Isometric · Full Body · 30 Days</div>
+  <div class="hero-title">🔥 Iron Hold Challenge</div>
+  <div class="hero-desc">Alternate Squat Hold and Plank Hold every day — 60 seconds each. 15 of each in 30 days.</div>
+</div>
+
+<div class="page">
+
+  <!-- Progress -->
+  <div class="prog-card">
+    <div class="prog-circle" id="progCircle">
+      <div class="prog-inner" id="progPct">0%</div>
+    </div>
+    <div class="prog-info">
+      <h3>Your Progress</h3>
+      <p>Keep going — every day counts!</p>
+    </div>
+    <div class="prog-count">
+      <div class="prog-num" id="progNum">0</div>
+      <div class="prog-lbl">of 30 days</div>
+    </div>
+  </div>
+
+  <!-- 30-Day Grid -->
+  <div class="sec-title">30-Day Schedule</div>
+  <div class="day-grid" id="dayGrid"></div>
+
+  <!-- Tracker -->
+  <div class="sec-title">Progress Tracker</div>
+  <div class="tracker-grid" id="trackerGrid"></div>
+
+  <!-- Timer -->
+  <div class="sec-title">Timer</div>
+  <div class="timer-card">
+    <div class="timer-title" id="timerTitle">Today's Exercise</div>
+    <div class="timer-ring-wrap">
+      <svg class="timer-svg" width="160" height="160" viewBox="0 0 160 160">
+        <circle fill="none" stroke="rgba(255,255,255,.1)" stroke-width="6" cx="80" cy="80" r="68"/>
+        <circle id="timerArc" fill="none" stroke="#ff6b35" stroke-width="6" stroke-linecap="round" cx="80" cy="80" r="68" stroke-dasharray="427.3" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-center">
+        <div id="timerDisplay" class="timer-big">01:00</div>
+        <div id="timerSub" class="timer-sub">HOLD</div>
+      </div>
+    </div>
+    <div class="timer-btns">
+      <button id="timerStartBtn" class="tbtn start" onclick="toggleTimer()">▶ Start</button>
+      <button class="tbtn reset" onclick="resetTimer()">↺ Reset</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- DAY MODAL -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div id="modalTitle" class="modal-title">Day 1</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-ex-box">
+        <div id="modalIcon" class="modal-icon">💪</div>
+        <div id="modalName" class="modal-ex-name"></div>
+        <div id="modalTime" class="modal-ex-time"></div>
+        <div class="modal-ex-lbl">TARGET</div>
+      </div>
+      <div class="tips-title">Form Tips</div>
+      <div id="modalTips"></div>
+      <button id="doneBtn" class="done-btn" onclick="markDone()">✓ Mark Day as Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORE = 'hf_ironhold';
+const COLOR = '#ff6b35';
+const CIRC = 427.3;
+
+const DAYS = Array.from({length:30},(_,i)=>{const d=i+1,sq=d%2!==0;return{label:sq?'Squat Hold':'Plank Hold',icon:sq?'🦵':'💪',time:'60s',color:sq?'#ff6b35':'#3b82f6',isRest:false,tips:sq?['Feet shoulder-width, toes out','Thighs parallel to floor','Back straight, chest up','Press knees outward','Breathe steadily']:['Wrists under shoulders','Straight line head to heels','Core and glutes tight','Hips level — no sagging','Look down, neck neutral']};});
+
+let doneDays = new Set();
+try { doneDays = new Set(JSON.parse(localStorage.getItem(STORE)||'[]')); } catch(e){}
+let openDay=null, timerRunning=false, timerInterval=null, timerSecs=60, timerTotal=60;
+
+function render(){
+  renderGrid(); renderTracker(); renderProgress();
+  const today = new Date().getDate();
+  const d = DAYS[Math.min(today,30)-1];
+  if(d && !d.isRest){ timerTotal = parseSecs(d.time)||60; timerSecs=timerTotal; updateTimer(); document.getElementById('timerSub').textContent=d.label.toUpperCase(); }
+}
+
+function parseSecs(str){ const m=str.match(/(\d+)s/); return m?parseInt(m[1]):0; }
+
+function renderGrid(){
+  const today=new Date().getDate();
+  document.getElementById('dayGrid').innerHTML = DAYS.map((d,i)=>{
+    const n=i+1, done=doneDays.has(n), isToday=n===today;
+    const bc=done?'var(--green)':isToday?COLOR:'#e8e8e8';
+    const bg=done?'rgba(34,197,94,.05)':isToday?'rgba(255,255,255,.7)':'#fff';
+    const nc=done?'var(--green)':isToday?COLOR:'var(--dark)';
+    return `<div onclick="openDayModal(${n})" class="day-cell${done?' done':''}${isToday?' today':''}${d.isRest?' rest':''}" style="border-color:${bc};background:${bg}">
+      <div class="day-num" style="color:${nc}">${n}</div>
+      <div class="day-label" style="color:${d.color}">${d.label.split('+')[0].substring(0,8).trim()}</div>
+      <div class="day-time">${d.isRest?'😴':d.time.split('+')[0].trim()}</div>
+      ${done?'<div class="day-check">✓</div>':''}
+    </div>`;
+  }).join('');
+}
+
+function renderTracker(){
+  const today=new Date().getDate();
+  document.getElementById('trackerGrid').innerHTML = DAYS.map((_,i)=>{
+    const n=i+1, done=doneDays.has(n), isToday=n===today&&!done;
+    const bg=done?COLOR:'#fff', bc=done?COLOR:isToday?'#111':'#e0e0e0', fc=done?'#fff':isToday?'#111':'#999';
+    return `<div onclick="openDayModal(${n})" class="tracker-box${done?' done':''}${isToday?' today':''}" style="background:${bg};border-color:${bc};color:${fc}">${n}</div>`;
+  }).join('');
+}
+
+function renderProgress(){
+  const count=doneDays.size, pct=Math.round(count/30*100);
+  document.getElementById('progNum').textContent=count;
+  document.getElementById('progPct').textContent=pct+'%';
+  document.getElementById('topDone').textContent=count+' / 30 Done';
+  document.getElementById('progCircle').style.background=`conic-gradient(${COLOR} ${pct}%,#e8e8e8 ${pct}%)`;
+}
+
+function openDayModal(n){
+  openDay=n;
+  const d=DAYS[n-1], done=doneDays.has(n);
+  document.getElementById('modalTitle').textContent='Day '+n;
+  document.getElementById('modalIcon').textContent=d.icon;
+  document.getElementById('modalName').textContent=d.label;
+  document.getElementById('modalTime').textContent=d.time;
+  document.getElementById('modalTime').style.color=d.color;
+  document.getElementById('modalTips').innerHTML=d.tips.map(t=>`<div class="tip"><div class="tip-dot" style="background:${COLOR}"></div>${t}</div>`).join('');
+  const btn=document.getElementById('doneBtn');
+  if(d.isRest){btn.style.display='none';}
+  else{btn.style.display='block';btn.textContent=done?'✅ Day Completed!':'✓ Mark Day as Done';btn.className='done-btn'+(done?' already':'');}
+  document.getElementById('modalBg').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('modalBg').classList.remove('open');document.body.style.overflow='';openDay=null;}
+function markDone(){
+  if(!openDay||doneDays.has(openDay))return;
+  doneDays.add(openDay);
+  try{localStorage.setItem(STORE,JSON.stringify([...doneDays]));}catch(e){}
+  render(); closeModal();
+}
+
+function toggleTimer(){
+  if(timerRunning){clearInterval(timerInterval);timerRunning=false;document.getElementById('timerStartBtn').textContent='▶ Resume';}
+  else{if(timerSecs<=0){resetTimer();return;}timerRunning=true;document.getElementById('timerStartBtn').textContent='⏸ Pause';
+    timerInterval=setInterval(()=>{timerSecs--;updateTimer();if(timerSecs<=0){clearInterval(timerInterval);timerRunning=false;document.getElementById('timerStartBtn').textContent='▶ Start';document.getElementById('timerSub').textContent='✅ DONE!';}},1000);}
+}
+function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerSecs=timerTotal;document.getElementById('timerStartBtn').textContent='▶ Start';updateTimer();}
+function updateTimer(){
+  document.getElementById('timerDisplay').textContent=Math.floor(timerSecs/60).toString().padStart(2,'0')+':'+((timerSecs%60).toString().padStart(2,'0'));
+  document.getElementById('timerArc').style.strokeDashoffset=CIRC*(1-timerSecs/(timerTotal||60));
+}
+
+render();
+updateTimer();
+</script>
+</body>
+</html>

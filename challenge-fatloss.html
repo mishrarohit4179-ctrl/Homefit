@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeFit – Fat Loss 30-Day Challenge</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --red:#e53e2f; --orange:#ff6b35;
+  --dark:#111; --light:#f2f2f2; --muted:#777;
+  --green:#22c55e; --card:#fff;
+}
+body{font-family:'Nunito',sans-serif;background:var(--light);color:var(--dark);min-height:100vh;}
+
+/* ── TOPBAR ── */
+.topbar{background:#111;color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.5);}
+.back-btn{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0;}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:1px;}
+.topbar-day{margin-left:auto;font-size:.75rem;font-weight:800;color:var(--orange);}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,#1a0a00,#3d1500);padding:28px 20px 32px;text-align:center;color:#fff;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:var(--orange);opacity:.15;filter:blur(40px);}
+.hero-badge{font-size:.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:var(--orange);color:#fff;display:inline-block;padding:4px 14px;border-radius:20px;margin-bottom:10px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,8vw,4rem);line-height:.95;letter-spacing:2px;margin-bottom:6px;}
+.hero-title span{color:var(--orange);}
+.hero-desc{font-size:.84rem;font-weight:600;color:rgba(255,255,255,.55);max-width:320px;margin:0 auto 16px;line-height:1.55;}
+.hero-stats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.h-stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.75);font-size:.7rem;font-weight:800;padding:5px 13px;border-radius:20px;}
+
+/* ── BODY ── */
+.page{padding:18px 14px 80px;max-width:680px;margin:0 auto;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.5px;margin-bottom:12px;color:var(--dark);}
+
+/* ── PROGRESS CARD ── */
+.prog-card{background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;align-items:center;gap:14px;}
+.prog-ring{width:56px;height:56px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.prog-ring-inner{width:42px;height:42px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:.9rem;color:var(--dark);}
+.prog-text{flex:1;} .prog-text h3{font-size:1rem;font-weight:900;margin-bottom:2px;} .prog-text p{font-size:.76rem;color:var(--muted);}
+.prog-right{text-align:right;} .prog-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--orange);line-height:1;} .prog-lbl{font-size:.6rem;font-weight:800;color:var(--muted);text-transform:uppercase;}
+
+/* ── TODAY'S WORKOUT CARD ── */
+.today-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1);margin-bottom:18px;}
+.today-header{background:linear-gradient(135deg,#1a0a00,#3d1500);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;}
+.today-label{font-size:.7rem;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;}
+.today-day{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#fff;letter-spacing:1px;}
+.today-count{background:var(--orange);color:#fff;font-size:.72rem;font-weight:800;padding:4px 12px;border-radius:20px;}
+
+/* ── PLAYLIST AREA ── */
+.playlist{padding:16px 18px 20px;}
+.playlist-title{font-size:.75rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.pl-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);}
+
+/* exercise item in playlist */
+.pl-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;margin-bottom:8px;transition:all .25s;position:relative;overflow:hidden;}
+.pl-item.locked{background:#f5f5f5;border:1.5px solid #ebebeb;opacity:.5;pointer-events:none;}
+.pl-item.active{background:linear-gradient(135deg,rgba(255,107,53,.08),rgba(229,62,47,.04));border:2px solid var(--orange);box-shadow:0 4px 16px rgba(255,107,53,.15);}
+.pl-item.done{background:rgba(34,197,94,.06);border:2px solid rgba(34,197,94,.3);}
+
+.pl-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;flex-shrink:0;}
+.pl-item.locked .pl-num{background:#e8e8e8;color:#bbb;}
+.pl-item.active .pl-num{background:var(--orange);color:#fff;box-shadow:0 3px 10px rgba(255,107,53,.4);}
+.pl-item.done .pl-num{background:var(--green);color:#fff;}
+
+.pl-info{flex:1;min-width:0;}
+.pl-name{font-size:.9rem;font-weight:800;color:var(--dark);margin-bottom:2px;}
+.pl-item.locked .pl-name{color:#bbb;}
+.pl-detail{font-size:.72rem;font-weight:700;color:var(--muted);}
+.pl-item.active .pl-detail{color:var(--orange);}
+.pl-item.done .pl-detail{color:var(--green);}
+
+.pl-status{flex-shrink:0;font-size:1rem;}
+.pl-lock-icon{color:#ccc;font-size:.9rem;}
+
+/* Active exercise action */
+.active-action{background:var(--orange);color:#fff;padding:14px 20px;border-radius:14px;margin-top:4px;display:none;}
+.active-action.show{display:block;}
+.ex-details{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+.ex-chip{font-size:.68rem;font-weight:800;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,.2);color:#fff;}
+
+/* Timer inside active */
+.mini-timer{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.2);border-radius:12px;padding:10px 14px;margin-bottom:12px;}
+.mini-timer-display{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;color:#fff;line-height:1;}
+.mini-timer-label{font-size:.65rem;font-weight:800;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.5px;}
+.mini-timer-btns{margin-left:auto;display:flex;gap:6px;}
+.mt-btn{padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:800;font-size:.72rem;text-transform:uppercase;}
+.mt-btn.play{background:rgba(255,255,255,.25);color:#fff;}
+.mt-btn.rst{background:rgba(0,0,0,.2);color:rgba(255,255,255,.6);}
+
+.confirm-btn{width:100%;padding:13px;border-radius:12px;border:none;cursor:pointer;background:#fff;color:var(--orange);font-weight:900;font-size:.9rem;letter-spacing:.8px;text-transform:uppercase;box-shadow:0 4px 14px rgba(0,0,0,.2);transition:all .2s;}
+.confirm-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.25);}
+.confirm-btn:active{transform:translateY(0);}
+
+/* All done state */
+.all-done-banner{display:none;background:linear-gradient(135deg,#22c55e,#16a34a);border-radius:16px;padding:20px;text-align:center;color:#fff;margin-top:8px;margin-bottom:8px;}
+.all-done-banner.show{display:block;}
+.all-done-banner .adb-icon{font-size:2.5rem;margin-bottom:8px;}
+.all-done-banner h3{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:4px;}
+.all-done-banner p{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.8);}
+.mark-day-btn{width:100%;padding:14px;border-radius:13px;border:none;cursor:pointer;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-weight:900;font-size:.9rem;letter-spacing:1px;text-transform:uppercase;box-shadow:0 6px 20px rgba(34,197,94,.3);margin-top:8px;transition:all .2s;display:none;}
+.mark-day-btn.show{display:block;}
+.mark-day-btn:hover{transform:translateY(-2px);}
+.mark-day-btn.already{background:#6b7280;box-shadow:none;cursor:default;}
+.mark-day-btn.already:hover{transform:none;}
+
+/* ── 30-DAY GRID ── */
+.day-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:20px;}
+.day-box{background:#fff;border-radius:10px;border:2px solid #e8e8e8;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:relative;}
+.day-box:hover{border-color:var(--orange);transform:translateY(-1px);}
+.day-box.active-day{border-color:var(--orange);background:rgba(255,107,53,.05);}
+.day-box.done-day{border-color:var(--green);background:rgba(34,197,94,.06);}
+.day-box.future{opacity:.45;cursor:default;}
+.day-box .dn{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;line-height:1;color:var(--dark);}
+.day-box.active-day .dn{color:var(--orange);}
+.day-box.done-day .dn{color:var(--green);}
+.day-box .dex{font-size:.45rem;font-weight:800;color:var(--muted);text-transform:uppercase;margin-top:2px;}
+.day-box .dtick{position:absolute;top:3px;right:4px;font-size:.55rem;color:var(--green);font-weight:900;}
+.day-box .dfire{position:absolute;top:2px;right:3px;font-size:.6rem;}
+
+/* ── BACK TO CALENDAR BTN ── */
+.view-switcher{display:flex;gap:8px;margin-bottom:16px;}
+.vs-btn{flex:1;padding:10px;border-radius:12px;border:2px solid #e8e8e8;background:#fff;font-weight:800;font-size:.8rem;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:all .2s;color:#666;}
+.vs-btn.active{background:var(--dark);border-color:var(--dark);color:#fff;}
+.view{display:none;} .view.show{display:block;}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a class="back-btn" href="challenges.html">&#8592;</a>
+  <div class="topbar-title">🔥 Fat Loss 30-Day Challenge</div>
+  <div class="topbar-day" id="topInfo">Day 1</div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🔥 Fat Loss · 30 Days</div>
+  <div class="hero-title">BURN <span>FAT</span><br>DAILY</div>
+  <div class="hero-desc">Every day more exercises. Complete one, unlock the next — like a workout playlist. No equipment needed.</div>
+  <div class="hero-stats">
+    <span class="h-stat">🏠 No Equipment</span>
+    <span class="h-stat">📈 Increases Daily</span>
+    <span class="h-stat">🎵 Playlist Style</span>
+    <span class="h-stat">📅 30 Days</span>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- Progress -->
+  <div class="prog-card">
+    <div class="prog-ring" id="progRing">
+      <div class="prog-ring-inner" id="progPct">0%</div>
+    </div>
+    <div class="prog-text">
+      <h3>Your Progress</h3>
+      <p id="progMsg">Start your first workout today!</p>
+    </div>
+    <div class="prog-right">
+      <div class="prog-num" id="progNum">0</div>
+      <div class="prog-lbl">of 30 days</div>
+    </div>
+  </div>
+
+  <!-- View Switch -->
+  <div class="view-switcher">
+    <button class="vs-btn active" id="btnToday" onclick="switchView('today')">🔥 Today's Workout</button>
+    <button class="vs-btn" id="btnCalendar" onclick="switchView('calendar')">📅 30-Day Calendar</button>
+  </div>
+
+  <!-- TODAY VIEW -->
+  <div class="view show" id="viewToday">
+    <div class="today-card">
+      <div class="today-header">
+        <div>
+          <div class="today-label">Day <span id="todayDayNum">1</span> of 30</div>
+          <div class="today-day" id="todayTitle">Today's Workout</div>
+        </div>
+        <div class="today-count" id="todayExCount">1 exercise</div>
+      </div>
+      <div class="playlist">
+        <div class="playlist-title"><div class="pl-dot"></div>Exercise Playlist</div>
+        <div id="playlistItems"></div>
+        <div class="all-done-banner" id="allDoneBanner">
+          <div class="adb-icon">🎉</div>
+          <h3>Workout Complete!</h3>
+          <p>You crushed Day <span id="allDoneDay">1</span>! Mark it done and come back stronger tomorrow.</p>
+        </div>
+        <button class="mark-day-btn" id="markDayBtn" onclick="markDayDone()">✓ Mark Day as Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALENDAR VIEW -->
+  <div class="view" id="viewCalendar">
+    <div class="sec-title">30-Day Progress</div>
+    <div class="day-grid" id="dayGrid"></div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════
+// ALL 30 DAYS DATA
+// Day N has N exercises (progressive)
+// Exercises rotate from fat-loss pool
+// ══════════════════════════════════════
+
+const exercisePool = [
+  // Day 1-10: Basic Cardio
+  { name:'Jumping Jacks',     sets:'3 sets', reps:'20 reps', rest:'15s', timer:30, icon:'⭐', desc:'Full body warm-up, raises heart rate fast.' },
+  { name:'High Knees',        sets:'3 sets', reps:'20 reps', rest:'15s', timer:30, icon:'🦵', desc:'Cardio drill that burns calories fast.' },
+  { name:'Burpees',           sets:'2 sets', reps:'8 reps',  rest:'30s', timer:40, icon:'💥', desc:'Total body fat burner — most effective cardio.' },
+  { name:'Mountain Climbers', sets:'3 sets', reps:'20 reps', rest:'20s', timer:35, icon:'🏔️', desc:'Core + cardio combo for fat loss.' },
+  { name:'Jump Squats',       sets:'3 sets', reps:'12 reps', rest:'20s', timer:30, icon:'⬆️', desc:'Explosive lower body power and calorie burn.' },
+  { name:'Push-Ups',          sets:'3 sets', reps:'10 reps', rest:'25s', timer:35, icon:'💪', desc:'Upper body strength while burning fat.' },
+  { name:'Lateral Shuffles',  sets:'3 sets', reps:'20s',     rest:'15s', timer:20, icon:'↔️', desc:'Agility drill to get heart rate up.' },
+  { name:'Plank Hold',        sets:'2 sets', reps:'30s',     rest:'20s', timer:30, icon:'🧱', desc:'Core stability and endurance builder.' },
+  { name:'Squat Pulses',      sets:'3 sets', reps:'20 reps', rest:'20s', timer:30, icon:'🔁', desc:'Sustained tension on legs for fat burn.' },
+  { name:'Butt Kicks',        sets:'3 sets', reps:'30 reps', rest:'15s', timer:25, icon:'🦶', desc:'Cardio drill that activates hamstrings.' },
+  // Day 11-20: Intermediate Moves
+  { name:'Inchworm Walk',     sets:'2 sets', reps:'8 reps',  rest:'20s', timer:35, icon:'🐛', desc:'Full body mobility and core activation.' },
+  { name:'Box Step-Ups',      sets:'3 sets', reps:'12 each', rest:'20s', timer:30, icon:'📦', desc:'Leg strength and cardio combined.' },
+  { name:'Reverse Lunges',    sets:'3 sets', reps:'10 each', rest:'20s', timer:30, icon:'🔄', desc:'Balance and lower body fat loss.' },
+  { name:'Superman Hold',     sets:'3 sets', reps:'12 reps', rest:'20s', timer:30, icon:'🦸', desc:'Lower back strength and glute activation.' },
+  { name:'Speed Skaters',     sets:'3 sets', reps:'16 reps', rest:'15s', timer:25, icon:'⛸️', desc:'Lateral cardio movement for calorie burn.' },
+  { name:'Tricep Dips',       sets:'3 sets', reps:'12 reps', rest:'25s', timer:30, icon:'💺', desc:'Arm strength and upper body toning.' },
+  { name:'Glute Bridges',     sets:'3 sets', reps:'15 reps', rest:'20s', timer:30, icon:'🍑', desc:'Glute activation and hip strength.' },
+  { name:'Bicycle Crunches',  sets:'3 sets', reps:'20 reps', rest:'20s', timer:30, icon:'🚴', desc:'Core and oblique fat burner.' },
+  { name:'Standing Oblique Crunches', sets:'3 sets', reps:'15 each', rest:'15s', timer:25, icon:'🌀', desc:'Side waist trimmer and core stabilizer.' },
+  { name:'Squat to Kick',     sets:'3 sets', reps:'12 each', rest:'20s', timer:30, icon:'🥋', desc:'Squat + kick combo for leg and cardio burn.' },
+  // Day 21-30: Advanced Fat Burn
+  { name:'Explosive Push-Ups',sets:'3 sets', reps:'8 reps',  rest:'30s', timer:35, icon:'🚀', desc:'Plyometric push-up for upper body power.' },
+  { name:'Tuck Jumps',        sets:'3 sets', reps:'10 reps', rest:'30s', timer:35, icon:'🏋️', desc:'Explosive jump — maximum calorie burn.' },
+  { name:'Bear Crawl',        sets:'3 sets', reps:'10 steps',rest:'25s', timer:30, icon:'🐻', desc:'Full body crawl for core and shoulder strength.' },
+  { name:'Side Plank',        sets:'2 sets', reps:'30s each',rest:'20s', timer:30, icon:'📐', desc:'Oblique and core side stability.' },
+  { name:'Wall Sit',          sets:'3 sets', reps:'40s hold',rest:'25s', timer:40, icon:'🧱', desc:'Leg endurance and calorie burn hold.' },
+  { name:'Decline Push-Ups',  sets:'3 sets', reps:'10 reps', rest:'25s', timer:35, icon:'📉', desc:'Upper chest and shoulder targeting push-up.' },
+  { name:'Knee-to-Elbow Plank',sets:'3 sets',reps:'12 each', rest:'20s', timer:30, icon:'📏', desc:'Dynamic plank for abs and obliques.' },
+  { name:'Lateral Lunges',    sets:'3 sets', reps:'10 each', rest:'20s', timer:30, icon:'⬅️', desc:'Inner thigh and glute targeting move.' },
+  { name:'Plank to Downdog',  sets:'3 sets', reps:'10 reps', rest:'20s', timer:30, icon:'🐕', desc:'Shoulder and core mobility flow.' },
+  { name:'Full Burpee + Tuck Jump', sets:'3 sets', reps:'6 reps', rest:'40s', timer:45, icon:'🔥', desc:'Ultimate fat burner — hardest day, strongest you!' },
+];
+
+// Day N gets first N exercises — no repeats, pool has exactly 30
+function getDayExercises(dayNum) {
+  const count = Math.min(dayNum, exercisePool.length);
+  return exercisePool.slice(0, count);
+}
+
+// ── State ──
+const STORE = 'hf_fatloss30';
+let savedData = {};
+try { savedData = JSON.parse(localStorage.getItem(STORE) || '{}'); } catch(e) {}
+
+const todayNum = new Date().getDate();
+const activeDay = Math.min(todayNum, 30);
+
+// Per-day progress: { completedExercises: Set, dayDone: bool }
+function getDayState(day) {
+  const d = savedData[day] || {};
+  return {
+    completed: new Set(d.completed || []),
+    dayDone: d.dayDone || false
+  };
+}
+function saveDayState(day, completed, dayDone) {
+  savedData[day] = { completed: [...completed], dayDone };
+  try { localStorage.setItem(STORE, JSON.stringify(savedData)); } catch(e) {}
+}
+
+// Current active exercise index in today's playlist
+let currentActiveIdx = 0;
+let timerInterval = null, timerRunning = false, timerSecs = 30, timerTotal = 30;
+let currentDay = activeDay;
+
+// ── Init ──
+function init() {
+  renderProgress();
+  renderCalendar();
+  renderTodayPlaylist(activeDay);
+}
+
+// ── Progress ──
+function renderProgress() {
+  let doneDays = 0;
+  for (let d = 1; d <= 30; d++) { if ((savedData[d] || {}).dayDone) doneDays++; }
+  const pct = Math.round(doneDays / 30 * 100);
+  document.getElementById('progNum').textContent = doneDays;
+  document.getElementById('progPct').textContent = pct + '%';
+  document.getElementById('topInfo').textContent = `Day ${activeDay} of 30`;
+  document.getElementById('progRing').style.background = `conic-gradient(var(--orange) ${pct}%, #e8e8e8 ${pct}%)`;
+  document.getElementById('progMsg').textContent = doneDays === 0 ? 'Start your first workout today!' : `${doneDays} days completed — keep going!`;
+}
+
+// ── Calendar ──
+function renderCalendar() {
+  let html = '';
+  for (let d = 1; d <= 30; d++) {
+    const state = getDayState(d);
+    const isToday = d === activeDay;
+    const isFuture = d > activeDay;
+    const exCount = Math.min(d, exercisePool.length);
+    let cls = 'day-box';
+    if (state.dayDone) cls += ' done-day';
+    else if (isToday) cls += ' active-day';
+    else if (isFuture) cls += ' future';
+    html += `<div class="${cls}" onclick="${isFuture ? '' : `openDayFromCal(${d})`}">
+      ${state.dayDone ? '<div class="dtick">✓</div>' : isToday ? '<div class="dfire">🔥</div>' : ''}
+      <div class="dn">${d}</div>
+      <div class="dex">${exCount} ex</div>
+    </div>`;
+  }
+  document.getElementById('dayGrid').innerHTML = html;
+}
+
+function openDayFromCal(day) {
+  currentDay = day;
+  switchView('today');
+  renderTodayPlaylist(day);
+}
+
+// ── TODAY PLAYLIST ──
+function renderTodayPlaylist(day) {
+  const exList = getDayExercises(day);
+  const state = getDayState(day);
+  const completed = state.completed;
+  const dayDone = state.dayDone;
+
+  document.getElementById('todayDayNum').textContent = day;
+  document.getElementById('todayTitle').textContent = `Day ${day} Workout`;
+  document.getElementById('todayExCount').textContent = `${exList.length} exercise${exList.length > 1 ? 's' : ''}`;
+  document.getElementById('allDoneDay').textContent = day;
+
+  // Find first uncompleted
+  let firstUncompleted = -1;
+  for (let i = 0; i < exList.length; i++) {
+    if (!completed.has(i)) { firstUncompleted = i; break; }
+  }
+  const allCompleted = firstUncompleted === -1;
+
+  let html = '';
+  exList.forEach((ex, i) => {
+    const isDone = completed.has(i);
+    const isActive = !dayDone && !isDone && i === firstUncompleted;
+    const isLocked = !dayDone && !isDone && i !== firstUncompleted;
+
+    let cls = 'pl-item';
+    if (isDone) cls += ' done';
+    else if (isActive) cls += ' active';
+    else if (isLocked) cls += ' locked';
+
+    const statusIcon = isDone ? '✅' : isActive ? '▶' : '🔒';
+
+    html += `<div class="${cls}" id="pl-item-${i}">
+      <div class="pl-num">${i + 1}</div>
+      <div class="pl-info">
+        <div class="pl-name">${ex.icon} ${ex.name}</div>
+        <div class="pl-detail">${isDone ? '✓ Completed' : isActive ? `${ex.sets} · ${ex.reps} · Rest ${ex.rest}` : `${ex.sets} · ${ex.reps}`}</div>
+      </div>
+      <div class="pl-status">${isLocked ? '<span class="pl-lock-icon">🔒</span>' : statusIcon}</div>
+    </div>
+    ${isActive ? `
+    <div class="active-action show" id="activeAction-${i}">
+      <div class="ex-details">
+        <span class="ex-chip">${ex.sets}</span>
+        <span class="ex-chip">${ex.reps}</span>
+        <span class="ex-chip">Rest ${ex.rest}</span>
+      </div>
+      <div class="mini-timer" id="miniTimer-${i}">
+        <div>
+          <div class="mini-timer-display" id="timerDisp-${i}">${String(Math.floor(ex.timer/60)).padStart(2,'0')}:${String(ex.timer%60).padStart(2,'0')}</div>
+          <div class="mini-timer-label">${ex.name}</div>
+        </div>
+        <div class="mini-timer-btns">
+          <button class="mt-btn play" id="timerBtn-${i}" onclick="toggleExTimer(${i},${ex.timer})">▶ Start</button>
+          <button class="mt-btn rst" onclick="resetExTimer(${i},${ex.timer})">↺</button>
+        </div>
+      </div>
+      <button class="confirm-btn" onclick="confirmExercise(${i})">✓ Done! Next Exercise →</button>
+    </div>` : ''}`;
+  });
+
+  document.getElementById('playlistItems').innerHTML = html;
+
+  // All done banner + mark day btn
+  const banner = document.getElementById('allDoneBanner');
+  const markBtn = document.getElementById('markDayBtn');
+  if (allCompleted || dayDone) {
+    banner.classList.add('show');
+    markBtn.classList.add('show');
+    markBtn.textContent = dayDone ? '✅ Day Already Marked Done!' : '✓ Mark Day as Done';
+    markBtn.className = 'mark-day-btn show' + (dayDone ? ' already' : '');
+  } else {
+    banner.classList.remove('show');
+    markBtn.classList.remove('show');
+  }
+}
+
+// ── Confirm Exercise ──
+function confirmExercise(idx) {
+  const day = currentDay;
+  const state = getDayState(day);
+  state.completed.add(idx);
+  saveDayState(day, state.completed, state.dayDone);
+  clearInterval(timerInterval); timerRunning = false;
+
+  // Small animation then re-render
+  const item = document.getElementById(`pl-item-${idx}`);
+  if (item) {
+    item.style.background = 'rgba(34,197,94,.15)';
+    item.style.borderColor = 'var(--green)';
+  }
+  setTimeout(() => {
+    renderTodayPlaylist(day);
+    renderProgress();
+    renderCalendar();
+    // Scroll to next active
+    setTimeout(() => {
+      const nextActive = document.querySelector('.pl-item.active');
+      if (nextActive) nextActive.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }, 300);
+}
+
+// ── Mark Day Done ──
+function markDayDone() {
+  const day = currentDay;
+  const state = getDayState(day);
+  if (state.dayDone) return;
+  saveDayState(day, state.completed, true);
+  renderTodayPlaylist(day);
+  renderProgress();
+  renderCalendar();
+}
+
+// ── Timer per exercise ──
+let activeTimerIdx = -1;
+function toggleExTimer(idx, totalSecs) {
+  if (activeTimerIdx !== idx) {
+    clearInterval(timerInterval); timerRunning = false;
+    timerSecs = totalSecs; timerTotal = totalSecs;
+    activeTimerIdx = idx;
+    updateExTimerDisplay(idx);
+  }
+  if (timerRunning) {
+    clearInterval(timerInterval); timerRunning = false;
+    document.getElementById(`timerBtn-${idx}`).textContent = '▶ Resume';
+  } else {
+    if (timerSecs <= 0) { resetExTimer(idx, totalSecs); return; }
+    timerRunning = true;
+    document.getElementById(`timerBtn-${idx}`).textContent = '⏸ Pause';
+    timerInterval = setInterval(() => {
+      timerSecs--;
+      updateExTimerDisplay(idx);
+      if (timerSecs <= 0) {
+        clearInterval(timerInterval); timerRunning = false;
+        const btn = document.getElementById(`timerBtn-${idx}`);
+        if (btn) btn.textContent = '✅ Done!';
+      }
+    }, 1000);
+  }
+}
+
+function resetExTimer(idx, totalSecs) {
+  clearInterval(timerInterval); timerRunning = false;
+  timerSecs = totalSecs; timerTotal = totalSecs;
+  activeTimerIdx = -1;
+  const btn = document.getElementById(`timerBtn-${idx}`);
+  if (btn) btn.textContent = '▶ Start';
+  updateExTimerDisplay(idx);
+}
+
+function updateExTimerDisplay(idx) {
+  const el = document.getElementById(`timerDisp-${idx}`);
+  if (!el) return;
+  el.textContent = String(Math.floor(timerSecs/60)).padStart(2,'0') + ':' + String(timerSecs%60).padStart(2,'0');
+}
+
+// ── View Switch ──
+function switchView(view) {
+  document.getElementById('viewToday').className = 'view' + (view==='today'?' show':'');
+  document.getElementById('viewCalendar').className = 'view' + (view==='calendar'?' show':'');
+  document.getElementById('btnToday').className = 'vs-btn' + (view==='today'?' active':'');
+  document.getElementById('btnCalendar').className = 'vs-btn' + (view==='calendar'?' active':'');
+}
+
+init();
+</script>
+</body>
+</html>

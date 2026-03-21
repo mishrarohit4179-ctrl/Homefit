@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeFit – About Us</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--red:#e53e2f;--orange:#ff6b35;--dark:#111;--green:#22c55e;--blue:#3b82f6;--purple:#8b5cf6;}
+body{font-family:'Nunito',sans-serif;background:#0d0d0d;color:#fff;min-height:100vh;}
+
+.topbar{background:#111;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.6);border-bottom:1px solid rgba(255,255,255,.07);}
+.back-btn{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0;}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:1px;}
+
+/* HERO */
+.hero{background:linear-gradient(150deg,#0d0d0d 0%,#1a0800 50%,#0d0d0d 100%);padding:48px 20px 44px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(229,62,47,.2),transparent 70%);}
+.hero::after{content:'';position:absolute;bottom:-60px;left:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,53,.1),transparent 70%);}
+.hero-logo{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,#ff6b35,#e53e2f);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 16px;box-shadow:0 12px 36px rgba(229,62,47,.45);}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,9vw,4.5rem);line-height:.9;letter-spacing:3px;margin-bottom:8px;}
+.hero-title span{color:#ff6b35;}
+.hero-tagline{font-size:.9rem;font-weight:700;color:rgba(255,255,255,.4);max-width:280px;margin:0 auto 20px;line-height:1.6;}
+.hero-stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.h-stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.65);font-size:.7rem;font-weight:800;padding:6px 14px;border-radius:20px;}
+
+.page{padding:22px 16px 80px;max-width:640px;margin:0 auto;}
+
+/* STORY SECTION */
+.story-card{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:22px 22px;margin-bottom:16px;position:relative;overflow:hidden;}
+.story-card::before{content:'"';position:absolute;top:-10px;right:16px;font-family:'Bebas Neue',sans-serif;font-size:8rem;color:rgba(255,107,53,.06);line-height:1;pointer-events:none;}
+.story-label{font-size:.68rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#ff6b35;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.story-label::after{content:'';flex:1;height:1px;background:rgba(255,107,53,.2);}
+.story-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:14px;line-height:1;}
+.story-title span{color:#ff6b35;}
+.story-text{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.45);line-height:1.8;margin-bottom:10px;}
+.story-text:last-child{margin-bottom:0;}
+
+/* MISSION */
+.mission-card{background:linear-gradient(135deg,#1a0800,#2d0e00);border:1px solid rgba(255,107,53,.15);border-radius:22px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden;}
+.mission-card::after{content:'🎯';position:absolute;bottom:-10px;right:16px;font-size:5rem;opacity:.08;}
+.mission-label{font-size:.68rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#ff6b35;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.mission-label::after{content:'';flex:1;height:1px;background:rgba(255,107,53,.2);}
+.mission-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:14px;}
+.mission-title span{color:#ff6b35;}
+.mission-text{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:10px;}
+.mission-text:last-child{margin-bottom:0;}
+
+/* VALUES */
+.values-section{margin-bottom:16px;}
+.sec-label{font-size:.68rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sec-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07);}
+.values-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.value-box{background:#161616;border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:16px 16px;transition:all .25s;}
+.value-box:hover{transform:translateY(-3px);border-color:rgba(255,107,53,.2);}
+.value-icon{font-size:1.6rem;margin-bottom:8px;}
+.value-title{font-weight:900;font-size:.88rem;color:#fff;margin-bottom:5px;}
+.value-text{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.35);line-height:1.55;}
+
+/* WHAT WE OFFER */
+.offer-card{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:22px;margin-bottom:16px;}
+.offer-label{font-size:.68rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#ff6b35;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.offer-label::after{content:'';flex:1;height:1px;background:rgba(255,107,53,.2);}
+.offer-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;margin-bottom:16px;}
+.offer-title span{color:#ff6b35;}
+.offer-list{display:flex;flex-direction:column;gap:10px;}
+.offer-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;}
+.offer-item-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.offer-item-text h4{font-size:.82rem;font-weight:900;color:#fff;margin-bottom:2px;}
+.offer-item-text p{font-size:.7rem;font-weight:600;color:rgba(255,255,255,.35);line-height:1.4;}
+
+/* PROMISE */
+.promise-card{background:linear-gradient(135deg,#0a1a0a,#0d2210);border:1px solid rgba(34,197,94,.15);border-radius:22px;padding:22px;margin-bottom:16px;}
+.promise-label{font-size:.68rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#22c55e;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.promise-label::after{content:'';flex:1;height:1px;background:rgba(34,197,94,.2);}
+.promise-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;margin-bottom:14px;}
+.promise-title span{color:#22c55e;}
+.promise-list{display:flex;flex-direction:column;gap:8px;}
+.promise-item{display:flex;align-items:flex-start;gap:10px;font-size:.8rem;font-weight:700;color:rgba(255,255,255,.5);line-height:1.5;}
+.promise-item::before{content:'✓';color:#22c55e;font-weight:900;font-size:.9rem;flex-shrink:0;margin-top:1px;}
+
+/* TEAM */
+.team-card{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:22px;margin-bottom:16px;}
+.team-label{font-size:.68rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#ff6b35;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.team-label::after{content:'';flex:1;height:1px;background:rgba(255,107,53,.2);}
+.team-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;margin-bottom:14px;}
+.team-member{display:flex;align-items:center;gap:14px;padding:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;}
+.team-avatar{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#ff6b35,#e53e2f);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;box-shadow:0 6px 20px rgba(229,62,47,.3);}
+.team-info h3{font-size:.95rem;font-weight:900;color:#fff;margin-bottom:3px;}
+.team-info p{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.4);line-height:1.5;}
+.team-info .team-role{font-size:.65rem;font-weight:800;color:#ff6b35;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;}
+.team-socials{margin-top:8px;display:flex;gap:6px;}
+.social-pill{font-size:.62rem;font-weight:800;padding:3px 10px;border-radius:10px;background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.2);color:#ff6b35;text-decoration:none;}
+
+/* CTA */
+.cta-card{background:linear-gradient(135deg,#1a0800,#2d0e00);border:1px solid rgba(255,107,53,.2);border-radius:22px;padding:26px 22px;text-align:center;margin-bottom:16px;position:relative;overflow:hidden;}
+.cta-card::before{content:'💪';position:absolute;right:-10px;bottom:-10px;font-size:6rem;opacity:.07;}
+.cta-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:1.5px;margin-bottom:8px;}
+.cta-title span{color:#ff6b35;}
+.cta-text{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.45);line-height:1.65;margin-bottom:18px;max-width:320px;margin-left:auto;margin-right:auto;}
+.cta-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.cta-btn-main{padding:13px 28px;border-radius:13px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--red),var(--orange));color:#fff;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;box-shadow:0 6px 22px rgba(229,62,47,.4);text-decoration:none;transition:all .2s;display:inline-block;}
+.cta-btn-main:hover{transform:translateY(-2px);}
+.cta-btn-sec{padding:13px 24px;border-radius:13px;border:2px solid rgba(255,255,255,.12);background:transparent;color:rgba(255,255,255,.6);font-weight:800;font-size:.82rem;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .2s;display:inline-block;}
+.cta-btn-sec:hover{border-color:rgba(255,255,255,.25);color:#fff;}
+
+footer{text-align:center;padding:24px;font-size:.72rem;color:rgba(255,255,255,.2);border-top:1px solid rgba(255,255,255,.06);}
+footer a{color:rgba(255,255,255,.35);text-decoration:none;margin:0 8px;}
+footer a:hover{color:#ff6b35;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.page>*{animation:fadeUp .5s ease both;}
+.page>*:nth-child(1){animation-delay:.05s;}
+.page>*:nth-child(2){animation-delay:.1s;}
+.page>*:nth-child(3){animation-delay:.15s;}
+.page>*:nth-child(4){animation-delay:.2s;}
+.page>*:nth-child(5){animation-delay:.25s;}
+
+@media(max-width:420px){.values-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="index.html">&#8592;</a>
+  <div class="topbar-title">💪 About Us</div>
+</div>
+
+<div class="hero">
+  <div class="hero-logo">💪</div>
+  <div class="hero-title">HOME<span>FIT</span></div>
+  <div class="hero-tagline">Ghar pe hi gym jaisi fitness — no equipment, no excuses.</div>
+  <div class="hero-stats">
+    <span class="h-stat">🏠 Home Workouts</span>
+    <span class="h-stat">📅 30-Day Challenges</span>
+    <span class="h-stat">⚡ Free Forever</span>
+    <span class="h-stat">💯 No Equipment</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- OUR STORY -->
+  <div class="story-card">
+    <div class="story-label">📖 Our Story</div>
+    <div class="story-title">Shuru Kaise <span>Hua?</span></div>
+    <p class="story-text">HomeFit ki kahani shuru hoti hai ek simple problem se — gym expensive hai, time nahi hota, aur ghar pe workout karna boring lagta hai. Hum chahte the ek aisi jagah banani jahan koi bhi, bina kisi equipment ke, apni fitness journey shuru kar sake.</p>
+    <p class="story-text">Bahut saare log fitness apps download karte hain jo ya toh paid hote hain, ya itne complicated ki shuru karne ka mann hi nahi karta. HomeFit ka idea yahi tha — ekdum simple, free aur motivating platform jo beginners se lekar intermediate tak sabke kaam aaye.</p>
+    <p class="story-text">Aaj HomeFit mein 30-Day Challenges, BMI Calculator, Calorie Tracker, HIIT Timer aur Progress Tracker hain — sab kuch completely free, koi ads nahi, koi account nahi. Sirf tum aur tumhari fitness.</p>
+  </div>
+
+  <!-- MISSION -->
+  <div class="mission-card">
+    <div class="mission-label">🎯 Our Mission</div>
+    <div class="mission-title">Hamaari <span>Soch</span></div>
+    <p class="mission-text">Hamara mission simple hai — fitness ko accessible banana. India mein aaj bhi bahut saare log gym afford nahi kar paate, ya unke sheher mein achha gym nahi hai, ya phir unke paas itna waqt nahi ki regularly gym jaayein.</p>
+    <p class="mission-text">Hum believe karte hain ki fitness sirf paison walon ka privilege nahi hona chahiye. Ek smartphone aur thodi si jagah ho toh tum apni poori body transform kar sakte ho — HomeFit yahi prove karna chahta hai.</p>
+    <p class="mission-text">Hamara goal hai ek aisa platform banana jo scientifically backed ho, practically useful ho, aur itna simple ho ki koi bhi use kar sake — chahe student ho, office worker ho, ya ghar par rehne wala koi bhi.</p>
+  </div>
+
+  <!-- VALUES -->
+  <div class="values-section">
+    <div class="sec-label">⭐ Our Values</div>
+    <div class="values-grid">
+      <div class="value-box">
+        <div class="value-icon">🆓</div>
+        <div class="value-title">Always Free</div>
+        <div class="value-text">Har feature, har challenge, har tool — hamesha free. Fitness ko paywall ke peeche nahi rakhenge.</div>
+      </div>
+      <div class="value-box">
+        <div class="value-icon">🔬</div>
+        <div class="value-title">Science Backed</div>
+        <div class="value-text">Workout plans aur calculators proven formulas par based hain — koi gimmick nahi, sirf real results.</div>
+      </div>
+      <div class="value-box">
+        <div class="value-icon">🔒</div>
+        <div class="value-title">Privacy First</div>
+        <div class="value-text">Tumhara data tumhare paas. No tracking, no ads, no data selling — sirf clean experience.</div>
+      </div>
+      <div class="value-box">
+        <div class="value-icon">🤝</div>
+        <div class="value-title">Inclusive</div>
+        <div class="value-text">Beginner ho ya advanced — sab ke liye kuch na kuch hai. Apni pace pe chalo, koi judgment nahi.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT WE OFFER -->
+  <div class="offer-card">
+    <div class="offer-label">🛠️ What We Offer</div>
+    <div class="offer-title">Kya Milega <span>Tumhe?</span></div>
+    <div class="offer-list">
+      <div class="offer-item">
+        <div class="offer-item-icon" style="background:rgba(229,62,47,.12);border:1px solid rgba(229,62,47,.2);">🔥</div>
+        <div class="offer-item-text"><h4>30-Day Challenges</h4><p>Fat Loss, Muscle Gain, Full Body, Distance, Sports, Athletics — 7 unique challenges, playlist style.</p></div>
+      </div>
+      <div class="offer-item">
+        <div class="offer-item-icon" style="background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.2);">⚖️</div>
+        <div class="offer-item-text"><h4>BMI Calculator</h4><p>Accurate BMI check karo ideal weight range aur health tips ke saath.</p></div>
+      </div>
+      <div class="offer-item">
+        <div class="offer-item-icon" style="background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.2);">🔢</div>
+        <div class="offer-item-text"><h4>Calorie Tracker</h4><p>TDEE calculate karo goal ke hisaab se — Mifflin-St Jeor formula se macros breakdown ke saath.</p></div>
+      </div>
+      <div class="offer-item">
+        <div class="offer-item-icon" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);">⏱️</div>
+        <div class="offer-item-text"><h4>HIIT Timer</h4><p>Custom interval timer — Tabata se Beginner tak 4 presets ya khud set karo work/rest time.</p></div>
+      </div>
+      <div class="offer-item">
+        <div class="offer-item-icon" style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.2);">📊</div>
+        <div class="offer-item-text"><h4>Progress Tracker</h4><p>Weight aur strength log karo — before/after comparison, streak counter, photo reminder.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUR PROMISE -->
+  <div class="promise-card">
+    <div class="promise-label">🤝 Our Promise</div>
+    <div class="promise-title">Tumse <span>Waada</span></div>
+    <div class="promise-list">
+      <div class="promise-item">Kabhi bhi paid subscription ya hidden charges nahi aayenge</div>
+      <div class="promise-item">Tumhara personal data kabhi sell ya share nahi karenge</div>
+      <div class="promise-item">Koi annoying ads nahi dikhayenge — clean experience milega hamesha</div>
+      <div class="promise-item">Content aur tools regularly update karte rahenge</div>
+      <div class="promise-item">Har feedback aur suggestion seriously lete hain — tumhari aawaz matter karti hai</div>
+      <div class="promise-item">Medical aur scientific accuracy ka dhyan rakhenge — fake claims nahi karenge</div>
+    </div>
+  </div>
+
+  <!-- TEAM -->
+  <div class="team-card">
+    <div class="team-label">👨‍💻 Behind HomeFit</div>
+    <div class="team-title">Karta Kaun Hai?</div>
+    <div class="team-member">
+      <div class="team-avatar">🧑‍💻</div>
+      <div class="team-info">
+        <div class="team-role">Founder & Developer</div>
+        <h3>Rohit Mishra</h3>
+        <p>Fitness enthusiast aur self-taught developer. HomeFit banaya taaki fitness sabke liye accessible ho — bina gym ke, bina paison ke. Constantly improve karta rehta hoon feedback ke basis par.</p>
+        <div class="team-socials">
+          <a href="mailto:mishrarohit4179@gmail.com" class="social-pill">📧 Email</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-card">
+    <div class="cta-title">READY TO<br><span>GET FIT?</span></div>
+    <p class="cta-text">Ab bas baatein kafi hain — action karne ka waqt hai. Pehla challenge aaj se shuru karo. Koi equipment nahi chahiye, sirf determination.</p>
+    <div class="cta-btns">
+      <a class="cta-btn-main" href="index.html">🏠 Back to Home</a>
+      <a class="cta-btn-sec" href="contact.html">📬 Contact Us</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  © 2026 HomeFit · All rights reserved
+  <br style="margin-bottom:8px;">
+  <a href="index.html">Home</a>
+  <a href="about.html">About Us</a>
+  <a href="contact.html">Contact</a>
+  <a href="privacy-policy.html">Privacy Policy</a>
+  <a href="terms-and-conditions.html">Terms & Conditions</a>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeFit – Progress Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--col:#8b5cf6;--colb:#7c3aed;--dark:#111;--light:#f3f2f8;--muted:#777;--green:#22c55e;--red:#ef4444;}
+body{font-family:'Nunito',sans-serif;background:var(--light);color:var(--dark);min-height:100vh;}
+
+.topbar{background:#1a0a2e;color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.5);}
+.back-btn{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0;}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:1px;}
+.topbar-sub{margin-left:auto;font-size:.72rem;font-weight:800;color:#c4b5fd;}
+
+.hero{background:linear-gradient(135deg,#1a0a2e,#2d1b69);padding:26px 20px 30px;text-align:center;color:#fff;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:var(--col);opacity:.12;filter:blur(60px);}
+.hero-badge{font-size:.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:var(--col);color:#fff;display:inline-block;padding:4px 14px;border-radius:20px;margin-bottom:10px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,7vw,3.5rem);line-height:.95;letter-spacing:2px;margin-bottom:6px;}
+.hero-title span{color:#c4b5fd;}
+.hero-desc{font-size:.83rem;font-weight:600;color:rgba(255,255,255,.5);max-width:300px;margin:0 auto;}
+
+.page{padding:16px 14px 80px;max-width:680px;margin:0 auto;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px;}
+.stat-box{background:#fff;border-radius:16px;padding:14px 10px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.06);border:2px solid #ebebeb;}
+.stat-box.highlight{border-color:var(--col);background:rgba(139,92,246,.04);}
+.stat-icon{font-size:1.3rem;margin-bottom:3px;}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;line-height:1;color:var(--col);}
+.stat-lbl{font-size:.58rem;font-weight:800;color:var(--muted);text-transform:uppercase;margin-top:2px;}
+.stat-change{font-size:.62rem;font-weight:800;margin-top:3px;}
+
+/* STREAK */
+.streak-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.streak-box{background:#fff;border-radius:16px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;align-items:center;gap:12px;}
+.streak-icon{font-size:1.8rem;}
+.streak-val{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;line-height:1;color:var(--col);}
+.streak-lbl{font-size:.65rem;font-weight:800;color:var(--muted);text-transform:uppercase;}
+
+/* BEFORE/AFTER */
+.ba-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);margin-bottom:18px;}
+.ba-header{background:linear-gradient(135deg,#1a0a2e,#2d1b69);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;}
+.ba-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:#fff;letter-spacing:1px;}
+.ba-badge{font-size:.68rem;font-weight:800;color:#c4b5fd;background:rgba(255,255,255,.1);padding:4px 10px;border-radius:12px;}
+.ba-body{display:grid;grid-template-columns:1fr 1fr;}
+.ba-side{padding:14px 16px;}
+.ba-side:first-child{border-right:1px solid #f0f0f0;}
+.ba-side-label{font-size:.62rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.ba-side:first-child .ba-side-label{color:#6b7280;}
+.ba-side:last-child .ba-side-label{color:var(--col);}
+.ba-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f5f5f5;}
+.ba-row:last-child{border-bottom:none;}
+.ba-row-lbl{font-size:.68rem;font-weight:700;color:#999;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ba-row-val{font-family:'Bebas Neue',sans-serif;font-size:.95rem;color:var(--dark);flex-shrink:0;margin-left:6px;}
+.ba-empty{text-align:center;padding:16px 8px;color:#ccc;font-size:.72rem;font-weight:700;}
+.ba-diff{padding:10px 16px;background:#f9f8ff;border-top:1px solid #ebebeb;display:flex;gap:6px;flex-wrap:wrap;}
+.diff-chip{font-size:.68rem;font-weight:800;padding:4px 10px;border-radius:16px;}
+.diff-chip.better{background:rgba(34,197,94,.1);color:#16a34a;}
+.diff-chip.worse{background:rgba(239,68,68,.1);color:#dc2626;}
+.diff-chip.same{background:#f0f0f0;color:#6b7280;}
+.diff-chip.none{background:#f5f5f5;color:#aaa;}
+
+/* PHOTO */
+.photo-card{background:linear-gradient(135deg,#1a0a2e,#312e81);border-radius:20px;padding:16px 18px;margin-bottom:18px;color:#fff;display:flex;align-items:center;gap:14px;}
+.photo-icon{font-size:2.2rem;flex-shrink:0;}
+.photo-text h3{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;margin-bottom:3px;}
+.photo-text p{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.5);line-height:1.45;}
+.photo-tips{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap;}
+.photo-tip{font-size:.6rem;font-weight:800;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);padding:3px 9px;border-radius:10px;}
+.photo-done-btn{margin-left:auto;flex-shrink:0;padding:9px 13px;border-radius:12px;border:2px solid rgba(255,255,255,.3);background:transparent;color:#fff;font-weight:800;font-size:.7rem;cursor:pointer;text-transform:uppercase;transition:all .2s;white-space:nowrap;}
+.photo-done-btn:hover{background:rgba(255,255,255,.15);}
+.photo-done-btn.taken{background:var(--green);border-color:var(--green);}
+
+/* LOG FORM */
+.log-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);margin-bottom:18px;}
+.log-header{background:var(--col);padding:14px 18px;}
+.log-header-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:#fff;letter-spacing:1px;}
+.log-header-sub{font-size:.7rem;font-weight:600;color:rgba(255,255,255,.7);margin-top:2px;}
+.log-body{padding:16px 18px;}
+.log-date-label{font-size:.72rem;font-weight:800;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.log-date-label span{background:#f0eeff;color:var(--col);padding:3px 10px;border-radius:10px;font-weight:800;}
+.field-label{font-size:.72rem;font-weight:800;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;display:flex;align-items:center;gap:6px;}
+.field-group{margin-bottom:16px;}
+.inp-unit{position:relative;display:flex;align-items:center;}
+.inp-unit .inp{padding-right:36px;}
+.inp-unit .unit{position:absolute;right:12px;font-size:.72rem;font-weight:800;color:#aaa;pointer-events:none;}
+.inp{width:100%;padding:11px 14px;border-radius:12px;border:2px solid #e8e8e8;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;color:var(--dark);background:#fff;transition:border-color .2s;-webkit-appearance:none;}
+.inp:focus{outline:none;border-color:var(--col);}
+.inp::placeholder{color:#ccc;font-weight:600;}
+
+/* CUSTOM STRENGTH ROWS */
+.strength-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+.strength-row{display:flex;align-items:center;gap:8px;}
+.strength-row .ex-inp{flex:1.8;min-width:0;}
+.strength-row .reps-inp{flex:1;min-width:0;}
+.strength-row .reps-wrap{flex:1;min-width:0;position:relative;display:flex;align-items:center;}
+.strength-row .reps-wrap .inp{padding-right:38px;}
+.strength-row .reps-wrap .unit{position:absolute;right:10px;font-size:.68rem;font-weight:800;color:#aaa;pointer-events:none;}
+.del-row-btn{width:30px;height:30px;border-radius:8px;border:none;background:#fee2e2;color:#ef4444;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.del-row-btn:hover{background:#fca5a5;}
+.add-ex-btn{display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:12px;border:2px dashed #d8b4fe;background:rgba(139,92,246,.04);color:var(--col);font-weight:800;font-size:.78rem;cursor:pointer;transition:all .2s;width:100%;}
+.add-ex-btn:hover{background:rgba(139,92,246,.1);border-color:var(--col);}
+.add-ex-btn span{font-size:1rem;}
+
+.save-btn{width:100%;padding:14px;border-radius:13px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--col),var(--colb));color:#fff;font-weight:900;font-size:.95rem;text-transform:uppercase;letter-spacing:.5px;box-shadow:0 6px 20px rgba(139,92,246,.35);transition:all .2s;margin-top:6px;}
+.save-btn:hover{transform:translateY(-2px);}
+
+/* HISTORY */
+.history-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);margin-bottom:18px;}
+.history-header{padding:14px 18px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;}
+.history-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px;}
+.clear-btn{font-size:.68rem;font-weight:800;color:#ef4444;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);padding:5px 12px;border-radius:10px;cursor:pointer;}
+.history-list{padding:10px 18px 16px;}
+.history-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid #f5f5f5;}
+.history-item:last-child{border-bottom:none;}
+.h-date-box{background:#f0eeff;border-radius:10px;padding:6px 10px;text-align:center;flex-shrink:0;min-width:44px;}
+.h-date-day{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;line-height:1;color:var(--col);}
+.h-date-mon{font-size:.55rem;font-weight:800;color:var(--muted);text-transform:uppercase;}
+.h-data{flex:1;min-width:0;}
+.h-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px;}
+.h-chip{font-size:.67rem;font-weight:800;padding:3px 10px;border-radius:10px;}
+.h-chip.wt{background:#fef3c7;color:#92400e;}
+.h-chip.ex{background:#ede9fe;color:#5b21b6;}
+.h-note{font-size:.67rem;color:#999;font-weight:600;margin-top:3px;}
+.h-photo{font-size:.65rem;color:#a78bfa;font-weight:700;margin-top:2px;}
+.h-exlist{font-size:.7rem;font-weight:700;color:#555;margin-top:4px;line-height:1.6;}
+.h-delete{color:#ccc;font-size:.85rem;cursor:pointer;padding:4px;flex-shrink:0;}
+.h-delete:hover{color:#ef4444;}
+.empty-history{text-align:center;padding:30px 20px;color:#bbb;}
+.empty-history .ei{font-size:2rem;margin-bottom:8px;}
+.empty-history p{font-size:.78rem;font-weight:600;}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a0a2e;color:#fff;padding:12px 24px;border-radius:30px;font-weight:800;font-size:.82rem;z-index:999;transition:transform .3s;box-shadow:0 8px 30px rgba(0,0,0,.3);white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+@media(max-width:480px){
+  .stats-row{grid-template-columns:repeat(3,1fr);}
+  .strength-row .ex-inp{flex:1.5;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="index.html">&#8592;</a>
+  <div class="topbar-title">📊 Progress Tracker</div>
+  <div class="topbar-sub" id="topSub">0 entries</div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">📊 Weight · Strength · Photos</div>
+  <div class="hero-title">TRACK YOUR<br><span>PROGRESS</span></div>
+  <div class="hero-desc">Apna weight aur jo bhi exercise karo — sab log karo, results dekho.</div>
+</div>
+
+<div class="page">
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-box highlight">
+      <div class="stat-icon">⚖️</div>
+      <div class="stat-val" id="statWeight">--</div>
+      <div class="stat-lbl">Weight (kg)</div>
+      <div class="stat-change" id="statWeightChange"></div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-icon">🔥</div>
+      <div class="stat-val" id="streakVal">0</div>
+      <div class="stat-lbl">Day Streak</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-icon">📋</div>
+      <div class="stat-val" id="totalEntries">0</div>
+      <div class="stat-lbl">Total Logs</div>
+    </div>
+  </div>
+
+  <!-- BEFORE / AFTER -->
+  <div class="ba-card">
+    <div class="ba-header">
+      <div class="ba-title">📸 Before vs Now</div>
+      <div class="ba-badge" id="baDaysLabel">Day 0</div>
+    </div>
+    <div class="ba-body">
+      <div class="ba-side">
+        <div class="ba-side-label">🕐 Before (Day 1)</div>
+        <div id="baBeforeContent"><div class="ba-empty">Pehla log karo</div></div>
+      </div>
+      <div class="ba-side">
+        <div class="ba-side-label">⚡ Now (Latest)</div>
+        <div id="baNowContent"><div class="ba-empty">Zyada entries ke baad dikhega</div></div>
+      </div>
+    </div>
+    <div class="ba-diff" id="baDiff">
+      <span class="diff-chip none">Log karte raho — comparison yahan dikhega!</span>
+    </div>
+  </div>
+
+  <!-- PHOTO REMINDER -->
+  <div class="photo-card">
+    <div class="photo-icon">📸</div>
+    <div class="photo-text">
+      <h3>Today's Photo Reminder</h3>
+      <p>Aaj ki progress photo lo — same angle, same lighting, subah best hoti hai.</p>
+      <div class="photo-tips">
+        <span class="photo-tip">📱 Front pose</span>
+        <span class="photo-tip">📱 Side pose</span>
+        <span class="photo-tip">☀️ Morning</span>
+      </div>
+    </div>
+    <button class="photo-done-btn" id="photoBtn" onclick="togglePhoto()">📷 Liya</button>
+  </div>
+
+  <!-- LOG FORM -->
+  <div class="log-card">
+    <div class="log-header">
+      <div class="log-header-title">📝 Log Today's Stats</div>
+      <div class="log-header-sub">Har roz log karo — progress dikhegi!</div>
+    </div>
+    <div class="log-body">
+      <div class="log-date-label">📅 Today: <span id="todayDateLabel"></span></div>
+
+      <!-- Weight -->
+      <div class="field-group">
+        <div class="field-label">⚖️ Weight</div>
+        <div class="inp-unit">
+          <input class="inp" id="inpWeight" type="number" step="0.1" min="30" max="300" placeholder="e.g. 72.5">
+          <span class="unit">kg</span>
+        </div>
+      </div>
+
+      <!-- Custom Strength -->
+      <div class="field-group">
+        <div class="field-label">💪 Strength Exercises <span style="color:#ccc;font-size:.65rem;text-transform:none;font-weight:600;">— apni exercise khud likho</span></div>
+        <div class="strength-rows" id="strengthRows"></div>
+        <button class="add-ex-btn" onclick="addExRow()"><span>＋</span> Exercise add karo</button>
+      </div>
+
+      <!-- Note -->
+      <div class="field-group">
+        <div class="field-label">📝 Note (optional)</div>
+        <input class="inp" id="inpNote" type="text" placeholder="e.g. Aaj bahut achha laga!">
+      </div>
+
+      <button class="save-btn" onclick="saveEntry()">💾 Save Today's Progress</button>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history-card">
+    <div class="history-header">
+      <div class="history-title">📋 Log History</div>
+      <button class="clear-btn" onclick="clearAll()">🗑 Clear All</button>
+    </div>
+    <div class="history-list" id="historyList"></div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORE = 'hf_progress_v3';
+let entries = [];
+try { entries = JSON.parse(localStorage.getItem(STORE) || '[]'); } catch(e) {}
+const todayStr = new Date().toISOString().split('T')[0];
+
+function saveData() { try { localStorage.setItem(STORE, JSON.stringify(entries)); } catch(e) {} }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ── STRENGTH ROWS ── */
+let rowId = 0;
+function addExRow(name = '', reps = '') {
+  const id = rowId++;
+  const div = document.createElement('div');
+  div.className = 'strength-row';
+  div.id = 'srow-' + id;
+  div.innerHTML = `
+    <input class="inp ex-inp" type="text" placeholder="Exercise name (e.g. Push-Up)" value="${name}" id="exname-${id}">
+    <div class="reps-wrap">
+      <input class="inp" type="number" min="0" max="9999" placeholder="Reps" value="${reps}" id="exreps-${id}">
+      <span class="unit">reps</span>
+    </div>
+    <button class="del-row-btn" onclick="delExRow('srow-${id}')">✕</button>`;
+  document.getElementById('strengthRows').appendChild(div);
+}
+function delExRow(id) { const el = document.getElementById(id); if(el) el.remove(); }
+function getExRows() {
+  return [...document.querySelectorAll('.strength-row')].map(row => {
+    const id = row.id.replace('srow-', '');
+    const name = (document.getElementById('exname-' + id)?.value || '').trim();
+    const reps = parseInt(document.getElementById('exreps-' + id)?.value);
+    return { name, reps };
+  }).filter(r => r.name && !isNaN(r.reps) && r.reps > 0);
+}
+
+/* ── SAVE ── */
+function saveEntry() {
+  const wt = parseFloat(document.getElementById('inpWeight').value);
+  const exercises = getExRows();
+  const note = document.getElementById('inpNote').value.trim();
+  if (!wt && !exercises.length) { showToast('⚠️ Weight ya koi exercise toh likho!'); return; }
+  entries = entries.filter(e => e.date !== todayStr);
+  entries.push({ date: todayStr, wt: wt || null, exercises, note });
+  entries.sort((a, b) => a.date < b.date ? -1 : 1);
+  saveData();
+  document.getElementById('inpWeight').value = '';
+  document.getElementById('inpNote').value = '';
+  document.getElementById('strengthRows').innerHTML = '';
+  rowId = 0;
+  showToast('✅ Progress saved!');
+  render();
+}
+
+/* ── DELETE ── */
+function deleteEntry(date) {
+  entries = entries.filter(e => e.date !== date);
+  saveData(); render(); showToast('🗑 Entry deleted');
+}
+function clearAll() {
+  entries = []; saveData(); render(); showToast('🗑 All cleared');
+}
+
+/* ── PHOTO ── */
+const photoKey = 'hf_photo_' + todayStr;
+function togglePhoto() {
+  const taken = localStorage.getItem(photoKey);
+  taken ? localStorage.removeItem(photoKey) : localStorage.setItem(photoKey, '1');
+  renderPhotoBtn();
+  showToast(taken ? '📷 Reminder reset' : '✅ Photo liya — great habit!');
+}
+function renderPhotoBtn() {
+  const btn = document.getElementById('photoBtn');
+  const taken = localStorage.getItem(photoKey);
+  btn.textContent = taken ? '✅ Done!' : '📷 Liya';
+  btn.className = 'photo-done-btn' + (taken ? ' taken' : '');
+}
+
+/* ── STATS ── */
+function renderStats() {
+  const sorted = [...entries].sort((a, b) => a.date > b.date ? -1 : 1);
+  const latest = sorted[0], prev = sorted[1];
+
+  const wtEl = document.getElementById('statWeight');
+  const wtChEl = document.getElementById('statWeightChange');
+  if (latest?.wt) {
+    wtEl.textContent = latest.wt;
+    if (prev?.wt) {
+      const d = (latest.wt - prev.wt).toFixed(1);
+      wtChEl.textContent = (d > 0 ? '▲ +' : '▼ ') + Math.abs(d) + ' kg';
+      wtChEl.style.color = d < 0 ? '#22c55e' : '#ef4444';
+    }
+  } else { wtEl.textContent = '--'; wtChEl.textContent = ''; }
+
+  document.getElementById('streakVal').textContent = calcStreak();
+  document.getElementById('totalEntries').textContent = entries.length;
+  document.getElementById('topSub').textContent = entries.length + ' entr' + (entries.length === 1 ? 'y' : 'ies');
+}
+
+function calcStreak() {
+  if (!entries.length) return 0;
+  const sorted = [...entries].sort((a, b) => a.date > b.date ? -1 : 1);
+  let streak = 0, check = new Date();
+  for (const e of sorted) {
+    const d = new Date(e.date + 'T00:00:00');
+    if (Math.round((check - d) / 86400000) <= 1) { streak++; check = d; } else break;
+  }
+  return streak;
+}
+
+/* ── BEFORE/AFTER ── */
+function renderBeforeAfter() {
+  const sorted = [...entries].sort((a, b) => a.date < b.date ? -1 : 1);
+  const first = sorted[0], last = sorted[sorted.length - 1];
+
+  if (!first) return;
+
+  const dayCount = sorted.length > 1
+    ? Math.floor((new Date(last.date + 'T00:00:00') - new Date(first.date + 'T00:00:00')) / 86400000) + 1
+    : 1;
+  document.getElementById('baDaysLabel').textContent = `Day ${dayCount}`;
+
+  const makeContent = (e) => {
+    if (!e) return '<div class="ba-empty">Data nahi</div>';
+    let html = '';
+    if (e.wt) html += `<div class="ba-row"><span class="ba-row-lbl">⚖️ Weight</span><span class="ba-row-val">${e.wt} kg</span></div>`;
+    (e.exercises || []).slice(0, 4).forEach(ex => {
+      html += `<div class="ba-row"><span class="ba-row-lbl">💪 ${ex.name}</span><span class="ba-row-val">${ex.reps}</span></div>`;
+    });
+    if (!html) html = '<div class="ba-empty">No data</div>';
+    return html;
+  };
+
+  document.getElementById('baBeforeContent').innerHTML = makeContent(first);
+  document.getElementById('baNowContent').innerHTML =
+    first !== last ? makeContent(last) : '<div class="ba-empty">Zyada entries ke baad dikhega</div>';
+
+  // Diff chips
+  let diffHtml = '';
+  if (first && last && first !== last) {
+    if (first.wt && last.wt) {
+      const d = (last.wt - first.wt).toFixed(1);
+      diffHtml += `<span class="diff-chip ${d < 0 ? 'better' : d > 0 ? 'worse' : 'same'}">⚖️ ${d > 0 ? '+' : ''}${d} kg</span>`;
+    }
+    // Match exercises by name
+    const firstMap = {}, lastMap = {};
+    (first.exercises || []).forEach(e => firstMap[e.name.toLowerCase()] = e.reps);
+    (last.exercises || []).forEach(e => lastMap[e.name.toLowerCase()] = e.reps);
+    Object.keys(lastMap).forEach(name => {
+      if (firstMap[name] !== undefined) {
+        const d = lastMap[name] - firstMap[name];
+        diffHtml += `<span class="diff-chip ${d > 0 ? 'better' : d < 0 ? 'worse' : 'same'}">💪 ${name} ${d > 0 ? '+' : ''}${d} reps</span>`;
+      }
+    });
+  }
+  if (!diffHtml) diffHtml = '<span class="diff-chip none">Log karte raho — comparison yahan dikhega!</span>';
+  document.getElementById('baDiff').innerHTML = diffHtml;
+}
+
+/* ── HISTORY ── */
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (!entries.length) {
+    list.innerHTML = '<div class="empty-history"><div class="ei">📋</div><p>Abhi koi log nahi — aaj ka pehla entry karo!</p></div>';
+    return;
+  }
+  const sorted = [...entries].sort((a, b) => a.date > b.date ? -1 : 1);
+  list.innerHTML = sorted.map(e => {
+    const d = new Date(e.date + 'T00:00:00');
+    const day = d.getDate();
+    const mon = d.toLocaleDateString('en-IN', { month: 'short' });
+    let chips = '';
+    if (e.wt) chips += `<span class="h-chip wt">⚖️ ${e.wt} kg</span>`;
+    if ((e.exercises||[]).length) chips += `<span class="h-chip ex">💪 ${e.exercises.length} exercise${e.exercises.length>1?'s':''}</span>`;
+    const exList = (e.exercises||[]).map(ex => `${ex.name}: ${ex.reps} reps`).join(' · ');
+    const photoTaken = localStorage.getItem('hf_photo_' + e.date);
+    return `<div class="history-item">
+      <div class="h-date-box"><div class="h-date-day">${day}</div><div class="h-date-mon">${mon}</div></div>
+      <div class="h-data">
+        <div class="h-chips">${chips || '<span class="h-chip">No data</span>'}</div>
+        ${exList ? `<div class="h-exlist">${exList}</div>` : ''}
+        ${photoTaken ? '<div class="h-photo">📸 Photo liya</div>' : ''}
+        ${e.note ? `<div class="h-note">📝 ${e.note}</div>` : ''}
+      </div>
+      <div class="h-delete" onclick="deleteEntry('${e.date}')">✕</div>
+    </div>`;
+  }).join('');
+}
+
+function render() {
+  renderStats();
+  renderBeforeAfter();
+  renderHistory();
+  renderPhotoBtn();
+  document.getElementById('todayDateLabel').textContent = new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+// Init — add one empty row by default
+addExRow();
+render();
+</script>
+</body>
+</html>

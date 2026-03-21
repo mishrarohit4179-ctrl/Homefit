@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeFit – Terms & Conditions</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:#0d0d0d;color:#fff;min-height:100vh;}
+.topbar{background:#111;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.6);border-bottom:1px solid rgba(255,255,255,.07);}
+.back-btn{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0;}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:1px;}
+.topbar-date{margin-left:auto;font-size:.7rem;font-weight:800;color:rgba(255,255,255,.3);}
+
+.hero{background:linear-gradient(135deg,#111,#1a1a2e);padding:32px 20px;text-align:center;position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.07);}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(229,62,47,.15),transparent 70%);}
+.hero-badge{font-size:.68rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:rgba(229,62,47,.15);color:#ff6b35;border:1px solid rgba(229,62,47,.3);display:inline-block;padding:4px 14px;border-radius:20px;margin-bottom:12px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,7vw,3.2rem);line-height:.95;letter-spacing:2px;margin-bottom:8px;}
+.hero-title span{color:#ff6b35;}
+.hero-meta{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.3);line-height:1.6;}
+
+.page{padding:24px 16px 80px;max-width:680px;margin:0 auto;}
+
+/* TOC */
+.toc-card{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px 20px;margin-bottom:24px;}
+.toc-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.8px;color:rgba(255,255,255,.5);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.toc-title::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07);}
+.toc-list{display:flex;flex-direction:column;gap:6px;}
+.toc-item{display:flex;align-items:center;gap:10px;text-decoration:none;padding:8px 12px;border-radius:10px;transition:background .2s;}
+.toc-item:hover{background:rgba(255,255,255,.05);}
+.toc-num{font-family:'Bebas Neue',sans-serif;font-size:.9rem;color:#ff6b35;width:22px;flex-shrink:0;}
+.toc-text{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.55);}
+
+/* SECTION */
+.doc-section{margin-bottom:28px;}
+.sec-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.07);}
+.sec-num{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:#ff6b35;line-height:1;flex-shrink:0;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:.8px;color:#fff;line-height:1;}
+.sec-body p{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.45);line-height:1.75;margin-bottom:12px;}
+.sec-body p:last-child{margin-bottom:0;}
+.sec-body ul{margin:10px 0 12px 0;display:flex;flex-direction:column;gap:6px;}
+.sec-body ul li{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.4);line-height:1.6;padding-left:18px;position:relative;}
+.sec-body ul li::before{content:'→';position:absolute;left:0;color:#ff6b35;font-size:.75rem;}
+
+.highlight-box{background:rgba(229,62,47,.06);border:1px solid rgba(229,62,47,.2);border-radius:14px;padding:14px 16px;margin:12px 0;}
+.highlight-box p{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.55);line-height:1.65;margin:0 !important;}
+
+.contact-card{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:20px;margin-top:28px;text-align:center;}
+.contact-card h3{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.8px;margin-bottom:8px;color:#ff6b35;}
+.contact-card p{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.4);line-height:1.7;}
+.contact-card a{color:#ff6b35;font-weight:800;text-decoration:none;}
+
+footer{text-align:center;padding:24px;font-size:.72rem;color:rgba(255,255,255,.2);border-top:1px solid rgba(255,255,255,.06);}
+footer a{color:rgba(255,255,255,.35);text-decoration:none;margin:0 8px;}
+footer a:hover{color:#ff6b35;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="index.html">&#8592;</a>
+  <div class="topbar-title">📄 Terms & Conditions</div>
+  <div class="topbar-date">Last updated: March 2026</div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">📄 Legal Document</div>
+  <div class="hero-title">TERMS &<br><span>CONDITIONS</span></div>
+  <div class="hero-meta">Effective Date: March 20, 2026 · HomeFit Website<br>Please read carefully before using our services.</div>
+</div>
+
+<div class="page">
+
+  <!-- TOC -->
+  <div class="toc-card">
+    <div class="toc-title">📋 Table of Contents</div>
+    <div class="toc-list">
+      <a class="toc-item" href="#s1"><span class="toc-num">01</span><span class="toc-text">Acceptance of Terms</span></a>
+      <a class="toc-item" href="#s2"><span class="toc-num">02</span><span class="toc-text">Use of Website</span></a>
+      <a class="toc-item" href="#s3"><span class="toc-num">03</span><span class="toc-text">Medical Disclaimer</span></a>
+      <a class="toc-item" href="#s4"><span class="toc-num">04</span><span class="toc-text">Fitness Tools & Calculators</span></a>
+      <a class="toc-item" href="#s5"><span class="toc-num">05</span><span class="toc-text">Intellectual Property</span></a>
+      <a class="toc-item" href="#s6"><span class="toc-num">06</span><span class="toc-text">Limitation of Liability</span></a>
+      <a class="toc-item" href="#s7"><span class="toc-num">07</span><span class="toc-text">User Data & Local Storage</span></a>
+      <a class="toc-item" href="#s8"><span class="toc-num">08</span><span class="toc-text">Third Party Links</span></a>
+      <a class="toc-item" href="#s9"><span class="toc-num">09</span><span class="toc-text">Changes to Terms</span></a>
+      <a class="toc-item" href="#s10"><span class="toc-num">10</span><span class="toc-text">Contact Us</span></a>
+    </div>
+  </div>
+
+  <!-- SECTIONS -->
+  <div class="doc-section" id="s1">
+    <div class="sec-header"><div class="sec-num">01</div><div class="sec-title">Acceptance of Terms</div></div>
+    <div class="sec-body">
+      <p>HomeFit website ("Website", "we", "us") access karne ya use karne se aap in Terms & Conditions se agree karte hain. Agar aap in terms se agree nahi karte, toh please is website ka use band kar dein.</p>
+      <p>Yeh terms sabhi visitors, users aur doosre logon par apply hote hain jo website access karte hain. Website ka continued use iska matlab hai ki aap updated terms se bhi agree karte hain.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="s2">
+    <div class="sec-header"><div class="sec-num">02</div><div class="sec-title">Use of Website</div></div>
+    <div class="sec-body">
+      <p>Aap is website ka use sirf lawful purposes ke liye kar sakte hain. Aap agree karte hain ki aap website ka use nahi karenge:</p>
+      <ul>
+        <li>Kisi bhi illegal activity ke liye ya doosron ko harm karne ke liye</li>
+        <li>Website ke kisi bhi part ko copy, reproduce ya distribute karne ke liye bina permission ke</li>
+        <li>Koi bhi malicious code, virus ya harmful software upload karne ke liye</li>
+        <li>Doosre users ki privacy violate karne ke liye ya unhe harass karne ke liye</li>
+        <li>Website ke normal operation mein interfere karne ke liye</li>
+      </ul>
+      <p>Hum kisi bhi violation ki situation mein website access restrict ya terminate karne ka adhikar rakhte hain.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="s3">
+    <div class="sec-header"><div class="sec-num">03</div><div class="sec-title">Medical Disclaimer</div></div>
+    <div class="sec-body">
+      <div class="highlight-box">
+        <p>⚠️ HomeFit ek fitness information website hai — yeh koi medical advice, diagnosis ya treatment provide nahi karta. Yahan diya gaya koi bhi content professional medical advice ka substitute nahi hai.</p>
+      </div>
+      <p>Koi bhi exercise program shuru karne se pehle, especially agar aapko koi existing medical condition, injury, ya health concern hai, toh apne doctor ya qualified healthcare professional se consult karein.</p>
+      <p>Aap apni fitness activities ke liye khud responsible hain. HomeFit kisi bhi injury, illness ya health complication ke liye responsible nahi hoga jo website par diye gaye workouts ya information ko follow karne se ho.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="s4">
+    <div class="sec-header"><div class="sec-num">04</div><div class="sec-title">Fitness Tools & Calculators</div></div>
+    <div class="sec-body">
+      <p>Hamare BMI Calculator, Calorie Tracker, HIIT Timer aur doosre tools sirf informational aur educational purposes ke liye hain. Yeh tools standard fitness formulas use karte hain jo widely accepted hain, lekin:</p>
+      <ul>
+        <li>Results approximate estimates hain, exact medical measurements nahi</li>
+        <li>Individual results vary kar sakte hain body composition, genetics aur doosre factors ke basis par</li>
+        <li>Calorie calculations average values par based hain — personal metabolism alag ho sakta hai</li>
+        <li>BMI calculator har individual ke liye accurate nahi ho sakta (jaise athletes, pregnant women)</li>
+      </ul>
+      <p>Kisi bhi significant dietary change ya intense exercise program shuru karne se pehle professional guidance lein.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="s5">
+    <div class="sec-header"><div class="sec-num">05</div><div class="sec-title">Intellectual Property</div></div>
+    <div class="sec-body">
+      <p>Is website par available sab content — including text, graphics, logos, icons, images, workout plans, challenge structures, aur software code — HomeFit ka intellectual property hai aur copyright laws se protected hai.</p>
+      <p>Aap yeh kar sakte hain:</p>
+      <ul>
+        <li>Personal, non-commercial use ke liye content access karna</li>
+        <li>Single copy print karna personal reference ke liye</li>
+      </ul>
+      <p>Aap yeh nahi kar sakte:</p>
+      <ul>
+        <li>Content ko commercially use karna ya sell karna</li>
+        <li>Website ka koi bhi part reproduce karna bina written permission ke</li>
+        <li>Content se HomeFit branding ya attribution remove karna</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="doc-section" id="s6">
+    <div class="sec-header"><div class="sec-num">06</div><div class="sec-title">Limitation of Liability</div></div>
+    <div class="sec-body">
+      <p>HomeFit aur uske creators kisi bhi direct, indirect, incidental, consequential ya punitive damages ke liye liable nahi honge jo website use karne se arise ho, including:</p>
+      <ul>
+        <li>Physical injury ya health complications workouts se</li>
+        <li>Inaccurate calculator results par reliance se hone wala nuksan</li>
+        <li>Website unavailability ya technical errors se hone wali inconvenience</li>
+        <li>Kisi third-party content ya links se hone wala nuksan</li>
+      </ul>
+      <p>Website "as is" aur "as available" basis par provide ki jaati hai. Hum kisi bhi specific result ki guarantee nahi dete.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="s7">
+    <div class="sec-header"><div class="sec-num">07</div><div class="sec-title">User Data & Local Storage</div></div>
+    <div class="sec-body">
+      <p>HomeFit aapka workout progress, BMI history aur doosra personal data sirf aapke device ke browser localStorage mein store karta hai. Yeh data humhare servers par store nahi hota.</p>
+      <ul>
+        <li>Aapka data sirf aapke device par hota hai — hum access nahi karte</li>
+        <li>Browser clear karne ya data delete karne par yeh information hamesha ke liye delete ho jaati hai</li>
+        <li>Hum aapke progress data ko kisi third party ke saath share nahi karte</li>
+        <li>Cookies sirf essential website functionality ke liye use ki jaati hain</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="doc-section" id="s8">
+    <div class="sec-header"><div class="sec-num">08</div><div class="sec-title">Third Party Links</div></div>
+    <div class="sec-body">
+      <p>Haari website mein third-party websites ke links ho sakte hain — jaise exercise images (Unsplash), fonts (Google Fonts) aur doosre resources. Yeh links sirf convenience ke liye hain.</p>
+      <p>Hum un third-party websites ke content, privacy policies ya practices ke liye responsible nahi hain. Hum strongly recommend karte hain ki aap unki respective privacy policies review karein.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="s9">
+    <div class="sec-header"><div class="sec-num">09</div><div class="sec-title">Changes to Terms</div></div>
+    <div class="sec-body">
+      <p>Hum in Terms & Conditions ko kabhi bhi update kar sakte hain. Changes is page par post ki jaayengi aur "Last Updated" date change hogi. Aap regular basis par yeh page review karte rahein.</p>
+      <p>Changes post hone ke baad website ka continued use inka acceptance maana jaayega. Agar aap changes se agree nahi hain, toh website ka use band kar dein.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="s10">
+    <div class="sec-header"><div class="sec-num">10</div><div class="sec-title">Contact Us</div></div>
+    <div class="sec-body">
+      <p>Agar in Terms & Conditions ke baare mein koi sawaal hai ya koi concern hai, toh humse contact karo.</p>
+    </div>
+  </div>
+
+  <div class="contact-card">
+    <h3>📬 Koi Sawaal Hai?</h3>
+    <p>Terms ke baare mein kuch samajh nahi aaya ya koi issue hai?<br>Humse contact karo — hum help karenge.</p>
+    <p style="margin-top:10px;"><a href="mailto:mishrarohit4179@gmail.com">mishrarohit4179@gmail.com</a></p>
+  </div>
+
+</div>
+
+<footer>
+  © 2026 HomeFit · All rights reserved
+  <br style="margin-bottom:8px;">
+  <a href="index.html">Home</a>
+  <a href="privacy-policy.html">Privacy Policy</a>
+  <a href="terms-and-conditions.html">Terms & Conditions</a>
+</footer>
+
+</body>
+</html>

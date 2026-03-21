@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeFit – Beginner Workout</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --red:#e53e2f; --orange:#ff6b35; --dark:#1a1a1a; --light:#f0f0f0; --muted:#777; --blue:#3b82f6; --green:#22c55e; }
+body { font-family:'Nunito',sans-serif; background:var(--light); color:var(--dark); overflow-x:hidden; }
+
+/* SIDEBAR OVERLAY */
+.sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(3px); z-index:900; opacity:0; pointer-events:none; transition:opacity .35s; }
+.sidebar-overlay.open { opacity:1; pointer-events:all; }
+
+/* SIDEBAR */
+.sidebar { position:fixed; top:0; left:0; height:100%; width:290px; background:rgba(12,12,12,.97); backdrop-filter:blur(30px); border-right:1px solid rgba(255,255,255,.1); box-shadow:8px 0 48px rgba(0,0,0,.6); z-index:1000; display:flex; flex-direction:column; transform:translateX(-100%); transition:transform .42s cubic-bezier(.4,0,.2,1); }
+.sidebar.open { transform:translateX(0); }
+.sidebar-header { display:flex; align-items:center; justify-content:space-between; padding:24px 20px 18px; border-bottom:1px solid rgba(255,255,255,.08); flex-shrink:0; }
+.sidebar-logo { display:flex; align-items:center; gap:10px; font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:2px; color:#fff; }
+.sidebar-logo .s-icon { width:34px; height:34px; background:linear-gradient(135deg,#ff6b35,#e53e2f); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:1rem; }
+.sidebar-close { width:34px; height:34px; border-radius:9px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); color:#fff; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.sidebar-body { flex:1; overflow-y:auto; padding:14px 12px; }
+.sidebar-lbl { font-size:.68rem; font-weight:800; letter-spacing:1.5px; color:rgba(255,255,255,.35); text-transform:uppercase; padding:10px 12px 6px; }
+.sidebar-nav a { display:flex; align-items:center; gap:13px; text-decoration:none; font-weight:700; font-size:.88rem; color:rgba(255,255,255,.75); padding:12px 14px; border-radius:12px; transition:all .2s; text-transform:uppercase; margin-bottom:3px; }
+.sidebar-nav a .s-icon2 { width:36px; height:36px; background:rgba(255,255,255,.07); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+.sidebar-nav a:hover { background:rgba(255,255,255,.09); color:#fff; }
+.sidebar-nav a.active { background:rgba(255,107,53,.14); color:#ff8055; border:1px solid rgba(255,107,53,.18); }
+.sidebar-divider { height:1px; background:rgba(255,255,255,.07); margin:10px 4px; }
+.sidebar-footer { padding:14px 12px 20px; flex-shrink:0; border-top:1px solid rgba(255,255,255,.07); }
+.sidebar-footer a { display:flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; background:linear-gradient(135deg,#ff6b35,#e53e2f); color:#fff; font-weight:800; font-size:.88rem; letter-spacing:1.2px; padding:14px; border-radius:13px; text-transform:uppercase; transition:all .22s; }
+
+/* NAVBAR */
+nav { position:fixed; top:18px; left:50%; transform:translateX(-50%); width:calc(100% - 40px); max-width:980px; z-index:500; display:flex; align-items:center; justify-content:space-between; padding:14px 26px; border-radius:20px; background:rgba(255,255,255,.10); backdrop-filter:blur(20px) saturate(180%); border:1px solid rgba(255,255,255,.22); box-shadow:0 8px 32px rgba(0,0,0,.28); animation:slideDown .6s ease both; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:2px; color:#fff; }
+.nav-logo .logo-icon { width:36px; height:36px; background:linear-gradient(135deg,#ff6b35,#e53e2f); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+.nav-links { display:flex; align-items:center; gap:6px; }
+.nav-links a { text-decoration:none; font-weight:700; font-size:.82rem; letter-spacing:.8px; color:rgba(255,255,255,.85); padding:8px 16px; border-radius:10px; transition:all .25s; text-transform:uppercase; }
+.nav-links a:hover { background:rgba(255,255,255,.15); color:#fff; }
+.nav-links a.active { background:rgba(255,255,255,.18); }
+.nav-cta { background:linear-gradient(135deg,#ff6b35,#e53e2f) !important; color:#fff !important; }
+.hamburger { display:flex; flex-direction:column; gap:5px; cursor:pointer; padding:8px; border-radius:10px; transition:background .2s; z-index:2000; position:relative; }
+.hamburger:hover { background:rgba(255,255,255,.15); }
+.hamburger span { display:block; width:22px; height:2.5px; background:#fff; border-radius:2px; transition:all .35s; }
+.hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+.hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
+/* SLIDER */
+.slider-section { position:relative; width:100%; height:100vh; min-height:560px; overflow:hidden; }
+.slide { position:absolute; inset:0; background-size:cover; background-position:center; opacity:0; transition:opacity 1.2s ease,transform 1.4s ease; transform:scale(1.05); }
+.slide.active { opacity:1; transform:scale(1); z-index:1; }
+.slide::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.35) 60%,rgba(0,0,0,.6) 100%); }
+.slide:nth-child(1){background-image:url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&q=85');}
+.slide:nth-child(2){background-image:url('https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1600&q=85');}
+.slide:nth-child(3){background-image:url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=1600&q=85');}
+.slide:nth-child(4){background-image:url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1600&q=85');}
+.slide-content { position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:100px 24px; }
+.slide-badge { display:inline-flex; align-items:center; gap:7px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25); backdrop-filter:blur(10px); color:#fff; font-size:.8rem; font-weight:700; padding:7px 18px; border-radius:50px; margin-bottom:18px; opacity:0; transform:translateY(20px); transition:all .6s ease .2s; }
+.slide h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(2.8rem,8vw,5.5rem); color:#fff; line-height:1; letter-spacing:2px; margin-bottom:16px; text-shadow:0 4px 20px rgba(0,0,0,.5); opacity:0; transform:translateY(25px); transition:all .6s ease .35s; }
+.slide p { color:rgba(255,255,255,.82); font-size:clamp(.9rem,2.5vw,1.1rem); font-weight:600; line-height:1.65; max-width:500px; margin-bottom:32px; opacity:0; transform:translateY(20px); transition:all .6s ease .5s; }
+.slide-btns { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; opacity:0; transform:translateY(18px); transition:all .6s ease .65s; }
+.slide.active .slide-badge,.slide.active h2,.slide.active p,.slide.active .slide-btns { opacity:1; transform:translateY(0); }
+.btn-primary { display:inline-block; background:linear-gradient(135deg,#ff6b35,#e53e2f); color:#fff; font-weight:800; font-size:.9rem; letter-spacing:1.5px; padding:15px 36px; border-radius:12px; text-decoration:none; text-transform:uppercase; box-shadow:0 8px 28px rgba(229,62,47,.5); transition:all .2s; cursor:pointer; border:none; }
+.btn-primary:hover { transform:translateY(-2px); }
+.btn-glass { display:inline-block; background:rgba(255,255,255,.12); border:1.5px solid rgba(255,255,255,.3); backdrop-filter:blur(10px); color:#fff; font-weight:700; font-size:.9rem; padding:14px 32px; border-radius:12px; text-decoration:none; text-transform:uppercase; transition:all .2s; cursor:pointer; }
+.btn-glass:hover { background:rgba(255,255,255,.22); transform:translateY(-2px); }
+.slider-dots { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); z-index:10; display:flex; gap:10px; }
+.dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.4); cursor:pointer; transition:all .35s; border:1.5px solid rgba(255,255,255,.3); }
+.dot.active { background:#fff; width:28px; border-radius:4px; }
+.slide-progress { position:absolute; bottom:0; left:0; height:3px; background:linear-gradient(90deg,#ff6b35,#e53e2f); z-index:10; width:0%; transition:width linear; }
+.slide-counter { position:absolute; bottom:26px; right:28px; z-index:10; color:rgba(255,255,255,.6); font-size:.82rem; font-weight:700; }
+.slide-counter span { color:#fff; }
+
+/* PAGE SECTIONS */
+.section { padding:34px 20px; max-width:960px; margin:0 auto; }
+.section-title { font-family:'Bebas Neue',sans-serif; font-size:1.95rem; letter-spacing:.4px; margin-bottom:18px; }
+
+/* GOAL GRID */
+.goal-wrap { background:#fff; border-radius:20px; padding:16px; box-shadow:0 2px 16px rgba(0,0,0,.07); }
+.goal-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.goal-card { border-radius:13px; overflow:hidden; background:#f9f9f9; border:1.5px solid #ebebeb; cursor:pointer; transition:transform .2s,box-shadow .2s; }
+.goal-card:hover { transform:translateY(-3px); box-shadow:0 10px 24px rgba(0,0,0,.12); }
+.goal-card img { width:100%; height:95px; object-fit:cover; display:block; }
+.goal-card-body { padding:9px 10px 12px; }
+.goal-card-body h3 { font-size:.9rem; font-weight:800; }
+.goal-card-body p { font-size:.76rem; color:var(--muted); margin-top:2px; }
+
+/* CHALLENGES CARD */
+.challenges-banner {
+  position:relative; border-radius:20px; overflow:hidden;
+  cursor:pointer; transition:transform .22s, box-shadow .22s;
+  background:#111; text-decoration:none; display:block;
+}
+.challenges-banner:hover { transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,.25); }
+.challenges-banner-bg {
+  position:absolute; inset:0;
+  background:url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=900&q=80') center/cover;
+  opacity:.25;
+}
+.challenges-banner-inner {
+  position:relative; z-index:2;
+  padding:24px 20px;
+  display:flex; align-items:center; gap:16px;
+}
+.ch-banner-icon {
+  width:60px; height:60px; border-radius:16px; flex-shrink:0;
+  background:linear-gradient(135deg,#ff6b35,#e53e2f);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.8rem; box-shadow:0 6px 20px rgba(229,62,47,.5);
+}
+.ch-banner-text { flex:1; }
+.ch-banner-eyebrow { font-size:.62rem; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--orange); margin-bottom:5px; }
+.ch-banner-title { font-family:'Bebas Neue',sans-serif; font-size:1.7rem; letter-spacing:1px; color:#fff; line-height:1; margin-bottom:5px; }
+.ch-banner-desc { font-size:.75rem; font-weight:600; color:rgba(255,255,255,.6); margin-bottom:10px; }
+.ch-banner-pills { display:flex; gap:6px; flex-wrap:wrap; }
+.ch-banner-pill { font-size:.6rem; font-weight:800; padding:3px 10px; border-radius:20px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); color:rgba(255,255,255,.8); }
+.ch-banner-arrow { font-size:2rem; color:rgba(255,255,255,.3); flex-shrink:0; }
+
+/* TOOLS */
+.tools-big { display:grid; grid-template-columns:1fr 1fr; gap:12px; background:#fff; border-radius:20px; padding:16px; box-shadow:0 2px 16px rgba(0,0,0,.07); }
+.tool-big { display:flex; align-items:center; gap:14px; background:#f9f9f9; border-radius:14px; padding:18px 40px 18px 16px; border:1.5px solid #ebebeb; cursor:pointer; position:relative; transition:transform .2s,box-shadow .2s; }
+.tool-big:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,.09); }
+.tool-icon { font-size:2.8rem; flex-shrink:0; }
+.tool-big h3 { font-size:1rem; font-weight:800; }
+.tool-big p { font-size:.78rem; color:var(--muted); margin-top:2px; }
+.arrow { position:absolute; right:14px; top:50%; transform:translateY(-50%); color:#bbb; font-size:1.2rem; }
+.tools-small { display:grid; grid-template-columns:1fr 1fr; gap:10px; background:#fff; border-radius:20px; padding:14px; box-shadow:0 2px 16px rgba(0,0,0,.07); }
+.tool-sm { display:flex; align-items:center; gap:10px; background:#f4f4f4; border-radius:12px; padding:13px 36px 13px 12px; cursor:pointer; position:relative; transition:background .2s; }
+.tool-sm:hover { background:#ebebeb; }
+.tool-icon-sm { font-size:2rem; flex-shrink:0; }
+.tool-sm h3 { font-size:.86rem; font-weight:800; }
+.tool-sm p { font-size:.72rem; color:var(--muted); margin-top:1px; }
+.arrow-sm { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#bbb; font-size:1rem; }
+
+/* WORKOUT MODAL */
+.modal-bg { position:fixed; inset:0; background:rgba(0,0,0,.7); backdrop-filter:blur(6px); z-index:2000; display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; }
+.modal-bg.open { opacity:1; pointer-events:all; }
+.modal { background:#fff; border-radius:24px 24px 0 0; width:100%; max-width:680px; max-height:90vh; display:flex; flex-direction:column; transform:translateY(100%); transition:transform .4s cubic-bezier(.4,0,.2,1); overflow:hidden; }
+.modal-bg.open .modal { transform:translateY(0); }
+.modal-handle { width:40px; height:4px; background:#ddd; border-radius:2px; margin:12px auto 0; flex-shrink:0; }
+.modal-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px 14px; border-bottom:1px solid #f0f0f0; flex-shrink:0; }
+.modal-title { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:1px; }
+.modal-close { width:32px; height:32px; border-radius:8px; background:#f2f2f2; border:none; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.modal-body { overflow-y:auto; padding:16px 20px 24px; flex:1; }
+.modal-body::-webkit-scrollbar { width:4px; }
+.modal-body::-webkit-scrollbar-thumb { background:#ddd; border-radius:2px; }
+.exercise-list { display:flex; flex-direction:column; gap:16px; }
+.exercise-item { border-radius:16px; overflow:hidden; background:#fff; border:1.5px solid #ebebeb; box-shadow:0 2px 10px rgba(0,0,0,.06); transition:transform .22s; }
+.exercise-item:hover { transform:translateY(-3px); }
+.exercise-cover { position:relative; width:100%; height:170px; overflow:hidden; }
+.exercise-cover img { width:100%; height:100%; object-fit:cover; display:block; }
+.exercise-cover::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom,rgba(0,0,0,.08) 0%,rgba(0,0,0,.55) 100%); }
+.ex-num { position:absolute; top:10px; left:12px; z-index:2; width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg,#ff6b35,#e53e2f); color:#fff; font-size:.72rem; font-weight:900; display:flex; align-items:center; justify-content:center; }
+.ex-cover-title { position:absolute; bottom:10px; left:12px; right:12px; z-index:2; color:#fff; font-family:'Bebas Neue',sans-serif; font-size:1.25rem; letter-spacing:1px; }
+.ex-timer-btn { position:absolute; top:10px; right:12px; z-index:2; background:rgba(255,255,255,.18); border:1.5px solid rgba(255,255,255,.35); backdrop-filter:blur(8px); color:#fff; font-size:.68rem; font-weight:800; padding:5px 12px; border-radius:20px; cursor:pointer; text-transform:uppercase; }
+.exercise-info { padding:13px 14px 15px; }
+.exercise-info p { font-size:.79rem; color:var(--muted); line-height:1.5; margin-bottom:10px; }
+.exercise-meta-row { display:flex; gap:8px; flex-wrap:wrap; }
+.ex-chip { font-size:.68rem; font-weight:800; padding:4px 11px; border-radius:20px; text-transform:uppercase; }
+.ex-chip.sets { background:rgba(255,107,53,.12); color:var(--orange); }
+.ex-chip.reps { background:rgba(26,26,26,.07); color:#444; }
+.ex-chip.rest { background:rgba(52,168,83,.1); color:#2a8a47; }
+.timer-box { background:linear-gradient(135deg,#1a1a1a,#2d2d2d); border-radius:18px; padding:22px; text-align:center; margin-bottom:20px; color:#fff; }
+.timer-box h3 { font-family:'Bebas Neue',sans-serif; font-size:1.2rem; letter-spacing:1px; margin-bottom:12px; color:rgba(255,255,255,.7); }
+.timer-display { font-family:'Bebas Neue',sans-serif; font-size:4rem; letter-spacing:4px; color:#fff; line-height:1; margin-bottom:4px; }
+.timer-label { font-size:.75rem; font-weight:700; color:rgba(255,255,255,.4); text-transform:uppercase; letter-spacing:1px; margin-bottom:18px; }
+.timer-btns { display:flex; gap:12px; justify-content:center; }
+.timer-btn { padding:10px 24px; border-radius:10px; font-weight:800; font-size:.82rem; text-transform:uppercase; cursor:pointer; border:none; transition:all .2s; }
+.timer-btn.start { background:linear-gradient(135deg,#ff6b35,#e53e2f); color:#fff; }
+.timer-btn.reset { background:rgba(255,255,255,.1); color:rgba(255,255,255,.7); border:1px solid rgba(255,255,255,.15); }
+.timer-exercise-name { font-size:.8rem; font-weight:700; color:var(--orange); margin-bottom:2px; }
+
+/* ─── FOOTER ─── */
+.site-footer{background:#0d0d0d;color:#fff;padding:0;margin-top:0;border-top:none;}
+.footer-top{background:#111;padding:36px 20px 32px;border-top:1px solid rgba(255,255,255,.07);}
+.footer-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:32px;}
+.footer-brand .footer-logo{display:flex;align-items:center;gap:10px;font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:2px;color:#fff;margin-bottom:10px;text-decoration:none;}
+.footer-logo .fl-icon{width:34px;height:34px;background:linear-gradient(135deg,#ff6b35,#e53e2f);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.footer-brand p{font-size:.75rem;font-weight:600;color:rgba(255,255,255,.35);line-height:1.7;max-width:200px;margin-bottom:14px;}
+.footer-social{display:flex;gap:8px;}
+.f-social-btn{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:.9rem;text-decoration:none;transition:all .2s;}
+.f-social-btn:hover{background:rgba(255,107,53,.2);border-color:rgba(255,107,53,.3);}
+.footer-col-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:1px;color:#fff;margin-bottom:12px;}
+.footer-col-title::after{content:'';display:block;width:24px;height:2px;background:linear-gradient(90deg,#ff6b35,#e53e2f);border-radius:2px;margin-top:5px;}
+.footer-links{display:flex;flex-direction:column;gap:7px;}
+.footer-links a{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.4);text-decoration:none;transition:color .2s;display:flex;align-items:center;gap:7px;}
+.footer-links a:hover{color:#ff6b35;}
+.footer-links a span{font-size:.75rem;}
+.footer-bottom{background:#0a0a0a;padding:14px 20px;border-top:1px solid rgba(255,255,255,.06);}
+.footer-bottom-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.footer-copy{font-size:.7rem;font-weight:700;color:rgba(255,255,255,.2);}
+.footer-copy span{color:#ff6b35;}
+.footer-bottom-links{display:flex;gap:16px;}
+.footer-bottom-links a{font-size:.68rem;font-weight:800;color:rgba(255,255,255,.25);text-decoration:none;transition:color .2s;}
+.footer-bottom-links a:hover{color:#ff6b35;}
+@media(max-width:640px){.footer-inner{grid-template-columns:1fr 1fr;gap:24px;}.footer-brand{grid-column:1/-1;}.footer-bottom-inner{flex-direction:column;text-align:center;}}
+@media(max-width:380px){.footer-inner{grid-template-columns:1fr;}}
+@keyframes slideDown { from{opacity:0;transform:translateX(-50%) translateY(-20px);}to{opacity:1;transform:translateX(-50%) translateY(0);} }
+@media(max-width:640px){ .nav-links{display:none;} nav{padding:12px 18px;} }
+@media(max-width:600px){ .goal-grid,.tools-big,.tools-small{grid-template-columns:1fr 1fr;} }
+@media(max-width:420px){ .tools-big,.tools-small{grid-template-columns:1fr;} }
+
+.tools-section-wrap{background:#0d0d0d;padding:36px 20px 40px;}.tools-section{max-width:720px;margin:0 auto;}
+
+.tools-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.tools-eyebrow-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.12),transparent);}
+.tools-eyebrow-text{font-size:.65rem;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.3);}
+
+.tools-heading{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,7vw,3.4rem);letter-spacing:2px;line-height:.95;margin-bottom:6px;}
+.tools-heading em{font-style:normal;background:linear-gradient(90deg,#e53e2f,#ff6b35);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.tools-sub{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.35);margin-bottom:28px;max-width:340px;line-height:1.6;}
+
+/* ─── GRID ─── */
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+/* ─── TOOL CARD BASE ─── */
+.tool-card{border-radius:24px;overflow:hidden;position:relative;cursor:pointer;text-decoration:none;display:block;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;}
+.tool-card:hover{transform:translateY(-6px);}
+
+/* ─── BMI CARD ─── */
+.tool-card.bmi{background:#111;border:1px solid rgba(255,255,255,.07);box-shadow:0 8px 40px rgba(0,0,0,.6);}
+.tool-card.bmi:hover{box-shadow:0 20px 60px rgba(229,62,47,.2);}
+.bmi-glow{position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(229,62,47,.35) 0%,transparent 70%);pointer-events:none;}
+.bmi-grid-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;}
+
+.bmi-top{padding:22px 22px 0;}
+.bmi-icon-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.bmi-icon-wrap{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#e53e2f,#ff6b35);display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 6px 20px rgba(229,62,47,.4);}
+.bmi-tag{font-size:.6rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.25);background:rgba(255,255,255,.06);padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.08);}
+.bmi-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:1.5px;line-height:1;margin-bottom:4px;}
+.bmi-title span{color:#e53e2f;}
+.bmi-desc{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.35);line-height:1.5;margin-bottom:18px;}
+
+/* BMI GAUGE VISUAL */
+.bmi-gauge-wrap{margin:0 -0px;padding:0 22px 18px;}
+.bmi-gauge{height:8px;border-radius:20px;background:linear-gradient(90deg,#3b82f6 0%,#22c55e 30%,#f59e0b 60%,#ef4444 85%,#7c3aed 100%);position:relative;margin-bottom:8px;overflow:visible;}
+.bmi-gauge-needle{position:absolute;top:50%;left:28%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.2),0 4px 12px rgba(0,0,0,.5);transition:left .4s;}
+.bmi-gauge-labels{display:flex;justify-content:space-between;}
+.bmi-gauge-label{font-size:.5rem;font-weight:800;color:rgba(255,255,255,.25);text-transform:uppercase;}
+.bmi-val-row{display:flex;align-items:baseline;gap:6px;margin-top:10px;}
+.bmi-val-num{font-family:'Bebas Neue',sans-serif;font-size:2.6rem;line-height:1;color:#e53e2f;}
+.bmi-val-unit{font-size:.7rem;font-weight:800;color:rgba(255,255,255,.3);}
+.bmi-val-status{font-size:.65rem;font-weight:800;background:rgba(229,62,47,.15);color:#ff6b35;padding:3px 10px;border-radius:10px;border:1px solid rgba(229,62,47,.2);}
+
+.bmi-bottom{padding:14px 22px 20px;border-top:1px solid rgba(255,255,255,.05);}
+.bmi-cta{display:flex;align-items:center;justify-content:space-between;}
+.bmi-cta-text{font-size:.72rem;font-weight:800;color:rgba(255,255,255,.45);}
+.bmi-cta-arrow{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#e53e2f,#ff6b35);display:flex;align-items:center;justify-content:center;font-size:.85rem;box-shadow:0 4px 14px rgba(229,62,47,.4);transition:transform .2s;}
+.tool-card.bmi:hover .bmi-cta-arrow{transform:translateX(3px);}
+
+/* ─── CALORIES CARD ─── */
+.tool-card.cal{background:#0a0a0a;border:1px solid rgba(255,255,255,.07);box-shadow:0 8px 40px rgba(0,0,0,.6);}
+.tool-card.cal:hover{box-shadow:0 20px 60px rgba(245,158,11,.18);}
+.cal-glow{position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.25) 0%,transparent 70%);pointer-events:none;}
+
+.cal-top{padding:22px 22px 0;}
+.cal-icon-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.cal-icon-wrap{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 6px 20px rgba(245,158,11,.35);}
+.cal-tag{font-size:.6rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.25);background:rgba(255,255,255,.06);padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.08);}
+.cal-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:1.5px;line-height:1;margin-bottom:4px;}
+.cal-title span{color:#f59e0b;}
+.cal-desc{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.35);line-height:1.5;margin-bottom:16px;}
+
+/* CALORIE RING VISUAL */
+.cal-ring-wrap{display:flex;align-items:center;gap:16px;padding-bottom:18px;}
+.cal-ring-svg{flex-shrink:0;position:relative;}
+.cal-ring-svg svg{transform:rotate(-90deg);}
+.cal-ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.cal-ring-num{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;line-height:1;color:#f59e0b;}
+.cal-ring-lbl{font-size:.42rem;font-weight:800;color:rgba(255,255,255,.3);text-transform:uppercase;margin-top:1px;}
+.cal-macros{flex:1;display:flex;flex-direction:column;gap:7px;}
+.cal-macro{display:flex;flex-direction:column;gap:3px;}
+.cal-macro-top{display:flex;justify-content:space-between;align-items:center;}
+.cal-macro-name{font-size:.62rem;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;}
+.cal-macro-val{font-size:.68rem;font-weight:900;color:rgba(255,255,255,.6);}
+.cal-macro-bar{height:4px;border-radius:4px;background:rgba(255,255,255,.07);}
+.cal-macro-fill{height:100%;border-radius:4px;transition:width .6s;}
+.cal-macro-fill.carb{background:linear-gradient(90deg,#f59e0b,#fbbf24);width:55%;}
+.cal-macro-fill.prot{background:linear-gradient(90deg,#3b82f6,#60a5fa);width:30%;}
+.cal-macro-fill.fat{background:linear-gradient(90deg,#ef4444,#f87171);width:20%;}
+
+.cal-bottom{padding:14px 22px 20px;border-top:1px solid rgba(255,255,255,.05);}
+.cal-cta{display:flex;align-items:center;justify-content:space-between;}
+.cal-cta-text{font-size:.72rem;font-weight:800;color:rgba(255,255,255,.45);}
+.cal-cta-arrow{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;font-size:.85rem;box-shadow:0 4px 14px rgba(245,158,11,.4);transition:transform .2s;}
+.tool-card.cal:hover .cal-cta-arrow{transform:translateX(3px);}
+
+/* ─── BOTTOM 2 TOOLS ─── */
+.tools-grid-bottom{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;}
+.mini-tool-card{border-radius:20px;border:1px solid rgba(255,255,255,.07);background:#111;padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .3s;text-decoration:none;}
+.mini-tool-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.15);}
+.mini-tool-icon{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.mini-tool-icon.hiit{background:linear-gradient(135deg,#8b5cf6,#6d28d9);box-shadow:0 6px 18px rgba(139,92,246,.35);}
+.mini-tool-icon.prog{background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 6px 18px rgba(34,197,94,.3);}
+.mini-tool-info{flex:1;}
+.mini-tool-name{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.8px;margin-bottom:2px;}
+.mini-tool-desc{font-size:.65rem;font-weight:700;color:rgba(255,255,255,.3);line-height:1.4;}
+.mini-tool-arrow{color:rgba(255,255,255,.2);font-size:.9rem;transition:all .2s;}
+.mini-tool-card:hover .mini-tool-arrow{color:rgba(255,255,255,.6);transform:translateX(3px);}
+
+/* ─── SEO CONTENT SECTION ─── */
+.seo-section-wrap{background:#f7f7f7;padding:44px 20px 50px;}
+.seo-section{max-width:760px;margin:0 auto;}
+.seo-eyebrow{font-size:.68rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#ff6b35;margin-bottom:8px;}
+.seo-main-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);letter-spacing:1px;line-height:1.05;color:#1a1a1a;margin-bottom:14px;}
+.seo-main-title span{color:#e53e2f;}
+.seo-lead{font-size:.88rem;font-weight:600;color:#555;line-height:1.75;max-width:620px;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid #e8e8e8;}
+.seo-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.seo-card{background:#fff;border-radius:18px;padding:22px;border:1px solid #ebebeb;box-shadow:0 2px 12px rgba(0,0,0,.05);margin-bottom:16px;}
+.seo-card-full{margin-bottom:16px;}
+.seo-card h3{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:.5px;color:#1a1a1a;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #f0f0f0;}
+.seo-card p{font-size:.8rem;font-weight:600;color:#666;line-height:1.8;margin-bottom:10px;}
+.seo-card p:last-child{margin-bottom:0;}
+.seo-card strong{color:#e53e2f;font-weight:800;}
+.seo-cta-box{background:linear-gradient(135deg,#1a0800,#2d0e00);border-radius:20px;padding:28px;text-align:center;border:1px solid rgba(255,107,53,.2);}
+.seo-cta-box h3{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;color:#fff;margin-bottom:10px;}
+.seo-cta-box p{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:18px;max-width:440px;margin-left:auto;margin-right:auto;}
+.seo-cta-btn{display:inline-block;background:linear-gradient(135deg,#e53e2f,#ff6b35);color:#fff;font-weight:900;font-size:.88rem;letter-spacing:1px;padding:13px 32px;border-radius:12px;text-decoration:none;text-transform:uppercase;box-shadow:0 6px 20px rgba(229,62,47,.4);transition:all .2s;}
+.seo-cta-btn:hover{transform:translateY(-2px);}
+@media(max-width:600px){.seo-grid-2{grid-template-columns:1fr;}}
+
+/* FADE IN */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.tools-section>*{animation:fadeUp .5s ease both;}
+.tools-eyebrow{animation-delay:.05s;}
+.tools-heading{animation-delay:.1s;}
+.tools-sub{animation-delay:.15s;}
+.tools-grid{animation-delay:.2s;}
+.tools-grid-bottom{animation-delay:.3s;}
+
+@media(max-width:500px){
+  .tools-grid,.tools-grid-bottom{grid-template-columns:1fr;}
+  .bmi-title,.cal-title{font-size:1.6rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo"><div class="s-icon">💪</div>HomeFit</div>
+    <div class="sidebar-close" onclick="closeSidebar()">✕</div>
+  </div>
+  <div class="sidebar-body">
+    <div class="sidebar-nav">
+      <div class="sidebar-lbl">Menu</div>
+      <a href="index.html" class="active"><div class="s-icon2">🏠</div>Home</a>
+      <a href="monthly-chart.html"><div class="s-icon2">📅</div>Monthly Chart</a>
+      <a href="challenges.html"><div class="s-icon2">🏆</div>Challenges</a>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-lbl">Fitness Tools</div>
+      <a href="bmi-calculator.html"><div class="s-icon2">⚖️</div>BMI Calculator</a>
+      <a href="calorie-tracker.html"><div class="s-icon2">🔥</div>Calorie Tracker</a>
+      <a href="hiit-timer.html"><div class="s-icon2">⏱️</div>HIIT Timer</a>
+      <a href="progress-tracker.html"><div class="s-icon2">📋</div>Progress Tracker</a>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-lbl">Company</div>
+      <a href="about.html"><div class="s-icon2">🏠</div>About Us</a>
+      <a href="contact.html"><div class="s-icon2">📬</div>Contact Us</a>
+      <a href="privacy-policy.html"><div class="s-icon2">🔒</div>Privacy Policy</a>
+      <a href="terms-and-conditions.html"><div class="s-icon2">📄</div>Terms & Conditions</a>
+    </div>
+  </div>
+  <div class="sidebar-footer"><a href="challenges.html">🚀 Start Free Today</a></div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-logo"><div class="logo-icon">💪</div>HomeFit</div>
+  <div class="nav-links">
+    <a href="index.html" class="active">Home</a>
+    <a href="monthly-chart.html">Monthly Chart</a>
+    <a href="challenges.html">Challenges</a>
+    <a href="#" class="nav-cta">Start Free</a>
+  </div>
+  <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- SLIDER -->
+<div class="slider-section" id="slider">
+  <div class="slide active">
+    <div class="slide-content">
+      <div class="slide-badge">🔥 7 Day Beginner Fitness Plan</div>
+      <h2>HomeFit Beginner<br>Workout</h2>
+      <p>Build strength, burn fat and stay fit at home without any equipment.</p>
+      <div class="slide-btns">
+        <button class="btn-primary" onclick="openModal('fatloss')">Start Workout</button>
+        <button class="btn-glass" onclick="openModal('fullbody')">Browse All</button>
+      </div>
+    </div>
+  </div>
+  <div class="slide">
+    <div class="slide-content">
+      <div class="slide-badge">💪 Muscle Building Program</div>
+      <h2>Build Muscle<br>Gain Strength</h2>
+      <p>Follow our expert-designed muscle gain program and see real results in 30 days.</p>
+      <div class="slide-btns">
+        <a href="monthly-chart.html" class="btn-primary">View Monthly Plan</a>
+        <button class="btn-glass" onclick="openModal('muscle')">Quick Workout</button>
+      </div>
+    </div>
+  </div>
+  <div class="slide">
+    <div class="slide-content">
+      <div class="slide-badge">⚡ 30-Day Challenges</div>
+      <h2>Push Your<br>Limits</h2>
+      <p>Iron Hold, Push-Up, Ab Blast — 30-day bodyweight challenges for everyone.</p>
+      <div class="slide-btns">
+        <a href="challenges.html" class="btn-primary">View Challenges</a>
+        <button class="btn-glass" onclick="openModal('fullbody')">Quick Workout</button>
+      </div>
+    </div>
+  </div>
+  <div class="slide">
+    <div class="slide-content">
+      <div class="slide-badge">🔥 Fat Burning Sessions</div>
+      <h2>Burn Fat<br>Feel Amazing</h2>
+      <p>High-intensity fat loss workouts designed to maximize calorie burn every session.</p>
+      <div class="slide-btns">
+        <button class="btn-primary" onclick="openModal('fatloss')">Burn Fat Now</button>
+        <button class="btn-glass" onclick="openModal('athletics')">Explore HIIT</button>
+      </div>
+    </div>
+  </div>
+  <div class="slider-dots" id="dots">
+    <div class="dot active" onclick="goToSlide(0)"></div>
+    <div class="dot" onclick="goToSlide(1)"></div>
+    <div class="dot" onclick="goToSlide(2)"></div>
+    <div class="dot" onclick="goToSlide(3)"></div>
+  </div>
+  <div class="slide-counter"><span id="currentNum">01</span> / 04</div>
+  <div class="slide-progress" id="progress"></div>
+</div>
+
+<!-- CHOOSE YOUR GOAL -->
+<div class="section">
+  <div class="section-title">Choose Your Goal</div>
+  <div class="goal-wrap">
+    <div class="goal-grid">
+      <div class="goal-card" onclick="location.href='challenge-fatloss.html'">
+        <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&q=80" alt="Fat Loss">
+        <div class="goal-card-body"><h3>Fat Loss</h3><p>Burn Calories</p></div>
+      </div>
+      <div class="goal-card" onclick="location.href='monthly-chart.html'">
+        <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=400&q=80" alt="Muscle Gain">
+        <div class="goal-card-body"><h3>Muscle Gain</h3><p>Monthly Plan</p></div>
+      </div>
+      <div class="goal-card" onclick="location.href='challenge-fatloss.html'">
+        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80" alt="Full Body">
+        <div class="goal-card-body"><h3>Full Body Workout</h3><p>Get Fit</p></div>
+      </div>
+      <div class="goal-card" onclick ="location.href='challenge-distance.html'">
+        <img src="https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=400&q=80" alt="Distance">
+        <div class="goal-card-body"><h3>Distance Workouts</h3><p>Get Fit</p></div>
+      </div>
+      <div class="goal-card" onclick="location.href='CHALLENGE-sports.html'">
+        <img src="https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=400&q=80" alt="Sports">
+        <div class="goal-card-body"><h3>Sports Workouts</h3><p>Boost Performance</p></div>
+      </div>
+      <div class="goal-card" onclick="location.href='challenge-athletics.html'">
+        <img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=400&q=80" alt="Athletics">
+        <div class="goal-card-body"><h3>Athletics Workouts</h3><p>Increase Speed</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 30-DAY CHALLENGES CARD -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">30-Day Challenges</div>
+  <a href="challenges.html" class="challenges-banner">
+    <div class="challenges-banner-bg"></div>
+    <div class="challenges-banner-inner">
+      <div class="ch-banner-icon">🏆</div>
+      <div class="ch-banner-text">
+        <div class="ch-banner-eyebrow">⚡ No Equipment · Bodyweight Only</div>
+        <div class="ch-banner-title">30-Day Challenges</div>
+        <div class="ch-banner-desc">Iron Hold · Push-Up · Ab Blast — pick your challenge and start today</div>
+        <div class="ch-banner-pills">
+          <span class="ch-banner-pill">🔥 3 Challenges</span>
+          <span class="ch-banner-pill">🏠 Home Workout</span>
+          <span class="ch-banner-pill">📅 30 Days Each</span>
+        </div>
+      </div>
+      <div class="ch-banner-arrow">›</div>
+    </div>
+  </a>
+</div>
+
+<!-- TOOLS BIG -->
+
+<div class="tools-section-wrap"><section class="tools-section">
+
+  <div class="tools-eyebrow">
+    <span class="tools-eyebrow-text">Fitness Tools</span>
+    <div class="tools-eyebrow-line"></div>
+  </div>
+
+  <h2 class="tools-heading">YOUR <em>BODY,</em><br>YOUR DATA</h2>
+  <p class="tools-sub">Smart calculators jo tumhare numbers ko samjhe — BMI se lekar daily calories tak.</p>
+
+  <div class="tools-grid">
+
+    <!-- BMI CARD -->
+    <a class="tool-card bmi" href="bmi-calculator.html">
+      <div class="bmi-glow"></div>
+      <div class="bmi-grid-lines"></div>
+      <div class="bmi-top">
+        <div class="bmi-icon-row">
+          <div class="bmi-icon-wrap">⚖️</div>
+          <span class="bmi-tag">Free Tool</span>
+        </div>
+        <div class="bmi-title">BMI<br><span>CHECKER</span></div>
+        <div class="bmi-desc">Apna Body Mass Index check karo aur apni health category jaano.</div>
+        <div class="bmi-val-row">
+          <span class="bmi-val-num">22.4</span>
+          <span class="bmi-val-unit">BMI</span>
+          <span class="bmi-val-status">Normal ✓</span>
+        </div>
+      </div>
+      <div class="bmi-gauge-wrap">
+        <div class="bmi-gauge">
+          <div class="bmi-gauge-needle"></div>
+        </div>
+        <div class="bmi-gauge-labels">
+          <span class="bmi-gauge-label">Under</span>
+          <span class="bmi-gauge-label">Normal</span>
+          <span class="bmi-gauge-label">Over</span>
+          <span class="bmi-gauge-label">Obese</span>
+        </div>
+      </div>
+      <div class="bmi-bottom">
+        <div class="bmi-cta">
+          <span class="bmi-cta-text">Calculate now →</span>
+          <div class="bmi-cta-arrow">→</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- CALORIES CARD -->
+    <a class="tool-card cal" href="calorie-tracker.html">
+      <div class="cal-glow"></div>
+      <div class="cal-top">
+        <div class="cal-icon-row">
+          <div class="cal-icon-wrap">🔥</div>
+          <span class="cal-tag">Free Tool</span>
+        </div>
+        <div class="cal-title">CALORIE<br><span>TRACKER</span></div>
+        <div class="cal-desc">Roz ki zaroorat jaano — goal ke hisaab se calories plan karo.</div>
+      </div>
+      <!-- Ring + macros -->
+      <div class="cal-ring-wrap" style="padding:0 22px 18px;">
+        <div class="cal-ring-svg">
+          <svg width="72" height="72" viewBox="0 0 72 72">
+            <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="7"/>
+            <circle cx="36" cy="36" r="28" fill="none" stroke="url(#calGrad)" stroke-width="7" stroke-dasharray="175.9" stroke-dashoffset="55" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="calGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#f59e0b"/>
+                <stop offset="100%" stop-color="#ef4444"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="cal-ring-center">
+            <div class="cal-ring-num">2100</div>
+            <div class="cal-ring-lbl">kcal</div>
+          </div>
+        </div>
+        <div class="cal-macros">
+          <div class="cal-macro">
+            <div class="cal-macro-top"><span class="cal-macro-name">Carbs</span><span class="cal-macro-val">262g</span></div>
+            <div class="cal-macro-bar"><div class="cal-macro-fill carb"></div></div>
+          </div>
+          <div class="cal-macro">
+            <div class="cal-macro-top"><span class="cal-macro-name">Protein</span><span class="cal-macro-val">157g</span></div>
+            <div class="cal-macro-bar"><div class="cal-macro-fill prot"></div></div>
+          </div>
+          <div class="cal-macro">
+            <div class="cal-macro-top"><span class="cal-macro-name">Fat</span><span class="cal-macro-val">58g</span></div>
+            <div class="cal-macro-bar"><div class="cal-macro-fill fat"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="cal-bottom">
+        <div class="cal-cta">
+          <span class="cal-cta-text">Calculate now →</span>
+          <div class="cal-cta-arrow">→</div>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- BOTTOM ROW -->
+  <div class="tools-grid-bottom">
+    <a class="mini-tool-card" href="hiit-timer.html">
+      <div class="mini-tool-icon hiit">⏱️</div>
+      <div class="mini-tool-info">
+        <div class="mini-tool-name">HIIT Timer</div>
+        <div class="mini-tool-desc">Custom interval timer for intense workouts</div>
+      </div>
+      <span class="mini-tool-arrow">→</span>
+    </a>
+    <a class="mini-tool-card" href="progress-tracker.html">
+      <div class="mini-tool-icon prog">📊</div>
+      <div class="mini-tool-info">
+        <div class="mini-tool-name">Progress Tracker</div>
+        <div class="mini-tool-desc">Weight, strength & before/after comparison</div>
+      </div>
+      <span class="mini-tool-arrow">→</span>
+    </a>
+  </div>
+
+</section>
+</div>
+
+<!-- SEO CONTENT SECTION -->
+<div class="seo-section-wrap">
+<section class="seo-section">
+
+  <div class="seo-intro">
+    <div class="seo-eyebrow">💪 HomeFit ke baare mein</div>
+    <h2 class="seo-main-title">Ghar Pe Gym — <span>Bina Equipment,</span> Bina Paison Ke</h2>
+    <p class="seo-lead">HomeFit India ka free home workout platform hai jahan tum apni fitness journey shuru kar sakte ho — bina gym membership ke, bina kisi equipment ke, aur bina kisi cost ke. Sirf ek smartphone chahiye aur determination — baaki hum handle karte hain.</p>
+  </div>
+
+  <div class="seo-grid-2">
+    <div class="seo-card">
+      <h3>🏠 Home Workout Kyun Choose Karein?</h3>
+      <p>Aaj ke busy life mein gym jaana har kisi ke liye possible nahi hota. Kabhi time nahi hota, kabhi gym expensive hoti hai, aur kabhi nearest gym bhi bahut door hoti hai. Lekin fitness rukni nahi chahiye sirf isliye.</p>
+      <p>Research prove karti hai ki <strong>bodyweight exercises</strong> utni hi effective hain jitni gym mein equipment workout. Push-ups, squats, burpees, planks — yeh sab exercises aapke puri body ko target karti hain aur aapko gym-level results deti hain, woh bhi apne ghar ke comfort mein.</p>
+      <p>HomeFit pe sare workouts specifically design kiye gaye hain taaki koi bhi inhe apne bedroom, terrace ya drawing room mein kar sake — without any equipment, without any gym subscription.</p>
+    </div>
+
+    <div class="seo-card">
+      <h3>📅 30-Day Challenge System Kya Hai?</h3>
+      <p>Hamare <strong>30-Day Fitness Challenges</strong> ek unique playlist system pe based hain. Pehle din sirf 1 exercise — simple aur easy. Dusre din 2 exercises, teesre din 3 — aur aise har roz ek nayi exercise unlock hoti rehti hai.</p>
+      <p>Yeh system isliye design kiya gaya hai kyunki beginners ke liye suddenly zyada workout karna overwhelming hota hai. Gradual progression se body adjust karti hai, injury ka risk kam hota hai, aur sabse important — habit ban jaati hai.</p>
+      <p>Fat Loss se lekar Muscle Gain, Full Body se lekar Athletics tak — <strong>7 different challenges</strong> hain jo alag alag goals ko target karte hain. Sab free, sab complete, sab aapke phone mein save.</p>
+    </div>
+  </div>
+
+  <div class="seo-card seo-card-full">
+    <h3>⚡ HomeFit Pe Kya Kya Milega?</h3>
+    <p>HomeFit sirf ek workout website nahi hai — yeh ek complete <strong>free fitness ecosystem</strong> hai. Hamare paas hain:</p>
+    <p><strong>30-Day Challenges</strong> — Fat Loss, Muscle Gain, Full Body, Distance Running, Sports Performance aur Athletics ke liye specially designed daily workout plans. Har challenge mein 30 unique exercises hain jo roz unlock hoti hain.</p>
+    <p><strong>BMI Calculator</strong> — Apna Body Mass Index calculate karo aur jaano ki aap healthy weight range mein ho ya nahi. Ideal weight range aur personalized health tips bhi milenge — completely free.</p>
+    <p><strong>Calorie Tracker</strong> — Mifflin-St Jeor formula se apna daily calorie requirement calculate karo — weight loss, maintenance ya muscle gain, jis bhi goal ke liye. Protein, carbs aur fat ka complete macro breakdown bhi milega.</p>
+    <p><strong>HIIT Timer</strong> — High Intensity Interval Training ke liye custom interval timer. Tabata, Beginner, Intermediate ya Advanced — preset choose karo ya apna custom timer set karo.</p>
+    <p><strong>Progress Tracker</strong> — Har roz ka weight aur exercises log karo. Before vs Now comparison dikhega — kitna weight kam hua, strength mein kitna improvement aaya. Progress photo reminder bhi hai.</p>
+  </div>
+
+  <div class="seo-grid-2">
+    <div class="seo-card">
+      <h3>🔥 Fat Loss Ke Liye Best Home Workouts</h3>
+      <p>Agar tumhara goal <strong>weight loss</strong> ya fat burn karna hai, toh HomeFit ka Fat Loss 30-Day Challenge perfect hai. Isme high-intensity exercises hain jaise Burpees, Jumping Jacks, Mountain Climbers, High Knees — yeh sab exercises heart rate badhaati hain aur maximum calorie burn karti hain.</p>
+      <p>Saath mein HIIT Timer use karo — short bursts mein intense exercise karo aur phir rest lo. Studies show karti hain ki HIIT se workout ke baad bhi 24-48 ghante tak fat burn hota rehta hai. Yeh <strong>Afterburn Effect</strong> regular cardio mein nahi hota.</p>
+    </div>
+    <div class="seo-card">
+      <h3>💪 Muscle Gain Bina Gym Ke — Possible Hai?</h3>
+      <p>Haan, bilkul possible hai! <strong>Bodyweight training</strong> se muscle build hoti hai — bas progressive overload chahiye. HomeFit ka Muscle Gain Challenge yahi karta hai — roz naye aur harder exercises add hoti jaati hain.</p>
+      <p>Push-Up variations — Wide, Diamond, Decline, Explosive — se chest, shoulders aur triceps build hote hain. Squats, Lunges, Glute Bridges se legs aur glutes. Plank variations se core. 30 days mein tum clearly feel karoge body mein strength aur muscle definition.</p>
+    </div>
+  </div>
+
+  <div class="seo-card seo-card-full">
+    <h3>🌟 HomeFit Alag Kyun Hai — Doosre Apps Se?</h3>
+    <p>Market mein bahut saare fitness apps hain — lekin unme se zyada saare ya toh paid hain, ya itne features se bhari hain ki confusing lagti hain, ya phir ads se bhari hain jo experience kharab karti hain. HomeFit ne yeh sab problems solve karne ki koshish ki hai.</p>
+    <p>Pehla farq — <strong>completely free</strong>. Koi subscription nahi, koi in-app purchase nahi, koi premium content behind paywall nahi. Sab kuch sab ke liye, hamesha.</p>
+    <p>Doosra farq — <strong>no account required</strong>. Koi signup, koi email verification, koi password याद karne ki zarurat nahi. Website open karo aur seedha workout shuru karo. Tumhara progress browser mein save hota hai — sirf tumhare device par, koi data collection nahi.</p>
+    <p>Teesra farq — <strong>no ads</strong>. Workout ke beech mein annoying ads nahi aate. Clean, distraction-free experience milti hai taaki tum sirf apni fitness par focus kar sako.</p>
+    <p>Aur sabse important — content <strong>scientifically backed</strong> hai. BMI aur Calorie calculators proven medical formulas use karte hain. Workout progressions exercise science ke principles pe based hain. Koi gimmick nahi, koi fake promises nahi — sirf real, practical fitness guidance.</p>
+  </div>
+
+  <div class="seo-cta-box">
+    <h3>🚀 Aaj Se Hi Shuru Karo</h3>
+    <p>Kal pe mat chodo — fitness ki journey ka sabse mushkil step pehla step hota hai. HomeFit pe aao, apna goal choose karo, aur aaj se hi pehla workout complete karo. 30 din mein khud difference feel karoge — guaranteed.</p>
+    <a href="challenges.html" class="seo-cta-btn">🔥 Challenges Dekho</a>
+  </div>
+
+</section>
+</div>
+
+<footer class="site-footer">
+
+  <div class="footer-top">
+    <div class="footer-inner">
+
+      <!-- BRAND -->
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">
+          <div class="fl-icon">💪</div>
+          HOMEFIT
+        </a>
+        <p>Ghar pe hi gym jaisi fitness — no equipment, no excuses. Completely free, hamesha.</p>
+        <div class="footer-social">
+          <a class="f-social-btn" href="/cdn-cgi/l/email-protection#5d30342e352f3c2f32353429696c6a641d3a303c3431733e3230" title="Email">📧</a>
+          <a class="f-social-btn" href="https://instagram.com" target="_blank" title="Instagram">📸</a>
+        </div>
+      </div>
+
+      <!-- CHALLENGES -->
+      <div>
+        <div class="footer-col-title">Challenges</div>
+        <div class="footer-links">
+          <a href="challenge-fatloss.html"><span>🔥</span>Fat Loss</a>
+          <a href="challenge-musclegain.html"><span>💪</span>Muscle Gain</a>
+          <a href="challenge-fullbody.html"><span>🏋️</span>Full Body</a>
+          <a href="challenge-distance.html"><span>🏃</span>Distance</a>
+          <a href="challenge-sports.html"><span>⚽</span>Sports</a>
+          <a href="challenge-athletics.html"><span>⚡</span>Athletics</a>
+        </div>
+      </div>
+
+      <!-- TOOLS -->
+      <div>
+        <div class="footer-col-title">Tools</div>
+        <div class="footer-links">
+          <a href="bmi-calculator.html"><span>⚖️</span>BMI Calculator</a>
+          <a href="calorie-tracker.html"><span>🔥</span>Calorie Tracker</a>
+          <a href="hiit-timer.html"><span>⏱️</span>HIIT Timer</a>
+          <a href="progress-tracker.html"><span>📊</span>Progress Tracker</a>
+          <a href="monthly-chart.html"><span>📅</span>Monthly Chart</a>
+        </div>
+      </div>
+
+      <!-- COMPANY -->
+      <div>
+        <div class="footer-col-title">Company</div>
+        <div class="footer-links">
+          <a href="about.html"><span>🏠</span>About Us</a>
+          <a href="contact.html"><span>📬</span>Contact Us</a>
+          <a href="privacy-policy.html"><span>🔒</span>Privacy Policy</a>
+          <a href="terms-and-conditions.html"><span>📄</span>Terms & Conditions</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <div class="footer-copy">© 2026 <span>HomeFit</span> · Made with 💪 by Rohit Mishra</div>
+      <div class="footer-bottom-links">
+        <a href="privacy-policy.html">Privacy</a>
+        <a href="terms-and-conditions.html">Terms</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </div>
+
+</footer>
+
+<!-- WORKOUT MODAL -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Workout</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// WORKOUT DATA
+const workoutData = {
+  fatloss:{ title:"Fat Loss", exercises:[
+    {name:"Jumping Jacks",desc:"Full body warm-up, raises heart rate fast.",sets:3,reps:"30 reps",rest:"20s",img:"https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?w=600&q=80",timer:30},
+    {name:"Burpees",desc:"Total body explosive movement for fat burn.",sets:3,reps:"10 reps",rest:"30s",img:"https://images.unsplash.com/photo-1616803689943-5601631c7fec?w=600&q=80",timer:45},
+    {name:"High Knees",desc:"Cardio drill that torches calories and tones legs.",sets:3,reps:"40 reps",rest:"20s",img:"https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=600&q=80",timer:40},
+    {name:"Mountain Climbers",desc:"Core + cardio combo — builds endurance while melting fat.",sets:3,reps:"30 reps",rest:"25s",img:"https://images.unsplash.com/photo-1544033527-b192daee1f5b?w=600&q=80",timer:35},
+  ]},
+  muscle:{ title:"Muscle Gain", exercises:[
+    {name:"Push-Ups",desc:"Classic compound push — builds chest, shoulders and triceps.",sets:4,reps:"15 reps",rest:"45s",img:"https://images.unsplash.com/photo-1598971639058-fab3c3109a15?w=600&q=80",timer:45},
+    {name:"Wide Push-Ups",desc:"Targets outer chest for a broader upper body.",sets:3,reps:"12 reps",rest:"45s",img:"https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&q=80",timer:45},
+    {name:"Bodyweight Squats",desc:"Works quads, hamstrings and glutes.",sets:4,reps:"12 reps",rest:"60s",img:"https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?w=600&q=80",timer:50},
+    {name:"Plank Hold",desc:"Isometric core exercise for deep stability.",sets:3,reps:"45s hold",rest:"30s",img:"https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?w=600&q=80",timer:45},
+  ]},
+  fullbody:{ title:"Full Body Workout", exercises:[
+    {name:"Dynamic Stretching",desc:"5-min full body warm-up.",sets:1,reps:"5 min",rest:"0s",img:"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80",timer:300},
+    {name:"Bodyweight Squats",desc:"Strengthens legs, glutes and core.",sets:3,reps:"15 reps",rest:"40s",img:"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80",timer:40},
+    {name:"Reverse Lunges",desc:"Balance and strength movement.",sets:3,reps:"10 each",rest:"40s",img:"https://images.unsplash.com/photo-1434682881908-b43d0467b798?w=600&q=80",timer:40},
+    {name:"Superman Hold",desc:"Strengthens lower back and glutes.",sets:3,reps:"15 reps",rest:"30s",img:"https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80",timer:30},
+  ]},
+  distance:{ title:"Distance Workouts", exercises:[
+    {name:"Brisk Walk / Jog",desc:"Steady-state cardio for base endurance.",sets:1,reps:"10 min",rest:"0s",img:"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=600&q=80",timer:600},
+    {name:"Interval Runs",desc:"30s sprint + 60s walk — boosts VO2 max.",sets:5,reps:"30s sprint",rest:"60s",img:"https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&q=80",timer:30},
+    {name:"Step-Ups",desc:"Strengthen legs for running.",sets:3,reps:"12 each",rest:"45s",img:"https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?w=600&q=80",timer:45},
+    {name:"Cool-down Walk",desc:"Bring heart rate back to resting level.",sets:1,reps:"5 min",rest:"0s",img:"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=600&q=80",timer:300},
+  ]},
+  sports:{ title:"Sports Workouts", exercises:[
+    {name:"Lateral Shuffles",desc:"Side-to-side agility for direction change.",sets:4,reps:"20s",rest:"20s",img:"https://images.unsplash.com/photo-1530549387789-4c1017266635?w=600&q=80",timer:20},
+    {name:"Jump Squats",desc:"Explosive lower body power.",sets:3,reps:"10 reps",rest:"60s",img:"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=600&q=80",timer:60},
+    {name:"T-Drill Sprints",desc:"Multi-directional sprint drill.",sets:4,reps:"1 round",rest:"45s",img:"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=600&q=80",timer:30},
+    {name:"Core Rotations",desc:"Rotational core power for all sports.",sets:3,reps:"15 each side",rest:"30s",img:"https://images.unsplash.com/photo-1571945192237-f8a99eed3c26?w=600&q=80",timer:35},
+  ]},
+  athletics:{ title:"Athletics Workouts", exercises:[
+    {name:"Sprint Drills",desc:"10m sprints for raw speed.",sets:6,reps:"10m sprint",rest:"60s",img:"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=600&q=80",timer:10},
+    {name:"Plyometric Jumps",desc:"Explosive jumps for fast-twitch power.",sets:4,reps:"8 reps",rest:"60s",img:"https://images.unsplash.com/photo-1530549387789-4c1017266635?w=600&q=80",timer:60},
+    {name:"Hurdle Hops",desc:"Lower body explosive power drills.",sets:3,reps:"10 reps",rest:"45s",img:"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=600&q=80",timer:45},
+    {name:"Hip Flexor Stretch",desc:"Cool-down after intense sprint work.",sets:2,reps:"30s each",rest:"0s",img:"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80",timer:30},
+  ]},
+};
+
+// TIMER
+let timerInterval=null,timerRunning=false,timerSeconds=0;
+function openModal(key){
+  const w=workoutData[key]; if(!w) return;
+  document.getElementById('modalTitle').textContent=w.title+' Workout';
+  document.getElementById('modalBody').innerHTML=`
+    <div class="timer-box">
+      <h3>⏱ Exercise Timer</h3>
+      <div class="timer-exercise-name" id="timerExName">Select an exercise below</div>
+      <div class="timer-display" id="timerDisplay">00:00</div>
+      <div class="timer-label" id="timerLabel">SELECT AN EXERCISE ↓</div>
+      <div class="timer-btns">
+        <button class="timer-btn start" id="timerStartBtn" onclick="toggleTimer()">▶ Start</button>
+        <button class="timer-btn reset" onclick="resetTimer()">↺ Reset</button>
+      </div>
+    </div>
+    <div class="exercise-list">${w.exercises.map((ex,i)=>`
+      <div class="exercise-item">
+        <div class="exercise-cover">
+          <img src="${ex.img}" alt="${ex.name}" loading="lazy">
+          <div class="ex-num">${i+1}</div>
+          <div class="ex-cover-title">${ex.name}</div>
+          <button class="ex-timer-btn" onclick="startExTimer(${ex.timer},'${ex.name}')">▶ ${ex.timer}s</button>
+        </div>
+        <div class="exercise-info">
+          <p>${ex.desc}</p>
+          <div class="exercise-meta-row">
+            <span class="ex-chip sets">${ex.sets} Sets</span>
+            <span class="ex-chip reps">${ex.reps}</span>
+            <span class="ex-chip rest">Rest ${ex.rest}</span>
+          </div>
+        </div>
+      </div>`).join('')}</div>`;
+  resetTimer();
+  document.getElementById('modalBg').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('modalBg').classList.remove('open');document.body.style.overflow='';clearInterval(timerInterval);timerRunning=false;}
+function startExTimer(s,n){clearInterval(timerInterval);timerRunning=false;timerSeconds=s;document.getElementById('timerExName').textContent=n;updateTimerDisplay();document.getElementById('timerLabel').textContent='READY — PRESS START';document.getElementById('timerStartBtn').textContent='▶ Start';}
+function toggleTimer(){
+  if(timerRunning){clearInterval(timerInterval);timerRunning=false;document.getElementById('timerStartBtn').textContent='▶ Resume';document.getElementById('timerLabel').textContent='PAUSED';}
+  else{if(timerSeconds<=0)return;timerRunning=true;document.getElementById('timerStartBtn').textContent='⏸ Pause';document.getElementById('timerLabel').textContent='RUNNING...';
+    timerInterval=setInterval(()=>{timerSeconds--;updateTimerDisplay();if(timerSeconds<=0){clearInterval(timerInterval);timerRunning=false;document.getElementById('timerLabel').textContent='✅ DONE!';document.getElementById('timerStartBtn').textContent='▶ Start';document.getElementById('timerDisplay').textContent='00:00';}},1000);}
+}
+function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerSeconds=0;['timerDisplay','timerLabel','timerStartBtn','timerExName'].forEach(id=>{const el=document.getElementById(id);if(!el)return;if(id==='timerDisplay')el.textContent='00:00';else if(id==='timerLabel')el.textContent='SELECT AN EXERCISE ↓';else if(id==='timerStartBtn')el.textContent='▶ Start';else el.textContent='Select an exercise below';});}
+function updateTimerDisplay(){const el=document.getElementById('timerDisplay');if(el)el.textContent=`${Math.floor(timerSeconds/60).toString().padStart(2,'0')}:${(timerSeconds%60).toString().padStart(2,'0')}`;}
+
+// SLIDER
+const slides=document.querySelectorAll('.slide'),dots=document.querySelectorAll('.dot'),progressBar=document.getElementById('progress'),currentNum=document.getElementById('currentNum');
+let current=0,sliderTimer;const DURATION=5000;
+function goToSlide(n){slides[current].classList.remove('active');dots[current].classList.remove('active');current=(n+slides.length)%slides.length;slides[current].classList.add('active');dots[current].classList.add('active');currentNum.textContent=String(current+1).padStart(2,'0');resetProgress();}
+function changeSlide(dir){goToSlide(current+dir);}
+function resetProgress(){clearTimeout(sliderTimer);progressBar.style.transition='none';progressBar.style.width='0%';setTimeout(()=>{progressBar.style.transition=`width ${DURATION}ms linear`;progressBar.style.width='100%';},50);sliderTimer=setTimeout(()=>changeSlide(1),DURATION);}
+let touchX=0;
+document.getElementById('slider').addEventListener('touchstart',e=>{touchX=e.touches[0].clientX;},{passive:true});
+document.getElementById('slider').addEventListener('touchend',e=>{const d=touchX-e.changedTouches[0].clientX;if(Math.abs(d)>50)changeSlide(d>0?1:-1);});
+
+// SIDEBAR
+function toggleSidebar(){document.getElementById('sidebar').classList.contains('open')?closeSidebar():openSidebar();}
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('open');document.getElementById('hamburger').classList.add('open');document.body.style.overflow='hidden';}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open');document.getElementById('hamburger').classList.remove('open');document.body.style.overflow='';}
+
+resetProgress();
+</script>
+</body>
+</html>

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeFit – BMI Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--red:#e53e2f;--orange:#ff6b35;--dark:#111;--light:#f0f0f0;--muted:#777;--green:#22c55e;--blue:#3b82f6;--yellow:#f59e0b;--purple:#8b5cf6;}
+body{font-family:'Nunito',sans-serif;background:#0d0d0d;color:#fff;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{background:#1a0000;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.6);}
+.back-btn{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0;}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:1px;}
+.topbar-sub{margin-left:auto;font-size:.72rem;font-weight:800;color:#fca5a5;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#1a0000,#2d0a0a);padding:28px 20px 32px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(229,62,47,.3),transparent 70%);pointer-events:none;}
+.hero::after{content:'';position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,53,.15),transparent 70%);pointer-events:none;}
+.hero-badge{font-size:.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:var(--red);color:#fff;display:inline-block;padding:4px 14px;border-radius:20px;margin-bottom:10px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,8vw,4rem);line-height:.95;letter-spacing:2px;margin-bottom:6px;}
+.hero-title span{color:#ff6b35;}
+.hero-desc{font-size:.84rem;font-weight:600;color:rgba(255,255,255,.45);max-width:300px;margin:0 auto;}
+
+/* PAGE */
+.page{padding:18px 16px 80px;max-width:600px;margin:0 auto;}
+
+/* INPUT CARD */
+.input-card{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:22px;overflow:hidden;margin-bottom:16px;box-shadow:0 8px 32px rgba(0,0,0,.4);}
+.input-card-header{background:linear-gradient(135deg,#1a0000,#2d0a0a);padding:16px 20px;}
+.input-card-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px;color:#fff;}
+.input-card-sub{font-size:.7rem;font-weight:600;color:rgba(255,255,255,.4);margin-top:2px;}
+.input-body{padding:18px 20px;}
+
+/* GENDER TOGGLE */
+.gender-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.gender-btn{padding:14px;border-radius:14px;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);font-weight:800;font-size:.85rem;cursor:pointer;text-align:center;transition:all .2s;}
+.gender-btn.active{border-color:var(--red);background:rgba(229,62,47,.12);color:#fff;}
+.gender-btn span{display:block;font-size:1.6rem;margin-bottom:4px;}
+
+/* UNIT TOGGLE */
+.unit-toggle{display:flex;background:rgba(255,255,255,.05);border-radius:12px;padding:4px;margin-bottom:18px;border:1px solid rgba(255,255,255,.08);}
+.unit-btn{flex:1;padding:8px;border-radius:9px;border:none;background:transparent;color:rgba(255,255,255,.4);font-weight:800;font-size:.78rem;cursor:pointer;text-transform:uppercase;transition:all .2s;}
+.unit-btn.active{background:var(--red);color:#fff;box-shadow:0 4px 12px rgba(229,62,47,.4);}
+
+/* FIELD */
+.field-group{margin-bottom:16px;}
+.field-label{font-size:.72rem;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.inp-wrap{position:relative;display:flex;align-items:center;}
+.inp-wrap .inp{padding-right:44px;}
+.inp-wrap .unit{position:absolute;right:14px;font-size:.75rem;font-weight:800;color:rgba(255,255,255,.3);pointer-events:none;}
+.inp{width:100%;padding:13px 16px;border-radius:13px;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;color:#fff;transition:border-color .2s;-webkit-appearance:none;}
+.inp:focus{outline:none;border-color:var(--red);}
+.inp::placeholder{color:rgba(255,255,255,.2);font-weight:600;}
+
+/* AGE SLIDER */
+.age-slider-wrap{position:relative;padding-top:6px;}
+.age-slider{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:rgba(255,255,255,.1);outline:none;cursor:pointer;}
+.age-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--orange));cursor:pointer;box-shadow:0 4px 12px rgba(229,62,47,.5);border:2px solid #fff;}
+.age-display{text-align:center;font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--red);line-height:1;margin-bottom:6px;}
+.age-display span{font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:800;color:rgba(255,255,255,.3);margin-left:4px;}
+
+/* CALC BUTTON */
+.calc-btn{width:100%;padding:16px;border-radius:14px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--red),var(--orange));color:#fff;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1.5px;box-shadow:0 8px 28px rgba(229,62,47,.45);transition:all .25s;margin-top:4px;}
+.calc-btn:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(229,62,47,.55);}
+.calc-btn:active{transform:translateY(0);}
+
+/* RESULT CARD */
+.result-card{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:22px;overflow:hidden;margin-bottom:16px;box-shadow:0 8px 32px rgba(0,0,0,.4);display:none;}
+.result-card.show{display:block;animation:fadeUp .4s ease both;}
+
+/* BMI BIG DISPLAY */
+.bmi-display{background:linear-gradient(135deg,#1a0000,#2d0a0a);padding:28px 20px;text-align:center;position:relative;overflow:hidden;}
+.bmi-display::before{content:'';position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(229,62,47,.2),transparent 70%);pointer-events:none;}
+.bmi-num-label{font-size:.7rem;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;}
+.bmi-big-num{font-family:'Bebas Neue',sans-serif;font-size:5.5rem;line-height:.9;letter-spacing:2px;margin-bottom:8px;}
+.bmi-category-badge{display:inline-block;font-size:.8rem;font-weight:900;padding:6px 20px;border-radius:30px;letter-spacing:.5px;margin-bottom:16px;}
+
+/* GAUGE */
+.gauge-wrap{max-width:340px;margin:0 auto;}
+.gauge-bar{height:10px;border-radius:20px;background:linear-gradient(90deg,#3b82f6 0%,#22c55e 28%,#f59e0b 55%,#ef4444 78%,#7c3aed 100%);position:relative;margin-bottom:8px;}
+.gauge-needle{position:absolute;top:50%;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.2),0 4px 14px rgba(0,0,0,.6);transition:left .6s cubic-bezier(.34,1.56,.64,1);}
+.gauge-labels{display:flex;justify-content:space-between;}
+.gauge-lbl{font-size:.5rem;font-weight:800;color:rgba(255,255,255,.25);text-transform:uppercase;}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.06);}
+.stat-cell{background:#161616;padding:16px 12px;text-align:center;}
+.stat-cell-icon{font-size:1.2rem;margin-bottom:4px;}
+.stat-cell-val{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;line-height:1;margin-bottom:2px;}
+.stat-cell-lbl{font-size:.58rem;font-weight:800;color:rgba(255,255,255,.3);text-transform:uppercase;}
+
+/* IDEAL WEIGHT */
+.ideal-section{padding:18px 20px;border-top:1px solid rgba(255,255,255,.06);}
+.ideal-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.8px;margin-bottom:12px;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:8px;}
+.ideal-title::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06);}
+.ideal-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.ideal-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px 10px;text-align:center;}
+.ideal-box-name{font-size:.58rem;font-weight:800;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.ideal-box-range{font-family:'Bebas Neue',sans-serif;font-size:.95rem;color:#fff;line-height:1.1;}
+.ideal-box.highlight{border-color:var(--green);background:rgba(34,197,94,.07);}
+.ideal-box.highlight .ideal-box-range{color:var(--green);}
+
+/* BMI TABLE */
+.bmi-table-section{padding:0 20px 18px;}
+.bmi-table{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;}
+.bmi-table th{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.3);padding:8px 10px;text-align:left;background:rgba(255,255,255,.03);}
+.bmi-table td{padding:10px 10px;font-size:.78rem;font-weight:700;border-top:1px solid rgba(255,255,255,.05);}
+.bmi-table tr.current-row td{background:rgba(255,255,255,.05);}
+.bmi-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px;}
+
+/* HEALTH TIPS */
+.tips-section{padding:18px 20px;border-top:1px solid rgba(255,255,255,.06);}
+.tips-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.8px;margin-bottom:12px;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:8px;}
+.tips-title::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06);}
+.tip-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;margin-bottom:8px;}
+.tip-item:last-child{margin-bottom:0;}
+.tip-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.tip-text h4{font-size:.82rem;font-weight:900;color:#fff;margin-bottom:3px;}
+.tip-text p{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.4);line-height:1.5;}
+
+/* ABOUT SECTION */
+.about-section{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:18px 20px;margin-bottom:16px;}
+.about-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.8px;margin-bottom:10px;color:rgba(255,255,255,.6);}
+.about-text{font-size:.75rem;font-weight:600;color:rgba(255,255,255,.3);line-height:1.65;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@media(max-width:400px){.ideal-grid{grid-template-columns:1fr 1fr;}.stats-row{grid-template-columns:repeat(3,1fr);}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="index.html">&#8592;</a>
+  <div class="topbar-title">⚖️ BMI Calculator</div>
+  <div class="topbar-sub" id="topResult">Enter details</div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">⚖️ Body Mass Index</div>
+  <div class="hero-title">CHECK YOUR<br><span>BMI</span></div>
+  <div class="hero-desc">Apna height, weight aur age enter karo — instant result milega.</div>
+</div>
+
+<div class="page">
+
+  <!-- INPUT CARD -->
+  <div class="input-card">
+    <div class="input-card-header">
+      <div class="input-card-title">📝 Your Details</div>
+      <div class="input-card-sub">Sab fields fill karo accurate result ke liye</div>
+    </div>
+    <div class="input-body">
+
+      <!-- GENDER -->
+      <div class="field-label">👤 Gender</div>
+      <div class="gender-row">
+        <button class="gender-btn active" id="genderMale" onclick="setGender('male')"><span>♂️</span>Male</button>
+        <button class="gender-btn" id="genderFemale" onclick="setGender('female')"><span>♀️</span>Female</button>
+      </div>
+
+      <!-- AGE -->
+      <div class="field-group">
+        <div class="field-label">🎂 Age</div>
+        <div class="age-display" id="ageDisplay">25 <span>years</span></div>
+        <div class="age-slider-wrap">
+          <input type="range" class="age-slider" id="ageSlider" min="10" max="100" value="25" oninput="updateAge(this.value)">
+        </div>
+      </div>
+
+      <!-- UNIT TOGGLE -->
+      <div class="field-label" style="margin-bottom:8px;">📏 Units</div>
+      <div class="unit-toggle">
+        <button class="unit-btn active" id="unitMetric" onclick="setUnit('metric')">Metric (kg/cm)</button>
+        <button class="unit-btn" id="unitImperial" onclick="setUnit('imperial')">Imperial (lb/ft)</button>
+      </div>
+
+      <!-- HEIGHT -->
+      <div class="field-group" id="metricFields">
+        <div class="field-label">📐 Height</div>
+        <div class="age-display" id="heightDisplay">170 <span>cm</span></div>
+        <div class="age-slider-wrap">
+          <input type="range" class="age-slider" id="heightSlider" min="100" max="220" value="170" oninput="updateHeight(this.value)">
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;">
+          <span style="font-size:.55rem;font-weight:800;color:rgba(255,255,255,.2);">100 cm</span>
+          <span style="font-size:.55rem;font-weight:800;color:rgba(255,255,255,.2);">220 cm</span>
+        </div>
+        <div class="field-label" style="margin-top:16px;">⚖️ Weight</div>
+        <div class="inp-wrap">
+          <input class="inp" id="weightKg" type="number" min="20" max="300" step="0.1" placeholder="e.g. 70">
+          <span class="unit">kg</span>
+        </div>
+      </div>
+
+      <div class="field-group" id="imperialFields" style="display:none;">
+        <div class="field-label">📐 Height &amp; Weight</div>
+        <div class="field-row" style="grid-template-columns:1fr 1fr 1fr;">
+          <div class="inp-wrap">
+            <input class="inp" id="heightFt" type="number" min="3" max="8" placeholder="5">
+            <span class="unit">ft</span>
+          </div>
+          <div class="inp-wrap">
+            <input class="inp" id="heightIn" type="number" min="0" max="11" placeholder="7">
+            <span class="unit">in</span>
+          </div>
+          <div class="inp-wrap">
+            <input class="inp" id="weightLb" type="number" min="50" max="700" placeholder="154">
+            <span class="unit">lb</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="calc-btn" onclick="calculate()">⚡ Calculate BMI</button>
+    </div>
+  </div>
+
+  <!-- RESULT CARD -->
+  <div class="result-card" id="resultCard">
+
+    <!-- BMI BIG DISPLAY -->
+    <div class="bmi-display">
+      <div class="bmi-num-label">Your BMI</div>
+      <div class="bmi-big-num" id="bmiNum">--</div>
+      <div class="bmi-category-badge" id="bmiCatBadge">--</div>
+      <div class="gauge-wrap">
+        <div class="gauge-bar"><div class="gauge-needle" id="gaugeNeedle" style="left:28%"></div></div>
+        <div class="gauge-labels">
+          <span class="gauge-lbl">Under</span>
+          <span class="gauge-lbl">Normal</span>
+          <span class="gauge-lbl">Over</span>
+          <span class="gauge-lbl">Obese</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="stats-row">
+      <div class="stat-cell">
+        <div class="stat-cell-icon">⚖️</div>
+        <div class="stat-cell-val" id="statWeight">--</div>
+        <div class="stat-cell-lbl">Weight</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-cell-icon">📐</div>
+        <div class="stat-cell-val" id="statHeight">--</div>
+        <div class="stat-cell-lbl">Height</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-cell-icon">🎂</div>
+        <div class="stat-cell-val" id="statAge">--</div>
+        <div class="stat-cell-lbl">Age</div>
+      </div>
+    </div>
+
+    <!-- IDEAL WEIGHT -->
+    <div class="ideal-section">
+      <div class="ideal-title">🎯 Ideal Weight Range</div>
+      <div class="ideal-grid" id="idealGrid"></div>
+    </div>
+
+    <!-- BMI TABLE -->
+    <div class="bmi-table-section">
+      <table class="bmi-table" id="bmiTable">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>BMI Range</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="bmiTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- HEALTH TIPS -->
+    <div class="tips-section">
+      <div class="tips-title">💡 Health Tips</div>
+      <div id="healthTips"></div>
+    </div>
+
+  </div>
+
+  <!-- ABOUT BMI -->
+  <div class="about-section">
+    <div class="about-title">ℹ️ BMI ke baare mein</div>
+    <div class="about-text">BMI (Body Mass Index) ek simple calculation hai jo weight aur height se body fat estimate karta hai. Yeh sirf ek indicator hai — actual health ke liye doctor se consult karo. Athletes, pregnant women aur bacchon ke liye results different ho sakte hain.</div>
+  </div>
+
+</div>
+
+<script>
+let gender = 'male', unit = 'metric', currentBMI = 0;
+
+function setGender(g) {
+  gender = g;
+  document.getElementById('genderMale').className = 'gender-btn' + (g === 'male' ? ' active' : '');
+  document.getElementById('genderFemale').className = 'gender-btn' + (g === 'female' ? ' active' : '');
+}
+
+function setUnit(u) {
+  unit = u;
+  document.getElementById('unitMetric').className = 'unit-btn' + (u === 'metric' ? ' active' : '');
+  document.getElementById('unitImperial').className = 'unit-btn' + (u === 'imperial' ? ' active' : '');
+  document.getElementById('metricFields').style.display = u === 'metric' ? '' : 'none';
+  document.getElementById('imperialFields').style.display = u === 'imperial' ? '' : 'none';
+}
+
+function updateAge(v) {
+  document.getElementById('ageDisplay').innerHTML = v + ' <span>years</span>';
+}
+
+function updateHeight(v) {
+  document.getElementById('heightDisplay').innerHTML = v + ' <span>cm</span>';
+}
+
+function getBMICategory(bmi) {
+  if (bmi < 18.5) return { label: 'Underweight', color: '#3b82f6', bg: 'rgba(59,130,246,.15)', needle: 10 };
+  if (bmi < 25)   return { label: 'Normal Weight', color: '#22c55e', bg: 'rgba(34,197,94,.15)', needle: 30 };
+  if (bmi < 30)   return { label: 'Overweight', color: '#f59e0b', bg: 'rgba(245,158,11,.15)', needle: 58 };
+  if (bmi < 35)   return { label: 'Obese Class I', color: '#ef4444', bg: 'rgba(239,68,68,.15)', needle: 75 };
+  return { label: 'Obese Class II+', color: '#7c3aed', bg: 'rgba(124,58,237,.15)', needle: 92 };
+}
+
+function showError(msg) {
+  const t = document.getElementById('errToast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 3000);
+}
+
+function calculate() {
+  const age = parseInt(document.getElementById('ageSlider').value);
+  let heightM, weightKg;
+
+  if (unit === 'metric') {
+    const hCm = parseInt(document.getElementById('heightSlider').value);
+    const wKg = parseFloat(document.getElementById('weightKg').value);
+    if (!wKg || wKg < 20) { showError('⚠️ Weight sahi enter karo!'); return; }
+    heightM = hCm / 100;
+    weightKg = wKg;
+  } else {
+    const ft = parseFloat(document.getElementById('heightFt').value) || 0;
+    const inch = parseFloat(document.getElementById('heightIn').value) || 0;
+    const lb = parseFloat(document.getElementById('weightLb').value);
+    if (!lb || (!ft && !inch)) { showError('⚠️ Height aur weight sahi enter karo!'); return; }
+    heightM = ((ft * 12) + inch) * 0.0254;
+    weightKg = lb * 0.453592;
+  }
+
+  const bmi = weightKg / (heightM * heightM);
+  currentBMI = Math.round(bmi * 10) / 10;
+  const cat = getBMICategory(currentBMI);
+
+  // Update big display
+  document.getElementById('bmiNum').textContent = currentBMI.toFixed(1);
+  document.getElementById('bmiNum').style.color = cat.color;
+  const badge = document.getElementById('bmiCatBadge');
+  badge.textContent = cat.label;
+  badge.style.background = cat.bg;
+  badge.style.color = cat.color;
+  badge.style.border = `1px solid ${cat.color}40`;
+  document.getElementById('gaugeNeedle').style.left = cat.needle + '%';
+  document.getElementById('topResult').textContent = `BMI: ${currentBMI.toFixed(1)}`;
+
+  // Stats
+  const hDisplay = unit === 'metric'
+    ? document.getElementById('heightSlider').value + ' cm'
+    : document.getElementById('heightFt').value + "'" + document.getElementById('heightIn').value + '"';
+  const wDisplay = unit === 'metric'
+    ? document.getElementById('weightKg').value + ' kg'
+    : document.getElementById('weightLb').value + ' lb';
+  document.getElementById('statWeight').textContent = wDisplay;
+  document.getElementById('statHeight').textContent = hDisplay;
+  document.getElementById('statAge').textContent = age + ' yr';
+
+  // Ideal weight (Devine formula base)
+  const hInches = heightM / 0.0254;
+  const over60 = Math.max(0, hInches - 60);
+  let idealBase = gender === 'male' ? 50 + 2.3 * over60 : 45.5 + 2.3 * over60;
+  const idealMin = Math.round((idealBase - 5) * 10) / 10;
+  const idealMax = Math.round((idealBase + 5) * 10) / 10;
+  const bmiNormalMin = Math.round(18.5 * heightM * heightM * 10) / 10;
+  const bmiNormalMax = Math.round(24.9 * heightM * heightM * 10) / 10;
+  const diff = Math.round((weightKg - idealBase) * 10) / 10;
+  const isIdeal = weightKg >= idealMin && weightKg <= idealMax;
+
+  const toDisplay = (kg) => unit === 'imperial' ? Math.round(kg * 2.205 * 10) / 10 + ' lb' : kg + ' kg';
+
+  document.getElementById('idealGrid').innerHTML = `
+    <div class="ideal-box${weightKg < bmiNormalMin ? ' highlight' : ''}">
+      <div class="ideal-box-name">Min (BMI 18.5)</div>
+      <div class="ideal-box-range">${toDisplay(bmiNormalMin)}</div>
+    </div>
+    <div class="ideal-box${isIdeal ? ' highlight' : ''}">
+      <div class="ideal-box-name">Ideal (Devine)</div>
+      <div class="ideal-box-range">${toDisplay(idealMin)}–${toDisplay(idealMax)}</div>
+    </div>
+    <div class="ideal-box${weightKg > bmiNormalMax ? ' highlight' : ''}">
+      <div class="ideal-box-name">Max (BMI 24.9)</div>
+      <div class="ideal-box-range">${toDisplay(bmiNormalMax)}</div>
+    </div>`;
+
+  // BMI Table
+  const categories = [
+    { name: 'Underweight', range: '< 18.5', color: '#3b82f6' },
+    { name: 'Normal Weight', range: '18.5 – 24.9', color: '#22c55e' },
+    { name: 'Overweight', range: '25.0 – 29.9', color: '#f59e0b' },
+    { name: 'Obese Class I', range: '30.0 – 34.9', color: '#ef4444' },
+    { name: 'Obese Class II+', range: '≥ 35.0', color: '#7c3aed' },
+  ];
+  document.getElementById('bmiTableBody').innerHTML = categories.map(c => {
+    const isCurrent = c.name === cat.label;
+    return `<tr${isCurrent ? ' class="current-row"' : ''}>
+      <td><span class="bmi-dot" style="background:${c.color}"></span>${c.name}</td>
+      <td style="color:${c.color};font-family:'Bebas Neue',sans-serif;font-size:.95rem;">${c.range}</td>
+      <td>${isCurrent ? `<span style="font-size:.68rem;font-weight:900;background:${c.color}22;color:${c.color};padding:3px 10px;border-radius:10px;border:1px solid ${c.color}44;">← You</span>` : ''}</td>
+    </tr>`;
+  }).join('');
+
+  // Health tips based on category
+  const tipsData = {
+    'Underweight': [
+      { icon: '🍽️', color: 'rgba(59,130,246,.2)', title: 'Calorie Surplus Lo', desc: 'Roz ki zaroorat se 300-500 extra calories khao — healthy fats aur protein se.' },
+      { icon: '💪', color: 'rgba(59,130,246,.2)', title: 'Strength Training Karo', desc: 'Weight training se muscle mass banta hai — sirf cardio mat karo.' },
+      { icon: '🥜', color: 'rgba(59,130,246,.2)', title: 'Nutrient Dense Foods', desc: 'Nuts, avocado, eggs, whole grains — calorie dense foods include karo.' },
+    ],
+    'Normal Weight': [
+      { icon: '✅', color: 'rgba(34,197,94,.2)', title: 'Great Job! Maintain Karo', desc: 'Tumhara BMI healthy range mein hai — balanced diet aur regular exercise continue rakho.' },
+      { icon: '🏃', color: 'rgba(34,197,94,.2)', title: 'Active Lifestyle', desc: 'Week mein 150 min moderate exercise ya 75 min intense workout karo.' },
+      { icon: '😴', color: 'rgba(34,197,94,.2)', title: 'Sleep Ka Dhyan Rakho', desc: '7-9 ghante ki neend metabolism aur weight maintenance ke liye zaroori hai.' },
+    ],
+    'Overweight': [
+      { icon: '🥗', color: 'rgba(245,158,11,.2)', title: 'Calorie Deficit Banao', desc: 'Roz 300-500 calories kam karo — processed food aur sugar reduce karo.' },
+      { icon: '🚶', color: 'rgba(245,158,11,.2)', title: 'Daily Walk Shuru Karo', desc: 'Roz 30-45 min brisk walk se fat burn hona shuru hoga gradually.' },
+      { icon: '💧', color: 'rgba(245,158,11,.2)', title: 'Pani Piyate Raho', desc: 'Roz 2-3 litre paani piyo — metabolism boost aur hunger control ke liye.' },
+    ],
+    'Obese Class I': [
+      { icon: '🏥', color: 'rgba(239,68,68,.2)', title: 'Doctor Se Consult Karo', desc: 'Ek healthcare professional se proper weight loss plan banao.' },
+      { icon: '🥩', color: 'rgba(239,68,68,.2)', title: 'Protein Badao', desc: 'High protein diet se satiety rehti hai aur muscle loss kam hoti hai.' },
+      { icon: '🏊', color: 'rgba(239,68,68,.2)', title: 'Low Impact Exercise', desc: 'Swimming ya cycling se joints pe pressure kam hoga aur calorie burn hogi.' },
+    ],
+    'Obese Class II+': [
+      { icon: '🏥', color: 'rgba(124,58,237,.2)', title: 'Medical Help Lo', desc: 'Is stage pe doctor ki supervision mein weight loss karna zaroori hai.' },
+      { icon: '📊', color: 'rgba(124,58,237,.2)', title: 'Ek Ek Kadam', desc: 'Choti choti changes karo — roz ek unhealthy habit replace karo.' },
+      { icon: '🧘', color: 'rgba(124,58,237,.2)', title: 'Mental Health Bhi Zaroori', desc: 'Weight journey ke saath stress management bhi seekho — mindful eating karo.' },
+    ],
+  };
+
+  const tips = tipsData[cat.label] || tipsData['Normal Weight'];
+  document.getElementById('healthTips').innerHTML = tips.map(t => `
+    <div class="tip-item">
+      <div class="tip-icon" style="background:${t.color}">${t.icon}</div>
+      <div class="tip-text"><h4>${t.title}</h4><p>${t.desc}</p></div>
+    </div>`).join('');
+
+  // Show result
+  document.getElementById('resultCard').classList.add('show');
+  setTimeout(() => document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+</script>
+<div id="errToast" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#ef4444;color:#fff;padding:12px 24px;border-radius:30px;font-weight:800;font-size:.82rem;z-index:999;box-shadow:0 8px 30px rgba(0,0,0,.4);white-space:nowrap;"></div>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeFit – 30-Day Challenges</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--orange:#ff6b35;--dark:#1a1a1a;--light:#f0f0f0;--muted:#777;}
+body{font-family:'Nunito',sans-serif;background:var(--light);color:var(--dark);}
+
+.topbar{background:#fff;border-bottom:1px solid #e8eaf0;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.back-btn{width:36px;height:36px;border-radius:10px;background:#f4f4f4;border:1.5px solid #e8e8e8;display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--dark);font-size:1.1rem;transition:all .2s;flex-shrink:0;}
+.back-btn:hover{background:var(--orange);color:#fff;border-color:transparent;}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:1px;}
+
+.hero{background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);padding:28px 20px 32px;text-align:center;color:#fff;}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,8vw,3.5rem);letter-spacing:2px;margin-bottom:6px;}
+.hero h1 span{color:var(--orange);}
+.hero p{font-size:.88rem;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:16px;}
+.hero-pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.hero-pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.8);font-size:.72rem;font-weight:800;padding:5px 14px;border-radius:20px;}
+
+.page{padding:20px 16px 50px;max-width:700px;margin:0 auto;}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.5px;margin-bottom:14px;}
+
+/* CHALLENGE CARDS */
+.ch-list{display:flex;flex-direction:column;gap:14px;}
+.ch-card{position:relative;border-radius:20px;overflow:hidden;cursor:pointer;transition:transform .22s,box-shadow .22s;background:#222;text-decoration:none;display:block;}
+.ch-card:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.3);}
+.ch-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .4s ease;}
+.ch-card:hover .ch-bg{transform:scale(1.04);}
+.ch-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.5) 60%,rgba(0,0,0,.15) 100%);}
+.ch-inner{position:relative;z-index:2;padding:20px 18px;display:flex;align-items:center;gap:14px;min-height:130px;}
+.ch-icon-box{width:54px;height:54px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+.ch-text{flex:1;min-width:0;}
+.ch-tag{font-size:.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.ch-name{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;color:#fff;line-height:1;margin-bottom:4px;}
+.ch-desc{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:8px;line-height:1.4;}
+.ch-pills{display:flex;gap:5px;flex-wrap:wrap;}
+.ch-pill{font-size:.58rem;font-weight:800;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);}
+.ch-arrow{flex-shrink:0;font-size:1.8rem;color:rgba(255,255,255,.3);}
+
+/* PROGRESS BADGES */
+.ch-progress-badge{position:absolute;top:12px;right:14px;z-index:3;font-size:.62rem;font-weight:800;padding:3px 10px;border-radius:20px;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);color:rgba(255,255,255,.7);}
+.ch-progress-badge.active{color:#22c55e;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="index.html">&#8592;</a>
+  <div class="topbar-title">🏆 30-Day Challenges</div>
+</div>
+
+<div class="hero">
+  <h1>30-Day <span>Challenges</span></h1>
+  <p>Pick a challenge, commit for 30 days, transform your body.</p>
+  <div class="hero-pills">
+    <span class="hero-pill">🏠 No Equipment</span>
+    <span class="hero-pill">💪 Bodyweight Only</span>
+    <span class="hero-pill">📅 30 Days Each</span>
+  </div>
+</div>
+
+<div class="page">
+  <div class="page-title">Choose Your Challenge</div>
+  <div class="ch-list">
+
+    <!-- Iron Hold -->
+    <a href="challenge-ironhold.html" class="ch-card">
+      <div class="ch-bg" style="background-image:url('https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?w=800&q=80')"></div>
+      <div class="ch-overlay"></div>
+      <div class="ch-progress-badge" id="prog-ironhold">0 / 30</div>
+      <div class="ch-inner">
+        <div class="ch-icon-box" style="background:rgba(255,107,53,.3);border:2px solid rgba(255,107,53,.5);">🔥</div>
+        <div class="ch-text">
+          <div class="ch-tag" style="color:#ff6b35;">⚡ Isometric · Full Body</div>
+          <div class="ch-name">Iron Hold</div>
+          <div class="ch-desc">Squat Hold + Plank Hold · 60 sec each · Alternate daily</div>
+          <div class="ch-pills">
+            <span class="ch-pill">🏠 No Equipment</span>
+            <span class="ch-pill">⏱ 60s Holds</span>
+            <span class="ch-pill">📅 30 Days</span>
+          </div>
+        </div>
+        <div class="ch-arrow">›</div>
+      </div>
+    </a>
+
+    <!-- Push-Up -->
+    <a href="challenge-pushup.html" class="ch-card">
+      <div class="ch-bg" style="background-image:url('https://images.unsplash.com/photo-1598971639058-fab3c3109a15?w=800&q=80')"></div>
+      <div class="ch-overlay"></div>
+      <div class="ch-progress-badge" id="prog-pushup">0 / 30</div>
+      <div class="ch-inner">
+        <div class="ch-icon-box" style="background:rgba(59,130,246,.3);border:2px solid rgba(59,130,246,.5);">💪</div>
+        <div class="ch-text">
+          <div class="ch-tag" style="color:#60a5fa;">💪 Strength · Chest & Arms</div>
+          <div class="ch-name">Push-Up Challenge</div>
+          <div class="ch-desc">Build from 10 to 100 push-ups — progressive daily targets</div>
+          <div class="ch-pills">
+            <span class="ch-pill">🏠 No Equipment</span>
+            <span class="ch-pill">📈 Progressive</span>
+            <span class="ch-pill">📅 30 Days</span>
+          </div>
+        </div>
+        <div class="ch-arrow">›</div>
+      </div>
+    </a>
+
+    <!-- Ab Blast -->
+    <a href="challenge-abs.html" class="ch-card">
+      <div class="ch-bg" style="background-image:url('https://images.unsplash.com/photo-1571945192237-f8a99eed3c26?w=800&q=80')"></div>
+      <div class="ch-overlay"></div>
+      <div class="ch-progress-badge" id="prog-abs">0 / 30</div>
+      <div class="ch-inner">
+        <div class="ch-icon-box" style="background:rgba(34,197,94,.3);border:2px solid rgba(34,197,94,.5);">🏆</div>
+        <div class="ch-text">
+          <div class="ch-tag" style="color:#4ade80;">🏆 Core · Abs & Waist</div>
+          <div class="ch-name">Ab Blast</div>
+          <div class="ch-desc">Daily crunches + leg raises — build visible abs in 30 days</div>
+          <div class="ch-pills">
+            <span class="ch-pill">🏠 No Equipment</span>
+            <span class="ch-pill">🔥 Daily Burn</span>
+            <span class="ch-pill">📅 30 Days</span>
+          </div>
+        </div>
+        <div class="ch-arrow">›</div>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<script>
+// Show progress badges from localStorage
+const stores = {ironhold:'hf_ironhold', pushup:'hf_pushup', abs:'hf_abs'};
+Object.entries(stores).forEach(([key,store])=>{
+  try{
+    const done = JSON.parse(localStorage.getItem(store)||'[]').length;
+    const el = document.getElementById('prog-'+key);
+    if(el){ el.textContent = done+' / 30'; if(done>0) el.classList.add('active'); }
+  }catch(e){}
+});
+</script>
+</body>
+</html>

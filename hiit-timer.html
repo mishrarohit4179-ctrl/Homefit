@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeFit – HIIT Timer</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--col:#8b5cf6;--colb:#6d28d9;--dark:#111;--muted:#777;--green:#22c55e;--red:#ef4444;--orange:#f97316;}
+body{font-family:'Nunito',sans-serif;background:#0a0a0f;color:#fff;min-height:100vh;}
+.topbar{background:#0f0a1a;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.6);border-bottom:1px solid rgba(139,92,246,.2);}
+.back-btn{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0;}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:1px;}
+.topbar-sub{margin-left:auto;font-size:.72rem;font-weight:800;color:#c4b5fd;}
+
+.hero{background:linear-gradient(135deg,#0f0a1a,#1e1035);padding:28px 20px 32px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.3),transparent 70%);pointer-events:none;}
+.hero::after{content:'';position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(249,115,22,.15),transparent 70%);pointer-events:none;}
+.hero-badge{font-size:.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:var(--col);color:#fff;display:inline-block;padding:4px 14px;border-radius:20px;margin-bottom:10px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,8vw,4rem);line-height:.95;letter-spacing:2px;margin-bottom:6px;}
+.hero-title span{color:#c4b5fd;}
+.hero-desc{font-size:.84rem;font-weight:600;color:rgba(255,255,255,.4);max-width:320px;margin:0 auto 16px;line-height:1.6;}
+.hero-facts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.hero-fact{font-size:.68rem;font-weight:800;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);padding:5px 13px;border-radius:20px;}
+
+.page{padding:18px 16px 80px;max-width:600px;margin:0 auto;}
+
+/* WHAT IS HIIT */
+.info-card{background:#13101f;border:1px solid rgba(139,92,246,.15);border-radius:20px;padding:20px;margin-bottom:16px;}
+.info-card h3{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.8px;margin-bottom:10px;color:#c4b5fd;}
+.info-card p{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.4);line-height:1.7;margin-bottom:10px;}
+.info-card p:last-child{margin-bottom:0;}
+.info-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.info-pill{font-size:.68rem;font-weight:800;padding:5px 12px;border-radius:20px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25);color:#c4b5fd;}
+
+/* PRESETS */
+.preset-section{margin-bottom:16px;}
+.sec-label{font-size:.68rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.sec-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07);}
+.preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.preset-btn{background:#13101f;border:2px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 12px;cursor:pointer;transition:all .2s;text-align:left;}
+.preset-btn:hover{border-color:var(--col);background:rgba(139,92,246,.08);}
+.preset-btn.active{border-color:var(--col);background:rgba(139,92,246,.12);}
+.preset-name{font-weight:900;font-size:.85rem;color:#fff;margin-bottom:3px;}
+.preset-detail{font-size:.65rem;font-weight:700;color:rgba(255,255,255,.35);}
+.preset-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;}
+
+/* SETTINGS CARD */
+.settings-card{background:#13101f;border:1px solid rgba(139,92,246,.15);border-radius:20px;padding:18px 20px;margin-bottom:16px;}
+.settings-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.8px;margin-bottom:16px;color:rgba(255,255,255,.7);}
+.setting-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.setting-item{display:flex;flex-direction:column;gap:6px;}
+.setting-label{font-size:.68rem;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px;}
+.setting-val{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--col);line-height:1;text-align:center;}
+.setting-unit{font-size:.6rem;font-weight:800;color:rgba(255,255,255,.25);text-align:center;margin-top:1px;}
+.stepper{display:flex;align-items:center;gap:0;background:rgba(255,255,255,.05);border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.08);}
+.step-btn{width:40px;height:42px;border:none;background:transparent;color:rgba(255,255,255,.5);font-size:1.2rem;font-weight:800;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.step-btn:hover{background:rgba(255,255,255,.1);color:#fff;}
+.step-display{flex:1;font-family:'Bebas Neue',sans-serif;font-size:1.5rem;text-align:center;color:#fff;padding:0 4px;}
+.step-unit-inline{font-size:.55rem;font-weight:800;color:rgba(255,255,255,.3);display:block;line-height:1;}
+.rounds-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid rgba(255,255,255,.05);}
+.rounds-label{font-size:.75rem;font-weight:800;color:rgba(255,255,255,.5);}
+
+/* MAIN TIMER */
+.timer-card{background:#13101f;border:2px solid rgba(139,92,246,.2);border-radius:24px;overflow:hidden;margin-bottom:16px;box-shadow:0 12px 40px rgba(0,0,0,.5);}
+.timer-phase-bar{height:5px;background:rgba(255,255,255,.08);position:relative;}
+.timer-phase-fill{height:100%;border-radius:0;transition:width .1s linear;width:0%;}
+.timer-main{padding:28px 20px 20px;text-align:center;}
+.timer-phase-label{font-size:.68rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.timer-round-info{font-size:.75rem;font-weight:800;color:rgba(255,255,255,.3);margin-bottom:16px;}
+.timer-circle{width:180px;height:180px;border-radius:50%;margin:0 auto 20px;position:relative;display:flex;align-items:center;justify-content:center;}
+.timer-circle svg{position:absolute;inset:0;transform:rotate(-90deg);}
+.timer-circle-inner{text-align:center;position:relative;z-index:2;}
+.timer-seconds{font-family:'Bebas Neue',sans-serif;font-size:4.5rem;line-height:.9;letter-spacing:2px;}
+.timer-sec-lbl{font-size:.6rem;font-weight:800;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px;}
+.timer-btns{display:flex;gap:10px;justify-content:center;margin-bottom:12px;}
+.t-btn{padding:13px 28px;border-radius:13px;border:none;cursor:pointer;font-weight:900;font-size:.88rem;text-transform:uppercase;letter-spacing:.5px;transition:all .2s;}
+.t-btn.play{background:linear-gradient(135deg,var(--col),var(--colb));color:#fff;box-shadow:0 6px 20px rgba(139,92,246,.4);}
+.t-btn.play:hover{transform:translateY(-2px);}
+.t-btn.stop{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.1);}
+.t-btn.reset-btn{background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);}
+.timer-progress-row{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;padding:0 10px 8px;}
+.round-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.12);transition:all .3s;}
+.round-dot.done{background:var(--green);}
+.round-dot.current{background:var(--col);box-shadow:0 0 8px rgba(139,92,246,.6);}
+
+/* COMPLETE */
+.complete-banner{display:none;background:linear-gradient(135deg,#16a34a,#15803d);border-radius:20px;padding:24px;text-align:center;margin-bottom:16px;}
+.complete-banner.show{display:block;animation:fadeUp .4s ease;}
+.complete-icon{font-size:3rem;margin-bottom:8px;}
+.complete-banner h3{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:1px;margin-bottom:6px;}
+.complete-banner p{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.7);line-height:1.5;}
+.complete-stats{display:flex;gap:12px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+.c-stat{background:rgba(255,255,255,.15);padding:8px 16px;border-radius:12px;text-align:center;}
+.c-stat-val{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;line-height:1;}
+.c-stat-lbl{font-size:.58rem;font-weight:800;color:rgba(255,255,255,.7);text-transform:uppercase;}
+
+/* BENEFITS */
+.benefits-card{background:#13101f;border:1px solid rgba(139,92,246,.15);border-radius:20px;padding:20px;margin-bottom:16px;}
+.benefits-card h3{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.8px;margin-bottom:14px;color:#c4b5fd;}
+.benefit-item{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;}
+.benefit-item:last-child{margin-bottom:0;}
+.benefit-icon{width:38px;height:38px;border-radius:11px;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.2);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.benefit-text h4{font-size:.82rem;font-weight:900;color:#fff;margin-bottom:2px;}
+.benefit-text p{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.35);line-height:1.5;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+.pulsing{animation:pulse 1s infinite;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="index.html">&#8592;</a>
+  <div class="topbar-title">⏱️ HIIT Timer</div>
+  <div class="topbar-sub" id="topStatus">Ready</div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">⚡ High Intensity Interval Training</div>
+  <div class="hero-title">HIIT<br><span>TIMER</span></div>
+  <div class="hero-desc">Work hard, rest smart. Custom intervals set karo aur maximum fat burn karo — sirf 20 minutes mein.</div>
+  <div class="hero-facts">
+    <span class="hero-fact">🔥 2x More Fat Burn</span>
+    <span class="hero-fact">⏱ 20-30 Min Workout</span>
+    <span class="hero-fact">💪 No Equipment</span>
+    <span class="hero-fact">⚡ Afterburn Effect</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- WHAT IS HIIT -->
+  <div class="info-card">
+    <h3>🤔 HIIT Kya Hota Hai?</h3>
+    <p>High Intensity Interval Training ek workout method hai jismein short bursts of intense exercise aur recovery periods alternate hote hain. Jaise: 30 second sprint, phir 15 second rest — yeh cycle repeat hoti hai.</p>
+    <p>Regular cardio se zyada effective hai — kam time mein zyada calories burn hoti hain aur workout ke baad bhi body fat burn karta rehta hai (Afterburn / EPOC effect).</p>
+    <div class="info-pills">
+      <span class="info-pill">🔥 Fat Loss</span>
+      <span class="info-pill">❤️ Cardio Health</span>
+      <span class="info-pill">💪 Endurance</span>
+      <span class="info-pill">⚡ Metabolism Boost</span>
+    </div>
+  </div>
+
+  <!-- PRESETS -->
+  <div class="preset-section">
+    <div class="sec-label">⚡ Quick Presets</div>
+    <div class="preset-grid">
+      <button class="preset-btn active" id="pre0" onclick="loadPreset(0)">
+        <div class="preset-name"><span class="preset-dot" style="background:#22c55e"></span>Beginner</div>
+        <div class="preset-detail">20s Work · 40s Rest · 6 Rounds</div>
+      </button>
+      <button class="preset-btn" id="pre1" onclick="loadPreset(1)">
+        <div class="preset-name"><span class="preset-dot" style="background:#f59e0b"></span>Tabata</div>
+        <div class="preset-detail">20s Work · 10s Rest · 8 Rounds</div>
+      </button>
+      <button class="preset-btn" id="pre2" onclick="loadPreset(2)">
+        <div class="preset-name"><span class="preset-dot" style="background:#ef4444"></span>Intermediate</div>
+        <div class="preset-detail">30s Work · 15s Rest · 10 Rounds</div>
+      </button>
+      <button class="preset-btn" id="pre3" onclick="loadPreset(3)">
+        <div class="preset-name"><span class="preset-dot" style="background:#8b5cf6"></span>Advanced</div>
+        <div class="preset-detail">40s Work · 20s Rest · 12 Rounds</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="settings-card">
+    <div class="settings-title">⚙️ Custom Settings</div>
+    <div class="setting-row">
+      <div class="setting-item">
+        <div class="setting-label">🔥 Work Time</div>
+        <div class="stepper">
+          <button class="step-btn" onclick="adjust('work',-5)">−</button>
+          <div class="step-display" id="workDisp">20<span class="step-unit-inline">sec</span></div>
+          <button class="step-btn" onclick="adjust('work',5)">+</button>
+        </div>
+      </div>
+      <div class="setting-item">
+        <div class="setting-label">😮‍💨 Rest Time</div>
+        <div class="stepper">
+          <button class="step-btn" onclick="adjust('rest',-5)">−</button>
+          <div class="step-display" id="restDisp">40<span class="step-unit-inline">sec</span></div>
+          <button class="step-btn" onclick="adjust('rest',5)">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="rounds-row">
+      <span class="rounds-label">🔄 Total Rounds</span>
+      <div class="stepper" style="width:140px;">
+        <button class="step-btn" onclick="adjust('rounds',-1)">−</button>
+        <div class="step-display" id="roundsDisp">6<span class="step-unit-inline">rounds</span></div>
+        <button class="step-btn" onclick="adjust('rounds',1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN TIMER -->
+  <div class="timer-card" id="timerCard">
+    <div class="timer-phase-bar">
+      <div class="timer-phase-fill" id="phaseFill"></div>
+    </div>
+    <div class="timer-main">
+      <div class="timer-phase-label" id="phaseLabel" style="color:#8b5cf6;">Ready to Start</div>
+      <div class="timer-round-info" id="roundInfo">Round 0 / 6 · 0:00 Total</div>
+      <div class="timer-circle" id="timerCircle">
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <circle cx="90" cy="90" r="80" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="10"/>
+          <circle cx="90" cy="90" r="80" fill="none" id="circleProgress" stroke="#8b5cf6" stroke-width="10" stroke-dasharray="502.65" stroke-dashoffset="502.65" stroke-linecap="round"/>
+        </svg>
+        <div class="timer-circle-inner">
+          <div class="timer-seconds" id="timerSecs">--</div>
+          <div class="timer-sec-lbl">seconds</div>
+        </div>
+      </div>
+      <div class="timer-btns">
+        <button class="t-btn play" id="playBtn" onclick="toggleTimer()">▶ Start</button>
+        <button class="t-btn reset-btn" onclick="resetTimer()">↺ Reset</button>
+      </div>
+      <div class="timer-progress-row" id="roundDots"></div>
+    </div>
+  </div>
+
+  <!-- COMPLETE BANNER -->
+  <div class="complete-banner" id="completeBanner">
+    <div class="complete-icon">🏆</div>
+    <h3>Workout Complete!</h3>
+    <p>Shandaar kaam! Tumne poora HIIT session finish kar liya. Body ab fat burn karta rahega agle kuch ghanton tak!</p>
+    <div class="complete-stats" id="completeStats"></div>
+  </div>
+
+  <!-- BENEFITS -->
+  <div class="benefits-card">
+    <h3>💪 HIIT Ke Fayde</h3>
+    <div class="benefit-item">
+      <div class="benefit-icon">🔥</div>
+      <div class="benefit-text"><h4>Afterburn Effect (EPOC)</h4><p>HIIT ke baad bhi 24-48 ghante tak body extra calories burn karta rehta hai — regular cardio mein yeh nahi hota.</p></div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">⏱️</div>
+      <div class="benefit-text"><h4>Time Efficient</h4><p>Sirf 20-25 minute ka HIIT session, 1 ghante ke steady cardio se zyada effective hota hai fat loss ke liye.</p></div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">❤️</div>
+      <div class="benefit-text"><h4>Heart Health</h4><p>VO2 max improve hota hai — dil zyada efficient ho jaata hai aur resting heart rate kam hoti hai.</p></div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">💪</div>
+      <div class="benefit-text"><h4>Muscle Preserve</h4><p>Regular cardio se muscle loss hoti hai, HIIT mein muscle preserve rehti hai aur lean body banata hai.</p></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const presets = [
+  {work:20, rest:40, rounds:6},
+  {work:20, rest:10, rounds:8},
+  {work:30, rest:15, rounds:10},
+  {work:40, rest:20, rounds:12},
+];
+
+let workTime=20, restTime=40, totalRounds=6;
+let timerInterval=null, isRunning=false, isWork=true, currentSecs=0, currentRound=0, totalElapsed=0;
+
+function loadPreset(i) {
+  document.querySelectorAll('.preset-btn').forEach((b,j)=>b.className='preset-btn'+(j===i?' active':''));
+  const p = presets[i];
+  workTime=p.work; restTime=p.rest; totalRounds=p.rounds;
+  updateSteppers(); resetTimer();
+}
+
+function updateSteppers() {
+  document.getElementById('workDisp').innerHTML = workTime + '<span class="step-unit-inline">sec</span>';
+  document.getElementById('restDisp').innerHTML = restTime + '<span class="step-unit-inline">sec</span>';
+  document.getElementById('roundsDisp').innerHTML = totalRounds + '<span class="step-unit-inline">rounds</span>';
+}
+
+function adjust(type, delta) {
+  if(type==='work') workTime = Math.max(5, Math.min(120, workTime+delta));
+  if(type==='rest') restTime = Math.max(5, Math.min(120, restTime+delta));
+  if(type==='rounds') totalRounds = Math.max(1, Math.min(30, totalRounds+delta));
+  updateSteppers(); resetTimer();
+}
+
+function buildDots() {
+  let html='';
+  for(let i=0;i<totalRounds;i++) {
+    let cls = i<currentRound ? 'round-dot done' : i===currentRound&&isRunning ? 'round-dot current' : 'round-dot';
+    html += `<div class="${cls}"></div>`;
+  }
+  document.getElementById('roundDots').innerHTML = html;
+}
+
+function updateCircle(pct, color) {
+  const circ = 502.65;
+  document.getElementById('circleProgress').style.strokeDashoffset = circ - (circ * pct);
+  document.getElementById('circleProgress').style.stroke = color;
+}
+
+function setPhaseUI() {
+  const color = isWork ? '#ef4444' : '#22c55e';
+  const label = isWork ? '🔥 WORK!' : '😮‍💨 REST';
+  const bg = isWork ? 'rgba(239,68,68,.15)' : 'rgba(34,197,94,.15)';
+  document.getElementById('phaseLabel').textContent = label;
+  document.getElementById('phaseLabel').style.color = isWork ? '#ef4444' : '#22c55e';
+  document.getElementById('phaseFill').style.background = color;
+  document.getElementById('timerCard').style.borderColor = isWork ? 'rgba(239,68,68,.4)' : 'rgba(34,197,94,.3)';
+  document.getElementById('topStatus').textContent = isWork ? `Round ${currentRound+1}/${totalRounds} - WORK` : `Round ${currentRound+1}/${totalRounds} - REST`;
+}
+
+function tick() {
+  currentSecs--;
+  totalElapsed++;
+  const total = isWork ? workTime : restTime;
+  const pct = currentSecs / total;
+  const color = isWork ? '#ef4444' : '#22c55e';
+  document.getElementById('timerSecs').textContent = currentSecs;
+  document.getElementById('timerSecs').style.color = currentSecs <= 3 && currentSecs > 0 ? '#f97316' : '#fff';
+  updateCircle(pct, color);
+  document.getElementById('phaseFill').style.width = ((1-pct)*100) + '%';
+  const mins = Math.floor(totalElapsed/60), secs = totalElapsed%60;
+  document.getElementById('roundInfo').textContent = `Round ${currentRound+1} / ${totalRounds} · ${mins}:${String(secs).padStart(2,'0')} Total`;
+
+  if(currentSecs <= 0) {
+    if(isWork) {
+      isWork = false;
+      currentSecs = restTime;
+      setPhaseUI();
+    } else {
+      currentRound++;
+      if(currentRound >= totalRounds) {
+        clearInterval(timerInterval); isRunning=false;
+        finishWorkout(); return;
+      }
+      isWork = true;
+      currentSecs = workTime;
+      setPhaseUI();
+    }
+    buildDots();
+  }
+}
+
+function toggleTimer() {
+  if(isRunning) {
+    clearInterval(timerInterval); isRunning=false;
+    document.getElementById('playBtn').textContent = '▶ Resume';
+    document.getElementById('topStatus').textContent = 'Paused';
+  } else {
+    if(currentRound===0 && currentSecs===0) {
+      currentSecs = workTime; isWork = true;
+      document.getElementById('completeBanner').className = 'complete-banner';
+      setPhaseUI();
+    }
+    isRunning = true;
+    document.getElementById('playBtn').textContent = '⏸ Pause';
+    timerInterval = setInterval(tick, 1000);
+    buildDots();
+  }
+}
+
+function resetTimer() {
+  clearInterval(timerInterval); isRunning=false; isWork=true; currentSecs=0; currentRound=0; totalElapsed=0;
+  document.getElementById('timerSecs').textContent = '--';
+  document.getElementById('timerSecs').style.color = '#fff';
+  document.getElementById('phaseLabel').textContent = 'Ready to Start';
+  document.getElementById('phaseLabel').style.color = '#8b5cf6';
+  document.getElementById('playBtn').textContent = '▶ Start';
+  document.getElementById('roundInfo').textContent = `Round 0 / ${totalRounds} · 0:00 Total`;
+  document.getElementById('phaseFill').style.width = '0%';
+  document.getElementById('timerCard').style.borderColor = 'rgba(139,92,246,.2)';
+  document.getElementById('topStatus').textContent = 'Ready';
+  document.getElementById('completeBanner').className = 'complete-banner';
+  updateCircle(0, '#8b5cf6');
+  buildDots();
+}
+
+function finishWorkout() {
+  const mins = Math.floor(totalElapsed/60), secs = totalElapsed%60;
+  const cals = Math.round(totalRounds * (workTime/60) * 12);
+  document.getElementById('completeStats').innerHTML = `
+    <div class="c-stat"><div class="c-stat-val">${totalRounds}</div><div class="c-stat-lbl">Rounds</div></div>
+    <div class="c-stat"><div class="c-stat-val">${mins}:${String(secs).padStart(2,'0')}</div><div class="c-stat-lbl">Duration</div></div>
+    <div class="c-stat"><div class="c-stat-val">~${cals}</div><div class="c-stat-lbl">Cal Burned</div></div>`;
+  document.getElementById('completeBanner').className = 'complete-banner show';
+  document.getElementById('topStatus').textContent = '✅ Done!';
+  document.getElementById('timerSecs').textContent = '00';
+  document.getElementById('roundInfo').textContent = `Complete! ${totalRounds} rounds · ${mins}:${String(secs).padStart(2,'0')}`;
+  buildDots();
+  setTimeout(()=>document.getElementById('completeBanner').scrollIntoView({behavior:'smooth',block:'center'}),200);
+}
+
+updateSteppers(); buildDots();
+</script>
+</body>
+</html>

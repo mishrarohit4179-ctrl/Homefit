@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeFit – Privacy Policy</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:#0d0d0d;color:#fff;min-height:100vh;}
+.topbar{background:#111;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.6);border-bottom:1px solid rgba(255,255,255,.07);}
+.back-btn{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0;}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:1px;}
+.topbar-date{margin-left:auto;font-size:.7rem;font-weight:800;color:rgba(255,255,255,.3);}
+
+.hero{background:linear-gradient(135deg,#0a0f1a,#0f1a2e);padding:32px 20px;text-align:center;position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.07);}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.15),transparent 70%);}
+.hero-badge{font-size:.68rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:rgba(59,130,246,.12);color:#60a5fa;border:1px solid rgba(59,130,246,.3);display:inline-block;padding:4px 14px;border-radius:20px;margin-bottom:12px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,7vw,3.2rem);line-height:.95;letter-spacing:2px;margin-bottom:8px;}
+.hero-title span{color:#60a5fa;}
+.hero-meta{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.3);line-height:1.6;}
+
+.page{padding:24px 16px 80px;max-width:680px;margin:0 auto;}
+
+/* QUICK SUMMARY */
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;}
+.summary-box{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px 16px;display:flex;align-items:flex-start;gap:10px;}
+.summary-icon{font-size:1.3rem;flex-shrink:0;margin-top:1px;}
+.summary-text h4{font-size:.78rem;font-weight:900;color:#fff;margin-bottom:3px;}
+.summary-text p{font-size:.68rem;font-weight:600;color:rgba(255,255,255,.35);line-height:1.5;}
+.summary-box.good{border-color:rgba(34,197,94,.2);background:rgba(34,197,94,.04);}
+.summary-box.good h4{color:#22c55e;}
+
+/* TOC */
+.toc-card{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px 20px;margin-bottom:24px;}
+.toc-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.8px;color:rgba(255,255,255,.5);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.toc-title::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07);}
+.toc-list{display:flex;flex-direction:column;gap:6px;}
+.toc-item{display:flex;align-items:center;gap:10px;text-decoration:none;padding:8px 12px;border-radius:10px;transition:background .2s;}
+.toc-item:hover{background:rgba(255,255,255,.05);}
+.toc-num{font-family:'Bebas Neue',sans-serif;font-size:.9rem;color:#60a5fa;width:22px;flex-shrink:0;}
+.toc-text{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.55);}
+
+/* SECTION */
+.doc-section{margin-bottom:28px;}
+.sec-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.07);}
+.sec-num{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:#60a5fa;line-height:1;flex-shrink:0;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:.8px;color:#fff;line-height:1;}
+.sec-body p{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.45);line-height:1.75;margin-bottom:12px;}
+.sec-body p:last-child{margin-bottom:0;}
+.sec-body ul{margin:10px 0 12px 0;display:flex;flex-direction:column;gap:6px;}
+.sec-body ul li{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.4);line-height:1.6;padding-left:18px;position:relative;}
+.sec-body ul li::before{content:'→';position:absolute;left:0;color:#60a5fa;font-size:.75rem;}
+
+.highlight-box{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:14px;padding:14px 16px;margin:12px 0;}
+.highlight-box p{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.55);line-height:1.65;margin:0 !important;}
+
+.green-box{background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.2);border-radius:14px;padding:14px 16px;margin:12px 0;}
+.green-box p{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.55);line-height:1.65;margin:0 !important;}
+
+.contact-card{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:20px;margin-top:28px;text-align:center;}
+.contact-card h3{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.8px;margin-bottom:8px;color:#60a5fa;}
+.contact-card p{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.4);line-height:1.7;}
+.contact-card a{color:#60a5fa;font-weight:800;text-decoration:none;}
+
+footer{text-align:center;padding:24px;font-size:.72rem;color:rgba(255,255,255,.2);border-top:1px solid rgba(255,255,255,.06);}
+footer a{color:rgba(255,255,255,.35);text-decoration:none;margin:0 8px;}
+footer a:hover{color:#60a5fa;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="index.html">&#8592;</a>
+  <div class="topbar-title">🔒 Privacy Policy</div>
+  <div class="topbar-date">Last updated: March 2026</div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">🔒 Privacy Document</div>
+  <div class="hero-title">PRIVACY<br><span>POLICY</span></div>
+  <div class="hero-meta">Effective Date: March 20, 2026 · HomeFit Website<br>Aapki privacy hamari priority hai.</div>
+</div>
+
+<div class="page">
+
+  <!-- QUICK SUMMARY BOXES -->
+  <div class="summary-grid">
+    <div class="summary-box good">
+      <div class="summary-icon">✅</div>
+      <div class="summary-text"><h4>Data Collect Nahi</h4><p>Hum koi personal data apne servers par store nahi karte.</p></div>
+    </div>
+    <div class="summary-box good">
+      <div class="summary-icon">✅</div>
+      <div class="summary-text"><h4>Device Pe Rehta Hai</h4><p>Progress sirf aapke browser localStorage mein save hota hai.</p></div>
+    </div>
+    <div class="summary-box good">
+      <div class="summary-icon">✅</div>
+      <div class="summary-text"><h4>Sell Nahi Karte</h4><p>Aapka koi bhi data third parties ko sell nahi kiya jaata.</p></div>
+    </div>
+    <div class="summary-box good">
+      <div class="summary-icon">✅</div>
+      <div class="summary-text"><h4>No Account Required</h4><p>Koi signup, login ya email ki zarurat nahi hai.</p></div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc-card">
+    <div class="toc-title">📋 Table of Contents</div>
+    <div class="toc-list">
+      <a class="toc-item" href="#p1"><span class="toc-num">01</span><span class="toc-text">Information We Collect</span></a>
+      <a class="toc-item" href="#p2"><span class="toc-num">02</span><span class="toc-text">Local Storage Data</span></a>
+      <a class="toc-item" href="#p3"><span class="toc-num">03</span><span class="toc-text">How We Use Information</span></a>
+      <a class="toc-item" href="#p4"><span class="toc-num">04</span><span class="toc-text">Cookies</span></a>
+      <a class="toc-item" href="#p5"><span class="toc-num">05</span><span class="toc-text">Third Party Services</span></a>
+      <a class="toc-item" href="#p6"><span class="toc-num">06</span><span class="toc-text">Children's Privacy</span></a>
+      <a class="toc-item" href="#p7"><span class="toc-num">07</span><span class="toc-text">Your Rights</span></a>
+      <a class="toc-item" href="#p8"><span class="toc-num">08</span><span class="toc-text">Data Security</span></a>
+      <a class="toc-item" href="#p9"><span class="toc-num">09</span><span class="toc-text">Policy Changes</span></a>
+      <a class="toc-item" href="#p10"><span class="toc-num">10</span><span class="toc-text">Contact Us</span></a>
+    </div>
+  </div>
+
+  <!-- SECTIONS -->
+  <div class="doc-section" id="p1">
+    <div class="sec-header"><div class="sec-num">01</div><div class="sec-title">Information We Collect</div></div>
+    <div class="sec-body">
+      <p>HomeFit ek static fitness website hai jo minimum data collect karta hai. Humara goal hai aapko best experience dena aapki privacy protect karte hue.</p>
+      <div class="green-box"><p>✅ Hum koi bhi personally identifiable information (PII) — jaise naam, email, phone number, address — collect, store ya process nahi karte.</p></div>
+      <p>Automatically collect hone wala basic information:</p>
+      <ul>
+        <li>Browser type aur version (anonymous analytics ke liye)</li>
+        <li>Device type — mobile ya desktop (UI optimization ke liye)</li>
+        <li>Pages visited aur time spent (anonymous, aggregated)</li>
+        <li>Referrer URL — aap kahan se aaye (traffic source samajhne ke liye)</li>
+      </ul>
+      <p>Yeh sab information aggregate form mein hoti hai — aapko personally identify karne ke liye use nahi hoti.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="p2">
+    <div class="sec-header"><div class="sec-num">02</div><div class="sec-title">Local Storage Data</div></div>
+    <div class="sec-body">
+      <p>HomeFit ke fitness tools — 30-Day Challenges, Progress Tracker, HIIT Timer — aapka data save karte hain. Yeh data exclusively aapke device ke browser localStorage mein store hota hai.</p>
+      <ul>
+        <li>Challenge progress (completed days, exercise logs)</li>
+        <li>Progress Tracker entries (weight, strength data)</li>
+        <li>Photo reminder status</li>
+        <li>Calculator ke last used values</li>
+      </ul>
+      <div class="highlight-box"><p>🔒 Yeh data kabhi bhi humhare servers par nahi jaata. Sirf aapka browser is data ko rakhta hai. Aap kabhi bhi browser settings se yeh data delete kar sakte hain.</p></div>
+      <p>Agar aap browser data clear karte hain ya incognito mode use karte hain, toh yeh saved data automatically delete ho jaata hai.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="p3">
+    <div class="sec-header"><div class="sec-num">03</div><div class="sec-title">How We Use Information</div></div>
+    <div class="sec-body">
+      <p>Jo limited anonymous information hum collect karte hain, uska use sirf in purposes ke liye hota hai:</p>
+      <ul>
+        <li>Website performance improve karna</li>
+        <li>Kaunse features popular hain yeh samajhna</li>
+        <li>Technical bugs aur errors fix karna</li>
+        <li>User experience better banana</li>
+      </ul>
+      <p>Hum yeh information kisi bhi third party ko sell, rent ya trade nahi karte marketing purposes ke liye. Aapka data hum kabhi bhi monetize nahi karte.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="p4">
+    <div class="sec-header"><div class="sec-num">04</div><div class="sec-title">Cookies</div></div>
+    <div class="sec-body">
+      <p>HomeFit limited cookies use karta hai. Hum tracking ya advertising cookies use nahi karte.</p>
+      <ul>
+        <li><strong style="color:rgba(255,255,255,.7)">Essential Cookies:</strong> Website ke basic functions ke liye zaroori — session management</li>
+        <li><strong style="color:rgba(255,255,255,.7)">Preference Cookies:</strong> Aapki settings save karne ke liye jaise theme preference</li>
+      </ul>
+      <p>Aap apne browser settings se cookies disable kar sakte hain, lekin isse website ke kuch features kaam nahi karenge properly.</p>
+      <div class="highlight-box"><p>📢 Hum Google Analytics, Facebook Pixel ya koi advertising network use nahi karte is website par. Aap ad-free experience enjoy karte hain.</p></div>
+    </div>
+  </div>
+
+  <div class="doc-section" id="p5">
+    <div class="sec-header"><div class="sec-num">05</div><div class="sec-title">Third Party Services</div></div>
+    <div class="sec-body">
+      <p>Website proper function karne ke liye kuch third-party services use karti hai:</p>
+      <ul>
+        <li><strong style="color:rgba(255,255,255,.7)">Google Fonts:</strong> Typography ke liye — fonts load karte time Google ke servers se request jaati hai</li>
+        <li><strong style="color:rgba(255,255,255,.7)">Unsplash:</strong> Exercise aur fitness images ke liye — CDN se serve hoti hain</li>
+        <li><strong style="color:rgba(255,255,255,.7)">Netlify:</strong> Website hosting provider — unki privacy policy apply hoti hai</li>
+      </ul>
+      <p>Yeh services apni own privacy policies follow karti hain. Hum recommend karte hain ki aap unki policies bhi review karein agar concerned hain.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="p6">
+    <div class="sec-header"><div class="sec-num">06</div><div class="sec-title">Children's Privacy</div></div>
+    <div class="sec-body">
+      <p>HomeFit 13 saal se kam umra ke bachon ke liye designed nahi hai. Hum knowingly 13 saal se kam umra ke bachon ka koi personal data collect nahi karte.</p>
+      <p>Agar aap parent ya guardian hain aur aapko lagta hai ki aapke child ne humein koi personal information provide ki hai, toh humse contact karein. Hum us information ko immediately delete karenge.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="p7">
+    <div class="sec-header"><div class="sec-num">07</div><div class="sec-title">Your Rights</div></div>
+    <div class="sec-body">
+      <p>Aapke paas apne data ke baare mein yeh rights hain:</p>
+      <ul>
+        <li><strong style="color:rgba(255,255,255,.7)">Access:</strong> Jaanne ka haq ki hum aapka kaun sa data rakhte hain (hum rakhte hi nahi practically)</li>
+        <li><strong style="color:rgba(255,255,255,.7)">Delete:</strong> Apna localStorage data browser settings se khud delete kar sakte hain</li>
+        <li><strong style="color:rgba(255,255,255,.7)">Opt-out:</strong> Browser settings se cookies disable kar sakte hain</li>
+        <li><strong style="color:rgba(255,255,255,.7)">Portability:</strong> Aapka data aapke device par hai — aap use control karte hain</li>
+      </ul>
+      <div class="green-box"><p>💡 Apna localStorage data delete karne ke liye: Browser Settings → Privacy → Clear Browsing Data → Local Storage select karo → Clear karo. Ya directly browser DevTools mein jaake Application → Local Storage → homefit data delete kar sakte hain.</p></div>
+    </div>
+  </div>
+
+  <div class="doc-section" id="p8">
+    <div class="sec-header"><div class="sec-num">08</div><div class="sec-title">Data Security</div></div>
+    <div class="sec-body">
+      <p>Kyunki hum koi personal data apne servers par store nahi karte, data breach ka risk practically zero hai humari side se. Aapka fitness data sirf aapke device par rehta hai.</p>
+      <p>Website HTTPS (SSL/TLS encryption) use karti hai — iska matlab aapka browser aur humara server ke beech communication secure hai.</p>
+      <p>Fir bhi, koi bhi internet transmission 100% secure nahi hoti. Hum commercially reasonable measures use karte hain website ko secure rakhne ke liye.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="p9">
+    <div class="sec-header"><div class="sec-num">09</div><div class="sec-title">Policy Changes</div></div>
+    <div class="sec-body">
+      <p>Hum is Privacy Policy ko update kar sakte hain time to time — website improvements ya legal requirements ki wajah se. Koi bhi significant change hone par is page par "Last Updated" date change hogi.</p>
+      <p>Aap regularly is page ko visit kar sakte hain latest policy check karne ke liye. Website ka continued use updated policy ki acceptance maana jaayega.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="p10">
+    <div class="sec-header"><div class="sec-num">10</div><div class="sec-title">Contact Us</div></div>
+    <div class="sec-body">
+      <p>Is Privacy Policy ke baare mein koi bhi question, concern ya request ke liye humse contact karo. Hum 48 hours mein respond karne ki koshish karte hain.</p>
+    </div>
+  </div>
+
+  <div class="contact-card">
+    <h3>📬 Privacy Concern Hai?</h3>
+    <p>Koi bhi data ya privacy related sawaal ke liye directly contact karo.<br>Hum seedha aur transparent reply denge.</p>
+    <p style="margin-top:10px;"><a href="mailto:mishrarohit4179@gmail.com">mishrarohit4179@gmail.com</a></p>
+  </div>
+
+</div>
+
+<footer>
+  © 2026 HomeFit · All rights reserved
+  <br style="margin-bottom:8px;">
+  <a href="index.html">Home</a>
+  <a href="privacy-policy.html">Privacy Policy</a>
+  <a href="terms-and-conditions.html">Terms & Conditions</a>
+</footer>
+
+</body>
+</html>
