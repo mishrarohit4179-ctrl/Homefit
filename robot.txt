@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mishrarohit4179-ctrl.github.io/Homefit/sitemap.xml
